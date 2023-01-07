@@ -16,9 +16,8 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import LoginIcon from "@mui/icons-material/Login";
 import Button from "@mui/material/Button";
-import { color, spacing } from "@mui/system";
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+// import { useContext } from "react";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -66,6 +65,7 @@ function Navbar() {
   // const authContext = useContext(AuthContext);
   // const isLogged = authContext.isLoggedin;
   const isLogged = false; // For Testing Only!!!!
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -167,15 +167,21 @@ function Navbar() {
         <Toolbar>
           <Typography
             variant="h6"
-            component="div"
+            component={"div"}
             sx={{ display: { sm: "block" }, mr: 2 }}
             size="large"
             edge="start"
             color="inherit"
           >
-            {/* <Link to="/"> </Link> */}
-            FoodApp
+            <Button
+              component={RouterLink}
+              to={"/"}
+              style={{ color: "#ffffff" }}
+            >
+              FoodApp
+            </Button>
           </Typography>
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -212,9 +218,12 @@ function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/auth">...</Link>
-                <Button color="inherit">Sign Up</Button>
-                <Button color="inherit">Log In</Button>
+                <Button component={RouterLink} to={"/Signup"} color="inherit">
+                  Sign Up
+                </Button>
+                <Button component={RouterLink} to={"/Login"} color="inherit">
+                  Log In
+                </Button>
               </>
             )}
           </Box>
