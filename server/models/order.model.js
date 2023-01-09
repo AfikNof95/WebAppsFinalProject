@@ -6,11 +6,21 @@ const OrderModel = new Schema(
   {
     user: String, //We get it from the firebase UID
     address: { type: Schema.Types.ObjectId, ref: "Address" },
-    products: {
-      count: Number,
-      product: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    products: [
+      {
+        count: { type: Number, default: 1 },
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+      },
+    ],
+    status: {
+      type: String,
+      enum: ["Created", "Packed", "Delivered"],
+      default: "Created",
     },
-    status: { type: String, enum: ["Created", "Packed", "Delivered"] },
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }

@@ -3,32 +3,56 @@ const ProductService = require("../services/product.service");
 const ProductController = {
   async getProduct(req, res, next) {
     try {
-      const response = await ProductService.getProduct(req.body.userId);
-      res.json(response);
+      const { productId } = req.params;
+      const response = await ProductService.getProduct(productId);
+      return res.json(response);
     } catch (ex) {
-      console.error(ex.message);
-      console.log(ex.stack);
+      next(ex);
+    }
+  },
+  async getAllProducts(req, res, next) {
+    try {
+      const response = await ProductService.getAllProducts();
+      return res.json(response);
+    } catch (ex) {
       next(ex);
     }
   },
   async createProduct(req, res, next) {
     try {
-      const response = await ProductService.createProduct(req.body.userId);
-      res.json(response);
+      const response = await ProductService.createProduct(req.body);
+      return res.json(response);
     } catch (ex) {
-      console.error(ex.message);
-      console.log(ex.stack);
       next(ex);
     }
   },
   async updateProduct(req, res, next) {
     try {
-      const response = await ProductService.updateProduct(req.body.cart);
-      res.json(response);
+      const { productId } = req.params;
+      const response = await ProductService.updateProduct(productId, req.body);
+      return res.json({ message: "Product updated successfully!" });
     } catch (ex) {
-      console.error(ex.message);
-      console.log(ex.stack);
       next(ex);
+    }
+  },
+  async deleteProduct(req, res, next) {
+    try {
+      const { productId } = req.params;
+      const response = await ProductService.deleteProduct(productId);
+      return res.json({ message: "Product deleted successfully!" });
+    } catch (ex) {
+      next(ex);
+    }
+  },
+  async getAllProductsByFilters(req, res) {
+    try {
+      const products = await ProductService.getAllProductsByFilters(
+        req.body.filters
+      );
+      return res.json(products);
+    } catch (ex) {
+      next(ex);
+      s;
     }
   },
 };

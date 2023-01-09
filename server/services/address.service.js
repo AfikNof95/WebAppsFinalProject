@@ -8,14 +8,35 @@ const AddressService = {
   async getAddressByUserId(userId) {
     return await AddressModel.find({ user: userId });
   },
-  async createAddress(userId) {
-    return await AddressModel.create({ user: userId });
+  async createAddress(address) {
+    return await AddressModel.create(address);
   },
-  async updateAddress(address) {
-    return await AddressModel.updateOne(
-      { user: address.userId, _id: new ObjectId(address._id) },
+  async updateAddress(addressId, address) {
+    const updatedAddress = await AddressModel.findOneAndUpdate(
+      { user: address.user, _id: new ObjectId(addressId) },
       address
     );
+
+    if (!updatedAddress) {
+      throw new Error("Address not found!");
+    }
+
+    return updatedAddress;
+  },
+  async deleteAddress(addressId) {
+    const deletedAddress = await AddressModel.findOneAndUpdate(
+      {
+        _id: new ObjectId(addressId),
+        isActive: true,
+      },
+      { isActive: false }
+    );
+
+    if (!deletedAddress) {
+      throw new Error("Address not found!");
+    }
+
+    return deletedAddress;
   },
 };
 

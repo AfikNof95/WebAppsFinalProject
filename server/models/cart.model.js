@@ -4,12 +4,13 @@ const Schema = require("mongoose").Schema;
 
 const CartModel = new Schema(
   {
-    products: {
-      count: Number,
-      product: [{ type: Schema.Types.ObjectId, ref: "Product" }],
-    },
-    user: String, //We get it from the firebase UID
-    isActive: { type: Boolean, default: true },
+    products: [
+      {
+        count: { type: Number, default: 1 },
+        product: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+      },
+    ],
+    user: { type: String, unique: true }, //We get it from the firebase UID
   },
   { timestamps: true }
 );

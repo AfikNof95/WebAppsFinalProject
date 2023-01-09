@@ -6,6 +6,7 @@ const CategoryModel = new Schema(
   {
     name: {
       type: String,
+      unique:[true,"Category already exists!"],
       required: [true, "Category name should not be empty!"],
       min: [1, "Category name should not be empty!"],
     },

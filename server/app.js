@@ -4,13 +4,14 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config();
+const path = require("path");
+const mongoSanitize = require("express-mongo-sanitize");
+
+require("dotenv").config({ path: path.join(__dirname, "./.env") });
 
 const PORT = process.env.PORT || 2308;
 const app = express();
-const path = require("path");
-const { default: errorHandler } = require("./middlewares/errorHandler");
-
+const errorHandler = require("./middlewares/errorHandler");
 // Try to connect mongo
 try {
   console.log("\nTrying to connect to mongoDB");
@@ -29,13 +30,15 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.resolve(__dirname, "./public")));
 
-app.use(logger("combined"))
+app.use(mongoSanitize());
+
+app.use(logger("combined"));
 app.use("/", require("./routes/index"));
-// app.use(errorHandler)
+app.use(errorHandler);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  res.status(404).send(createError(404));
 });
 
 app.listen(PORT, () => {
