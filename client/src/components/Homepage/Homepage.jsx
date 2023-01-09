@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../Navbar/Navbar";
 import "./Homepage.css";
 import { Container } from "@mui/system";
 import ProductCard from "../ProductCard/ProductCard";
