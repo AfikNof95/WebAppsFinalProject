@@ -1,22 +1,23 @@
 import "./App.css";
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Layout from './components/Navbar/Layout'
+import AuthPage from './pages/LoginPage';
 
 const App = () => {
   return (
     <div className="App">
       <Router>
         <Layout>
-          <Routes>
+          <Switch>
             <Route path="/" exact>
               HomePage component
               {/* then change to  <Route exact path="/" element={<Home />} /> */}
             </Route>
-            <Route path="/auth">Auth component</Route>
+            <Route path="/login"> <AuthPage/> </Route>
             <Route path="/user">User component</Route>
             {/* <Route path="*" element={<NotFound />} /> */}
-          </Routes>
+          </Switch>
         </Layout>
       </Router>
     </div>
