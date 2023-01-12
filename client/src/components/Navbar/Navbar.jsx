@@ -17,7 +17,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import LoginIcon from "@mui/icons-material/Login";
 import Button from "@mui/material/Button";
 import { color, spacing } from "@mui/system";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
 
@@ -64,6 +64,11 @@ function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const history = useHistory();
+  const [isLogin, setIsLogin] = useState(true);
+
+  const switchAuthModeHandler = () => {
+    setIsLogin((prevState) => !prevState);
+  };
 
   // const authContext = useContext(AuthContext);
   // const isLogged = authContext.isLoggedin;
@@ -215,7 +220,8 @@ function Navbar() {
             ) : (
               <>
                 <Link to="/login">
-                <Button color="inherit">Log In</Button>
+                <Button onClick={switchAuthModeHandler} color="inherit" >
+                  Log In</Button>
                 </Link>
               </>
             )}

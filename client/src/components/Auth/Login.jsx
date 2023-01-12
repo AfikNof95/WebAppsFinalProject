@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import classes from "./Login.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import { auth, provider } from './firebaseConfig'
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail } from "firebase/auth";
 
 const AuthForm = () => {
   const emailInputRef = useRef();
@@ -27,7 +27,7 @@ const AuthForm = () => {
     let url ; 
     if (isLogin) {
       url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCPHJfNEGeaNbsPRkPbiKAG2B-7lAz_kIk';
-    } else{
+    } else {
       url =  'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCPHJfNEGeaNbsPRkPbiKAG2B-7lAz_kIk'; 
     }
     fetch (url ,
@@ -62,11 +62,25 @@ const AuthForm = () => {
   }
 
   const signInWithGoogle = () => {
-    signInWithPopup(auth, provider).then((data) => {
-      localStorage.clear();
-    })
+    
+    signInWithPopup(auth, provider).then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+
+    }).catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.customData.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
   }
 
+  const passwordReset = async () => {
+    const email = prompt("Please enter you email: ")
+    await sendPasswordResetEmail(auth, email)
+    alert("Password reset sent to " + email)
+  }
   
   return (
     <section className={classes.auth}>
@@ -80,11 +94,7 @@ const AuthForm = () => {
         </div>
         <div class="row mb-4">
           <div class="col d-flex justify-content-center">
-            <div class="form-check">
-              <label class="form-check-label" for="RememberMe">Remember me </label>
-              <input class="form-check-input" type="checkbox" value="" id="RememberMe" checked />
-            </div>
-            <a id="forPass" href="#!">{isLogin ? 'Forgot password?': ''}</a>
+            <a id="forPass" href="#!" onClick={passwordReset}>{isLogin ? 'Forgot password?': ''}</a>
           </div>
         </div>
         <button type="submit" id="signIn" class="btn btn-primary btn-block mb-4">
@@ -112,4 +122,5 @@ const AuthForm = () => {
   );
 };
 
-export default AuthForm;
+
+export default AuthForm
