@@ -6,9 +6,9 @@ import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <ShopContext>
+  <ShopContext.Provider>
     <React.StrictMode>
       <App />
     </React.StrictMode>
-  </ShopContext>
+  </ShopContext.Provider>
 );
