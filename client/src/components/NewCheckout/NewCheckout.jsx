@@ -46,11 +46,11 @@ export default function NewCheckout() {
     country: "", // should check - less than 25 letters
   });
   const [userPayment, setUserPayment] = useState({
-    cardsName: '', // Check for full name
-    cardsNumber: '', // Validate numbers only
-    expiryDate: '', // validate date format
-    cvv: '', // validate 3 digits only
-  })
+    cardsName: "", // Check for full name
+    cardsNumber: "", // Validate numbers only
+    expiryDate: "", // validate date format
+    cvv: "", // validate 3 digits only
+  });
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -114,7 +114,7 @@ export default function NewCheckout() {
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                     Back
                   </Button>
-                )} 
+                )}
 
                 {/* Should be disable when not validated */}
                 <Button

@@ -29,6 +29,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="given-name"
             variant="standard"
+            inputProps={{ maxLength: 14, minLength: 2 }}
             onChange={checkoutCntxt.handleFormChange}
           />
         </Grid>
@@ -46,6 +47,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="family-name"
             variant="standard"
+            inputProps={{ maxLength: 14, minLength: 2 }}
             onChange={checkoutCntxt.handleFormChange}
           />
         </Grid>
@@ -63,6 +65,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping address-line1"
             variant="standard"
+            inputProps={{ maxLength: 22, minLength: 2 }}
             onChange={checkoutCntxt.handleFormChange}
           />
         </Grid>
@@ -81,6 +84,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping address-line2"
             variant="standard"
+            inputProps={{ maxLength: 22, minLength: 2 }}
             onChange={checkoutCntxt.handleFormChange}
           />
         </Grid>
@@ -97,6 +101,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping address-level2"
             variant="standard"
+            inputProps={{ maxLength: 18, minLength: 2 }}
             onChange={checkoutCntxt.handleFormChange}
           />
         </Grid>
@@ -112,6 +117,7 @@ export default function AddressForm() {
             placeholder={!checkoutCntxt?.tmpUserInfo?.state && "State..."}
             fullWidth
             variant="standard"
+            inputProps={{ maxLength: 20, minLength: 2 }}
             onChange={checkoutCntxt.handleFormChange}
           />
         </Grid>
@@ -128,6 +134,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping postal-code"
             variant="standard"
+            inputProps={{ maxLength: 8, minLength: 4 }}
             onChange={checkoutCntxt.handleFormChange}
           />
         </Grid>
@@ -145,6 +152,7 @@ export default function AddressForm() {
             fullWidth
             autoComplete="shipping country"
             variant="standard"
+            inputProps={{ maxLength: 22, minLength: 2 }}
             onChange={checkoutCntxt.handleFormChange}
           />
         </Grid>
