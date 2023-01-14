@@ -60,10 +60,6 @@ export default function NewCheckout() {
     setActiveStep(activeStep - 1);
   };
 
-  const handleFormChange = (event) => {
-    setContactInfo({ ...contactInfo, [event.target.name]: event.target.value });
-  };
-
   const checkFormValidation = () => {
     for (let contactInfoField of Object.keys(contactInfo)) {
       if (
