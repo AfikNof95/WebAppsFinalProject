@@ -1,0 +1,15 @@
+#checkoutButton {
+  background-color: rgb(33, 42, 47);
+  color: white;
+}
+
+#checkoutButton:hover {
+  background-color: transparent;
+  border-color: rgb(33, 42, 47);
+  color: black;
+}
+
+#checkoutButton:focus {
+  background-color: transparent;
+  border-color: rgb(33, 42, 47);
+}

@@ -13,10 +13,13 @@ import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
 import MoreIcon from "@mui/icons-material/MoreVert";
 import LoginIcon from "@mui/icons-material/Login";
 import Button from "@mui/material/Button";
 import { Link as RouterLink } from "react-router-dom";
+import { useShoppingCart } from "../../context/ShoppingCartContext";
 // import { useContext } from "react";
 
 const Search = styled("div")(({ theme }) => ({
@@ -61,10 +64,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const { openCart, getCartQuantity } = useShoppingCart();
 
   // const authContext = useContext(AuthContext);
   // const isLogged = authContext.isLoggedin;
-  const isLogged = false; // For Testing Only!!!!
+  const isLogged = true; // For Testing Only!!!!
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -132,7 +136,7 @@ function Navbar() {
           color="inherit"
         >
           <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
+            <ShoppingCartIcon />
           </Badge>
         </IconButton>
         <p>Notifications</p>
@@ -163,7 +167,12 @@ function Navbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed">
+      <AppBar
+        position="fixed"
+        sx={{
+          backgroundImage: "linear-gradient(15deg, #13547a 0%, #80d0c7 100%);",
+        }}
+      >
         <Toolbar>
           <Typography
             variant="h6"
@@ -178,7 +187,7 @@ function Navbar() {
               to={"/"}
               style={{ color: "#ffffff" }}
             >
-              FoodApp
+              Store
             </Button>
           </Typography>
 
@@ -187,7 +196,7 @@ function Navbar() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search Food..."
+              placeholder="Search Products..."
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
@@ -199,9 +208,10 @@ function Navbar() {
                   size="large"
                   aria-label="show 17 new notifications"
                   color="inherit"
+                  onClick={() => openCart()}
                 >
-                  <Badge badgeContent={17} color="error">
-                    <NotificationsIcon />
+                  <Badge badgeContent={getCartQuantity()} color="error">
+                    <ShoppingCartIcon />
                   </Badge>
                 </IconButton>
                 <IconButton
