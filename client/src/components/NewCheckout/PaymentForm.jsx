@@ -24,6 +24,13 @@ export default function PaymentForm() {
             fullWidth
             autoComplete="cc-name"
             variant="standard"
+            value={
+              checkoutCntxt?.tmpPayment?.cardName &&
+              checkoutCntxt.tmpPayment.cardName
+            }
+            placeholder={
+              !checkoutCntxt?.tmpPayment?.cardName && "Card holder..."
+            }
             onChange={checkoutCntxt.handlePaymentChange}
           />
         </Grid>
@@ -36,6 +43,13 @@ export default function PaymentForm() {
             fullWidth
             autoComplete="cc-number"
             variant="standard"
+            value={
+              checkoutCntxt?.tmpPayment?.cardNumber &&
+              checkoutCntxt.tmpPayment.cardNumber
+            }
+            placeholder={
+              !checkoutCntxt?.tmpPayment?.cardNumber && "Card number..."
+            }
             onChange={checkoutCntxt.handlePaymentChange}
           />
         </Grid>
@@ -48,6 +62,13 @@ export default function PaymentForm() {
             fullWidth
             autoComplete="cc-exp"
             variant="standard"
+            value={
+              checkoutCntxt?.tmpPayment?.expDate &&
+              checkoutCntxt.tmpPayment.expDate
+            }
+            placeholder={
+              !checkoutCntxt?.tmpPayment?.expDate && "Expiry date..."
+            }
             onChange={checkoutCntxt.handlePaymentChange}
           />
         </Grid>
@@ -61,6 +82,10 @@ export default function PaymentForm() {
             fullWidth
             autoComplete="cc-csc"
             variant="standard"
+            value={
+              checkoutCntxt?.tmpPayment?.cvv && checkoutCntxt.tmpPayment.cvv
+            }
+            placeholder={!checkoutCntxt?.tmpPayment?.cvv && "CVV..."}
             onChange={checkoutCntxt.handlePaymentChange}
           />
         </Grid>

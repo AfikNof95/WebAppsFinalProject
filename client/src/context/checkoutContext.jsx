@@ -12,26 +12,26 @@ const CheckoutContext = React.createContext({
 });
 
 export const CheckoutContextProvider = (props) => {
-  //   const [userInfo, setUserInfo] = useState([
-  //     {
-  //       fName: "",
-  //       lName: "",
-  //       street: "",
-  //       address2: "",
-  //       city: "",
-  //       state: "",
-  //       zip: null,
-  //       country: "",
-  //     },
-  //   ]);
-  //   const [paymentInfo, setPaymentInfo] = useState([
-  //     {
-  //       name: "",
-  //       number: null,
-  //       expire: "",
-  //       cvc: null,
-  //     },
-  //   ]);
+  // const [userInfo, setUserInfo] = useState([
+  //   {
+  //     fName: "",
+  //     lName: "",
+  //     address1: "",
+  //     address2: "",
+  //     city: "",
+  //     state: "",
+  //     zip: "",
+  //     country: "",
+  //   },
+  // ]);
+  // const [paymentInfo, setPaymentInfo] = useState([
+  //   {
+  //     cardName: "",
+  //     cardNumber: "",
+  //     expDate: "",
+  //     cvv: ,
+  //   },
+  // ]);
 
   const [tmpUserInfo, setTmpUserInfo] = useState({
     fName: "omer",
@@ -47,7 +47,7 @@ export const CheckoutContextProvider = (props) => {
     cardName: "omer kaplan",
     cardNumber: "5555111156149999",
     expDate: "01/27",
-    cvc: 111,
+    cvv: 111,
   });
   const tmpProducts = [
     {
@@ -68,7 +68,6 @@ export const CheckoutContextProvider = (props) => {
       ...tmpUserInfo,
       [event.target.name]: event.target.value,
     });
-    console.log(tmpUserInfo);
   };
 
   const handlePaymentChange = async (event) => {
@@ -76,12 +75,11 @@ export const CheckoutContextProvider = (props) => {
       ...tmpPayment,
       [event.target.name]: event.target.value,
     });
-    console.log(tmpPayment);
   };
 
   const checkoutContextValue = {
-    userInfo: tmpUserInfo,
-    paymentInfo: tmpPayment,
+    // userInfo: userInfo,
+    // paymentInfo: paymentInfo,
     handleFormChange: handleFormChange,
     handlePaymentChange: handlePaymentChange,
     tmpProducts: tmpProducts,
