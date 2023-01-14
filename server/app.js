@@ -6,23 +6,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 const mongoSanitize = require("express-mongo-sanitize");
+const Scraper = require("./scraper/main");
 
 require("dotenv").config({ path: path.join(__dirname, "./.env") });
 
 const PORT = process.env.PORT || 2308;
 const app = express();
 const errorHandler = require("./middlewares/errorHandler");
-// Try to connect mongo
-try {
-  console.log("\nTrying to connect to mongoDB");
-  mongoose.connect(process.env.MONGOURI, (err) => {
-    if (err) throw err;
-  });
-  console.log("MongoDB connected successfully");
-} catch (ex) {
-  console.error(ex.message);
-  console.log(ex.stack);
-}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,13 +26,45 @@ app.use(logger("combined"));
 app.use("/", require("./routes/index"));
 app.use(errorHandler);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  res.status(404).send(createError(404));
-});
+const connectToMongo = async () => {
+  // Try to connect mongo
+  try {
+    console.log("\nTrying to connect to mongoDB");
+    await mongoose.connect(process.env.MONGOURI);
+    // mongoose.connect(process.env.MONGOURI, (err) => {
+    //   if (err) throw err;
+    // });
+    console.log("MongoDB connected successfully");
+  } catch (ex) {
+    console.error(ex.message);
+    console.log(ex.stack);
+  }
+};
 
-app.listen(PORT, () => {
-  console.log(`\nServer is listening on port: ${PORT} \n`);
-});
+const runScraper = async () => {
+  try {
+    console.log("Scraping Amazon: ");
+    const response = await Scraper();
+  } catch (ex) {
+    console.error("Failed scraping Amazon");
+    console.error(ex.message);
+  }
+};
 
+const startServer = async () => {
+  await connectToMongo();
+
+  await runScraper();
+
+  // catch 404 and forward to error handler
+  app.use(function (req, res, next) {
+    res.status(404).send(createError(404));
+  });
+
+  app.listen(PORT, () => {
+    console.log(`\nServer is listening on port: ${PORT} \n`);
+  });
+};
+
+startServer();
 module.exports = app;
