@@ -36,20 +36,20 @@ export default function NewCheckout() {
   const [activeStep, setActiveStep] = useState(0);
   const [isNextAvailable, setIsNextAvailable] = useState(true);
   const [contactInfo, setContactInfo] = useState({
-    firstName: "", // should check - less than 25 letters
-    lastName: "", // should check - less than 25 letters
-    address1: "", // should check - less than 25 letters
-    address2: "", // should check - less than 25 letters
-    city: "", // should check - less than 25 letters
-    state: "", // should check - less than 25 letters
-    zip: "", // should check - numbers only
-    country: "", // should check - less than 25 letters
+    fName: "",
+    lName: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    zip: "",
+    country: "",
   });
   const [userPayment, setUserPayment] = useState({
-    cardsName: "", // Check for full name
-    cardsNumber: "", // Validate numbers only
-    expiryDate: "", // validate date format
-    cvv: "", // validate 3 digits only
+    cardName: "",
+    cardNumber: "",
+    expDate: "",
+    cvv: null,
   });
 
   const handleNext = () => {
@@ -61,21 +61,23 @@ export default function NewCheckout() {
   };
 
   const checkFormValidation = () => {
-    for (let contactInfoField of Object.keys(contactInfo)) {
-      if (
-        contactInfo[contactInfoField].trim() === "" &&
-        !(contactInfoField == "address2")
-      ) {
-        setIsNextAvailable(false);
-        return;
-      }
-    }
-    setIsNextAvailable(true);
+    // can also use value.filled ?
+    // for (let contactInfoField of Object.keys(contactInfo)) {
+    //   if (
+    //     contactInfo[contactInfoField].trim() === "" &&
+    //     !(contactInfoField == "address2")
+    //   ) {
+    //     setIsNextAvailable(false);
+    //     return;
+    //   }
+    // }
+    // setIsNextAvailable(true);
+    return;
   };
 
-  // useEffect(() => {
-  //   checkFormValidation();
-  // }, [contactInfo]);
+  useEffect(() => {
+    checkFormValidation();
+  }, [contactInfo, userPayment]);
 
   return (
     <ThemeProvider theme={theme}>
