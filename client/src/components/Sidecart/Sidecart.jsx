@@ -24,7 +24,7 @@ export function SideCart({ isCartOpen }) {
       <Box sx={{ padding: "15px" }}>
         <Stack spacing={3} direction={"column"}>
           <Stack spacing={2}>
-            <CartProductList></CartProductList>
+            <CartProductList />
           </Stack>
 
           <Box
