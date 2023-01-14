@@ -5,10 +5,13 @@ const CheckoutContext = React.createContext({
   userInfo: [],
   paymentInfo: [],
   handleFormChange: () => {},
+  handlePaymentChange: () => {},
+  tmpProducts: [],
+  tmpUserInfo: [],
+  tmpPayment: [],
 });
 
 export const CheckoutContextProvider = (props) => {
-  //   const [cart, setCart] = useState([]);
   //   const [userInfo, setUserInfo] = useState([
   //     {
   //       fName: "",
@@ -30,24 +33,6 @@ export const CheckoutContextProvider = (props) => {
   //     },
   //   ]);
 
-  const [tmpCart, setTmpCart] = useState([
-    {
-      name: "Product 1",
-      desc: "A nice thing",
-      price: "$9.99",
-    },
-    {
-      name: "Product 2",
-      desc: "Another thing",
-      price: "$3.45",
-    },
-    {
-      name: "Product 3",
-      desc: "Something else",
-      price: "$6.51",
-    },
-    { name: "Shipping", desc: "", price: "Free" },
-  ]);
   const [tmpUserInfo, setTmpUserInfo] = useState({
     fName: "omer",
     lName: "kaplan",
@@ -58,14 +43,25 @@ export const CheckoutContextProvider = (props) => {
     zip: "7179902",
     country: "IL",
   });
-  const [tmpPayment, setTmpPayment] = useState([
+  const [tmpPayment, setTmpPayment] = useState({
+    cardName: "omer kaplan",
+    cardNumber: "5555111156149999",
+    expDate: "01/27",
+    cvc: 111,
+  });
+  const tmpProducts = [
     {
-      name: "omer kaplan",
-      number: 5555111156149999,
-      expire: "01/27",
-      cvc: 111,
+      name: "Product 1",
+      desc: "A nice thing",
+      price: "$9.99",
     },
-  ]);
+    {
+      name: "Product 3",
+      desc: "Something else",
+      price: "$6.51",
+    },
+    { name: "Shipping", desc: "", price: "Free" },
+  ];
 
   const handleFormChange = async (event) => {
     setTmpUserInfo({
@@ -75,11 +71,22 @@ export const CheckoutContextProvider = (props) => {
     console.log(tmpUserInfo);
   };
 
+  const handlePaymentChange = async (event) => {
+    setTmpPayment({
+      ...tmpPayment,
+      [event.target.name]: event.target.value,
+    });
+    console.log(tmpPayment);
+  };
+
   const checkoutContextValue = {
-    userCart: tmpCart,
     userInfo: tmpUserInfo,
     paymentInfo: tmpPayment,
     handleFormChange: handleFormChange,
+    handlePaymentChange: handlePaymentChange,
+    tmpProducts: tmpProducts,
+    tmpUserInfo: tmpUserInfo,
+    tmpPayment: tmpPayment,
   };
 
   return (

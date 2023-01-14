@@ -5,11 +5,9 @@ import TextField from "@mui/material/TextField";
 import CheckoutContext from "../../context/checkoutContext";
 
 // Add validations, grey the next if not valid
-// userCart: tmpCart, userInfo: tmpUserInfo, paymentInfo: tmpPayment,
 
 export default function AddressForm() {
   const checkoutCntxt = useContext(CheckoutContext);
-  console.log(checkoutCntxt.userInfo);
 
   return (
     <React.Fragment>
@@ -54,7 +52,7 @@ export default function AddressForm() {
             name="address1"
             label="Address line 1"
             placeholder={
-              checkoutCntxt.userInfo.street && checkoutCntxt.userInfo.street
+              checkoutCntxt.userInfo.address1 && checkoutCntxt.userInfo.address1
             }
             fullWidth
             autoComplete="shipping address-line1"

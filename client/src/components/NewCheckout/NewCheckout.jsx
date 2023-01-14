@@ -114,8 +114,9 @@ export default function NewCheckout() {
                   <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                     Back
                   </Button>
-                )}
+                )} 
 
+                {/* Should be disable when not validated */}
                 <Button
                   variant="contained"
                   onClick={handleNext}
