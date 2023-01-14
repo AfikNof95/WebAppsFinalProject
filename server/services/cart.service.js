@@ -13,7 +13,10 @@ const CartService = {
   },
   async updateCart(userId, cart) {
     cart.products = cart.products.map((product) => {
-      return { count: product.count, product: new ObjectId(product.product) };
+      return {
+        quantity: product.quantity,
+        product: new ObjectId(product.product),
+      };
     });
     const updatedCart = await CartModel.updateOne(
       { user: userId },

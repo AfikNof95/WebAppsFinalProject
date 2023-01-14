@@ -8,7 +8,7 @@ const OrderModel = new Schema(
     address: { type: Schema.Types.ObjectId, ref: "Address" },
     products: [
       {
-        count: { type: Number, default: 1 },
+        quantity: { type: Number, default: 1 },
         product: {
           type: Schema.Types.ObjectId,
           ref: "Product",
