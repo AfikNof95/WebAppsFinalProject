@@ -171,6 +171,8 @@ function Navbar() {
         position="fixed"
         sx={{
           backgroundImage: "linear-gradient(15deg, #13547a 0%, #80d0c7 100%);",
+          // backgroundColor: "white",
+          // color: "black",
         }}
       >
         <Toolbar>

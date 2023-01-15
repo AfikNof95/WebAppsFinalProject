@@ -15,7 +15,7 @@ import Box from "@mui/material/Box";
 import { Link as RouterLink } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 
-import CartProductList from "../CartProductList/CartProductList";
+import CartProductList from "../SideCartProductList/SideCartProductList";
 
 export function SideCart({ isCartOpen }) {
   const { closeCart, getCartTotalPrice } = useShoppingCart();

@@ -1,3 +1,4 @@
+import CartPage from "../../pages/Cart/Cart";
 import Homepage from "../Homepage/Homepage";
 import NotFound from "../NotFound/NotFound";
 
@@ -10,6 +11,10 @@ const appRoutes = [
   {
     path: "/login",
     element: <div style={{ paddingTop: "100px" }}>To Do login</div>,
+  },
+  {
+    path: "/cart",
+    element: <CartPage></CartPage>,
   },
   {
     path: "*",
