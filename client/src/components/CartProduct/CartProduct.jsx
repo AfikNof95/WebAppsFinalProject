@@ -24,8 +24,8 @@ export function CartProduct({ id, name, imageURL, quantity, price }) {
     useShoppingCart();
 
   return (
-    <Card sx={{ display: "flex", padding: 2 }} elevation={0}>
-      <Avatar sx={{ width: 151, height: 151 }} src={imageURL} />
+    <Card sx={{ display: "flex", padding: 2 }} elevation={1}>
+      <Avatar sx={{ width: 80, height: 80 }} src={imageURL} />
       <CardContent
         sx={{
           flex: "1 0 auto",
@@ -41,12 +41,12 @@ export function CartProduct({ id, name, imageURL, quantity, price }) {
           height={"100%"}
         >
           <Grid item xs={3}>
-            <Typography component="div" variant="h5">
+            <Typography component="div" variant="body1" fontWeight={"bold"}>
               {name}
             </Typography>
           </Grid>
 
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <TextField
               variant="outlined"
               type="number"
@@ -83,7 +83,7 @@ export function CartProduct({ id, name, imageURL, quantity, price }) {
           <Grid item xs={3}>
             <Typography variant="body1">{formatPrice(price)}</Typography>
           </Grid>
-          <Grid item xs={3} display="flex" justifyContent="end">
+          <Grid item xs={2} display="flex" justifyContent="end">
             <IconButton onClick={() => removeFromCart(id)}>
               <ClearIcon></ClearIcon>
             </IconButton>

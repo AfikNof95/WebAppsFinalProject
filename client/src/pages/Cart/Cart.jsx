@@ -1,12 +1,22 @@
 import "./Cart.css";
 import { Link as ReactLink } from "react-router-dom";
-import { Box, Button, Divider, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  FormLabel,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { Container } from "@mui/system";
 import CartProductList from "../../components/CartProductList/CartProductList";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
+import { formatPrice } from "../../utils/formatPrice";
 
 const CartPage = () => {
-  const { getCartTotalPrice, getCartQuantity } = useShoppingCart();
+  const { getCartTotalPrice, getCartQuantity, getCartProducts } =
+    useShoppingCart();
 
   const getCartTitle = () => {
     if (getCartQuantity() > 0) {
@@ -14,52 +24,86 @@ const CartPage = () => {
     }
     return "Please add products to your cart.";
   };
+
+  const cartProducts = getCartProducts();
+
   return (
     <div className="cart-layout">
       <Container>
-        <Paper elevation={1} sx={{ minHeight: "700px" }}>
-          <Box
-            sx={{
-              backgroundImage:
-                "linear-gradient(15deg, #13547a 0%, #80d0c7 100%)",
-              padding: "10px",
-            }}
-            display={"flex"}
-            justifyContent="center"
-            alignContent={"center"}
-          >
-            <Typography variant="h4" color="white">
-              {getCartTitle()}
-            </Typography>
-          </Box>
+        <Typography variant="h5" marginBottom={5}>
+          {getCartTitle()}
+        </Typography>
 
-          <Divider></Divider>
-          <Stack direction={"column"} spacing={1} padding="10px">
-            <Box height={600} overflow="auto">
+        {getCartQuantity() > 0 && (
+          <Stack direction={"row"} gap={2} flexWrap>
+            <Stack direction={"column"} gap={3} minWidth={500}>
               <CartProductList></CartProductList>
-            </Box>
-            <Box
-              display={"flex"}
-              justifyContent="flex-end"
-              justifySelf={"flex-end"}
-            >
-              <Typography fontWeight={"bold"} textAlign={"end"}>
-                Total Price: {getCartTotalPrice()}
-              </Typography>
-            </Box>
-            <Box display={"flex"} justifyContent="center">
-              <Button
-                disabled={getCartQuantity() === 0}
-                variant="contained"
-                size="large"
-                LinkComponent={ReactLink}
-                to="/checkout"
-              >
-                Proceed to checkout
-              </Button>
-            </Box>
+            </Stack>
+
+            <Paper elevation={3} sx={{ width: 300, padding: 5 }}>
+              <Box display={"flex"} flexDirection="column" height={"100%"}>
+                <Typography variant="h6">Order summary</Typography>
+                <Divider></Divider>
+                <Stack direction={"column"} marginBottom={2}>
+                  {cartProducts.map((cartProduct) => (
+                    <Box
+                      key={cartProduct.product._id}
+                      display={"flex"}
+                      flexDirection={"row"}
+                      justifyContent={"space-between"}
+                    >
+                      <div>
+                        <Typography variant="body1">
+                          {cartProduct.product.name}
+                          <FormLabel
+                            color="secondary"
+                            sx={{ fontWeight: "bold", fontSize: "0.7em" }}
+                          >
+                            x{cartProduct.quantity}
+                          </FormLabel>
+                        </Typography>
+                      </div>
+                      <Typography fontWeight={"bold"}>
+                        {formatPrice(
+                          cartProduct.quantity * cartProduct.product.price
+                        )}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Stack>
+                <Divider></Divider>
+                <Box
+                  display={"flex"}
+                  justifyContent="space-between"
+                  marginTop={1}
+                >
+                  <Typography variant="body1" textAlign={"start"}>
+                    Total Price:
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    fontWeight={"bold"}
+                    textAlign={"end"}
+                  >
+                    {getCartTotalPrice()}
+                  </Typography>
+                </Box>
+                <Box display={"flex"} justifyContent="center" marginTop="auto">
+                  <Button
+                    fullWidth
+                    disabled={getCartQuantity() === 0}
+                    variant="contained"
+                    size="large"
+                    LinkComponent={ReactLink}
+                    to="/checkout"
+                  >
+                    Checkout now
+                  </Button>
+                </Box>
+              </Box>
+            </Paper>
           </Stack>
-        </Paper>
+        )}
       </Container>
     </div>
   );
