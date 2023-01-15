@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const ProductModel = require("../models/product.model");
+const categoryModel = require("../models/category.model");
 const productLinks = {
   "Computers & Tablets":
     "https://www.amazon.com/s?i=specialty-aps&bbn=16225007011&rh=n%3A16225007011%2Cn%3A13896617011&ref=nav_em__nav_desktop_sa_intl_computers_tablets_0_2_6_4",
@@ -23,7 +24,7 @@ const fetchProducts = async () => {
     const products = [];
 
     for (let [category, link] of Object.entries(productLinks)) {
-      const timeOut = Math.random(3000, 15000);
+      const timeOut = Math.random(10000, 20000);
       await new Promise((res) => setTimeout(res, 10000));
       const response = await axios.get(link);
 
@@ -68,7 +69,7 @@ const fetchProducts = async () => {
           }
         }
         const images = [];
-        if(productImages){
+        if (productImages) {
           for (let imageUrl of productImages) {
             imageUrl += "}";
             const url = JSON.parse(imageUrl).hiRes;
@@ -85,15 +86,29 @@ const fetchProducts = async () => {
             category,
             quantity,
           };
-  
+
+          if (!description) {
+            element.description = "Amazing Product!";
+          }
           if (price) {
+            let categoryObject = await categoryModel.findOne({
+              name: category,
+            });
+            if (!categoryObject) {
+              categoryObject = await categoryModel.create({ name: category });
+            }
+            let productObject = await ProductModel.findOne({ name: name });
+            if (!productObject) {
+              await ProductModel.create({
+                ...element,
+                price: parseFloat(price),
+                category: categoryObject._id,
+              });
+            }
+
             products.push(element);
           }
-
         }
-
-
-      
       }
     }
     return products;
