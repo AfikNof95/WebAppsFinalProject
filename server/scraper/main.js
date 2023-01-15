@@ -17,8 +17,6 @@ const productLinks = {
     "https://www.amazon.com/s?i=specialty-aps&bbn=16225018011&rh=n%3A7141123011%2Cn%3A16225018011%2Cn%3A6358543011&ref=nav_em__nav_desktop_sa_intl_watches_0_2_12_5",
 };
 
-const productCategories = ["Computers & Tablets", "Kitchen", "Shoes", ""];
-
 const fetchProducts = async () => {
   try {
     const products = [];
