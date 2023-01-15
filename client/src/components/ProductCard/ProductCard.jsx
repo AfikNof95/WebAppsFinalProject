@@ -33,7 +33,7 @@ const ExpandMore = styled((props) => {
 
 const ProductCard = () => {
   const [expanded, setExpanded] = React.useState(false);
-  const { addToCart } = useShoppingCart();
+  const { addToCart, openCart } = useShoppingCart();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -78,7 +78,10 @@ const ProductCard = () => {
               <Tooltip title="Add to cart">
                 <IconButton
                   aria-label="add to cart"
-                  onClick={() => addToCart(product)}
+                  onClick={() => {
+                    addToCart(product);
+                    openCart();
+                  }}
                 >
                   <AddIcon />
                 </IconButton>

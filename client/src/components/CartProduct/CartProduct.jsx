@@ -1,5 +1,11 @@
 import "./CartProduct.css";
-import { IconButton, Input, Stack, TextField, Typography } from "@mui/material";
+import {
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlusIcon from "@mui/icons-material/Add";
@@ -18,9 +24,11 @@ export function CartProduct({ id, name, imageURL, quantity, price }) {
   return (
     <Paper elevation={0} sx={{ position: "relative" }}>
       <div style={{ position: "absolute", right: 0 }}>
-        <IconButton color="error" onClick={() => removeFromCart(id)}>
-          <ClearIcon></ClearIcon>
-        </IconButton>
+        <Tooltip title="Remove product" >
+          <IconButton color="error" onClick={() => removeFromCart(id)}>
+            <ClearIcon></ClearIcon>
+          </IconButton>
+        </Tooltip>
       </div>
       <Stack direction={"row"} gap={1} display="flex" padding={1}>
         <img
@@ -55,22 +63,27 @@ export function CartProduct({ id, name, imageURL, quantity, price }) {
               key="quantity"
               InputProps={{
                 startAdornment: (
-                  <IconButton onClick={() => decreaseProductQuantity(id)}>
-                    <MinusIcon></MinusIcon>
+                  <IconButton
+                    onClick={() => decreaseProductQuantity(id)}
+                    size="small"
+                  >
+                    <MinusIcon fontSize="0.6em"></MinusIcon>
                   </IconButton>
                 ),
                 endAdornment: (
-                  <IconButton onClick={() => increaseProductQuantity(id)}>
-                    <PlusIcon></PlusIcon>
+                  <IconButton
+                    onClick={() => increaseProductQuantity(id)}
+                    size="small"
+                  >
+                    <PlusIcon fontSize="0.6em"></PlusIcon>
                   </IconButton>
                 ),
               }}
-              sx={{ width: "150px", alignSelf: "flex-end" }}
+              sx={{ width: "120px", alignSelf: "flex-end" }}
               inputProps={{ style: { textAlign: "center" } }}
               value={quantity}
-              onInput={(event) =>
-                updateProductQuantity(id, Number(event.target.value))
-              }
+              disabled
+              size="small"
             ></TextField>
           </div>
         </Stack>

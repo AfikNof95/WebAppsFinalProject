@@ -66,7 +66,6 @@ export function ShoppingCartProvider({ children }) {
         return cartProduct;
       });
     });
-    openCart();
   }
 
   function increaseProductQuantity(productId, count = 1) {
@@ -133,9 +132,6 @@ export function ShoppingCartProvider({ children }) {
   }
 
   function openCart() {
-    if (cartQuantity === 0) {
-      return;
-    }
     setIsOpen(true);
   }
   function closeCart() {
