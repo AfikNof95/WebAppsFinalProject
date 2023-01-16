@@ -20,6 +20,7 @@ import { color, spacing } from "@mui/system";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from 'react-router-dom';
+import AuthContext from '../../store/auth-context';
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -61,6 +62,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navbar() {
+  const authCtx = useContext(AuthContext);
+  const loggin = authCtx.isLoggedin;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const history = useHistory();
@@ -147,12 +150,10 @@ function Navbar() {
           aria-haspopup="true"
           color="inherit"
         >
+          
           <AccountCircle />
         </IconButton>
         <p>Profile</p>
-        </MenuItem>
-        <MenuItem>
-          <p>Signup</p>
         </MenuItem>
         <MenuItem>
         <IconButton size="large" aria-label="Login" color="inherit">
@@ -214,9 +215,16 @@ function Navbar() {
               </>
             ) : (
               <>
+              { !loggin && (
                 <Link to="/login">
                 <Button color="inherit">Log In</Button>
                 </Link>
+              )}
+              { loggin && (
+                <Link to="/profile">
+                <Button color="inherit">My Profile</Button>
+                </Link>
+              )}
               </>
             )}
           </Box>
