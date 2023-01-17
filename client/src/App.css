@@ -1,5 +1,8 @@
+html * {
+  font-family: Open Sans,Roboto,-apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif !important
+}
 body {
-  background-color: #dedede;
+  background-color: #f6f9fc;
 }
 .App {
   text-align: center;

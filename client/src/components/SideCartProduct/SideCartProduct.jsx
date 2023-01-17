@@ -1,17 +1,12 @@
-import "./CartProduct.css";
+import "./SideCartProduct.css";
 import {
-  Avatar,
-  Card,
-  CardContent,
-  CardMedia,
-  Grid,
   IconButton,
   Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-
+import Paper from "@mui/material/Paper";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlusIcon from "@mui/icons-material/Add";
 import MinusIcon from "@mui/icons-material/Remove";
@@ -19,44 +14,53 @@ import { useShoppingCart } from "../../context/ShoppingCartContext";
 import { Box } from "@mui/system";
 import { formatPrice } from "../../utils/formatPrice";
 
-export function CartProduct({ id, name, imageURL, quantity, price }) {
+export function SideCartProduct({ id, name, imageURL, quantity, price }) {
   const { removeFromCart, increaseProductQuantity, decreaseProductQuantity } =
     useShoppingCart();
 
   return (
-    <Card sx={{ display: "flex", padding: 2 }} elevation={1}>
-      <Avatar sx={{ width: 80, height: 80 }} src={imageURL} />
-      <CardContent
-        sx={{
-          flex: "1 0 auto",
-          alignItems: "center",
-          alignContent: "center",
-        }}
-      >
-        <Grid
-          container
-          spacing={2}
-          direction="row"
-          alignItems={"center"}
-          height={"100%"}
-        >
-          <Grid item xs={3}>
-            <Typography component="div" variant="body1" fontWeight={"bold"}>
+    <Paper elevation={0} sx={{ position: "relative" }}>
+      <div style={{ position: "absolute", right: 0 }}>
+        <Tooltip title="Remove product">
+          <IconButton color="error" onClick={() => removeFromCart(id)}>
+            <ClearIcon></ClearIcon>
+          </IconButton>
+        </Tooltip>
+      </div>
+      <Stack direction={"row"} gap={1} display="flex" padding={1}>
+        <img
+          src={imageURL}
+          style={{ width: "125px", height: "125px", objectFit: "contain" }}
+        ></img>
+
+        <Stack direction={"column"} gap={1} display="flex">
+          <Box
+            display={"flex"}
+            flexDirection="row"
+            flexWrap={"wrap"}
+            justifyContent={"space-between"}
+            marginTop={1}
+          >
+            <Typography
+              color="text.black"
+              fontWeight={"bold"}
+              flexBasis={"100%"}
+            >
               {name}
             </Typography>
-          </Grid>
-
-          <Grid item xs={4}>
+            <Typography color="text.secondary" fontSize={"0.8rem"}>
+              {formatPrice(price)}
+            </Typography>
+          </Box>
+          <div>
             <TextField
               variant="outlined"
               type="number"
               name="quantity-input"
               key="quantity"
-              color="primary"
               InputProps={{
                 startAdornment: (
                   <IconButton
-                    sx={{ pointerEvents: "all" }}
                     onClick={() => decreaseProductQuantity(id)}
                     size="small"
                   >
@@ -65,7 +69,6 @@ export function CartProduct({ id, name, imageURL, quantity, price }) {
                 ),
                 endAdornment: (
                   <IconButton
-                    sx={{ pointerEvents: "all" }}
                     onClick={() => increaseProductQuantity(id)}
                     size="small"
                   >
@@ -73,23 +76,15 @@ export function CartProduct({ id, name, imageURL, quantity, price }) {
                   </IconButton>
                 ),
               }}
-              sx={{ width: "120px", pointerEvents: "none" }}
+              sx={{ width: "120px", alignSelf: "flex-end" }}
               inputProps={{ style: { textAlign: "center" } }}
               value={quantity}
+              disabled
               size="small"
             ></TextField>
-          </Grid>
-
-          <Grid item xs={3}>
-            <Typography variant="body1">{formatPrice(price)}</Typography>
-          </Grid>
-          <Grid item xs={2} display="flex" justifyContent="end">
-            <IconButton onClick={() => removeFromCart(id)}>
-              <ClearIcon></ClearIcon>
-            </IconButton>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+          </div>
+        </Stack>
+      </Stack>
+    </Paper>
   );
 }
