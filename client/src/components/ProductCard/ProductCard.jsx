@@ -9,12 +9,14 @@ import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
+import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { tmpFood } from "../../data";
-import { Grid } from "@mui/material";
+import { Grid, Tooltip } from "@mui/material";
+import { useShoppingCart } from "../../context/ShoppingCartContext";
+import { formatPrice } from "../../utils/formatPrice";
+import { Link } from "react-router-dom";
 
 const storeProducts = tmpFood;
 
@@ -31,83 +33,83 @@ const ExpandMore = styled((props) => {
 
 const ProductCard = () => {
   const [expanded, setExpanded] = React.useState(false);
+  const { addToCart, openCart } = useShoppingCart();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   return (
-    <>
-      <Grid
-        container
-        spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 4, sm: 8, md: 12 }}
-      >
-        {storeProducts.map((product, index) => (
-          <Grid item xs={2} sm={4} md={4} key={index}>
-            <Card sx={{ maxWidth: 290, minWidth: 250 }}>
+    <Grid container spacing={1}>
+      {storeProducts.map((product, index) => (
+        <Grid item xs={"auto"} key={product._id}>
+          <Card raised sx={{ width: 270, padding: "1em" }}>
+            <Link to={`/product/${product._id}`}>
               <CardMedia
                 component="img"
-                height="110"
-                image={product.image}
+                height="250px"
+                image={product.images[0]}
                 alt={product.Title}
+                sx={{
+                  cursor: "pointer",
+                  objectFit: "contain",
+                }}
               />
-              <CardHeader
-                action={
-                  <IconButton aria-label="settings">
-                    <MoreVertIcon />
-                  </IconButton>
-                }
-                title={product.Title}
-                subheader={product.Description}
-              />
-
+            </Link>
+            <CardContent>
+              <Typography
+                variant="body1"
+                color="text.primary"
+                fontWeight={"bold"}
+                textAlign="start"
+              >
+                {product.name}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                fontWeight={"bold"}
+                textAlign="start"
+              >
+                {formatPrice(product.price)}
+              </Typography>
+            </CardContent>
+            <CardActions disableSpacing>
+              <Tooltip title="Add to cart">
+                <IconButton
+                  aria-label="add to cart"
+                  onClick={() => {
+                    addToCart(product);
+                    openCart();
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+              <ExpandMore
+                expand={expanded}
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+                aria-label="show more"
+              >
+                <ExpandMoreIcon />
+              </ExpandMore>
+            </CardActions>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
               <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  Food Type: {product.Type}
-                </Typography>
-                <div className="seperator"></div>
-                <Typography variant="body2" color="text.secondary">
-                  Price: {product.Price} &#x2022; Delivery:{" "}
-                  {product.DeliveryFee}
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  textAlign={"start"}
+                >
+                  {product.description}
                 </Typography>
               </CardContent>
-              <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                  <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="share">
-                  <ShareIcon />
-                </IconButton>
-                <ExpandMore
-                  expand={expanded}
-                  onClick={handleExpandClick}
-                  aria-expanded={expanded}
-                  aria-label="show more"
-                >
-                  <ExpandMoreIcon />
-                </ExpandMore>
-              </CardActions>
-              <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                  <Typography paragraph>
-                    Time to deliver: {product.TimeToDeliver}
-                  </Typography>
-                  <Typography paragraph>
-                    Rating: {product.ProductRating} &#9733;
-                  </Typography>
-                  {product.IsProductPopular && (
-                    <Typography paragraph>
-                      This product is popular! &#127942;
-                    </Typography>
-                  )}
-                </CardContent>
-              </Collapse>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </>
+            </Collapse>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 
