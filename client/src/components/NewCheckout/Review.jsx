@@ -6,9 +6,12 @@ import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
 import CheckoutContext from "../../context/checkoutContext";
 import omit from "lodash/omit";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
-export default function Review() {
+export default function Review(props) {
   const checkoutCtx = useContext(CheckoutContext);
+  const { isNextAvailable, setIsNextAvailable, handleNext, handleBack } = props;
   const sumOrder = "$34.06"; // temp of course
 
   const last4digits = checkoutCtx.tmpPayment.cardNumber.substr(-4);
@@ -71,6 +74,20 @@ export default function Review() {
           </Grid>
         </Grid>
       </Grid>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+          Back
+        </Button>
+
+        <Button
+          variant="contained"
+          onClick={handleNext}
+          sx={{ mt: 3, ml: 1 }}
+          disabled={!isNextAvailable}
+        >
+          Place order
+        </Button>
+      </Box>
     </React.Fragment>
   );
 }

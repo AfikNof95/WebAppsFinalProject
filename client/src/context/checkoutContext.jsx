@@ -47,7 +47,7 @@ export const CheckoutContextProvider = (props) => {
     cardName: "omer kaplan",
     cardNumber: "5555111156149999",
     expDate: "01/27",
-    cvv: 111,
+    cvv: "111",
   });
   const tmpProducts = [
     {

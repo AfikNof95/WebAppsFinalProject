@@ -1,17 +1,41 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import CheckoutContext from "../../context/checkoutContext";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
-// Add validations, grey the next if not valid
-
-export default function AddressForm() {
+export default function AddressForm(props) {
   const checkoutCntxt = useContext(CheckoutContext);
+  const { isNextAvailable, setIsNextAvailable, handleNext } = props;
+
+  const checkFormValidation = () => {
+    // can also use formik
+    for (let contactInfoField of Object.keys(checkoutCntxt.tmpUserInfo)) {
+      if (
+        checkoutCntxt.tmpUserInfo[contactInfoField].trim() === "" &&
+        !(contactInfoField == "address2")
+      ) {
+        setIsNextAvailable(false);
+        return;
+      }
+    }
+    setIsNextAvailable(true);
+    return;
+  };
+
+  useEffect(() => {
+    checkFormValidation();
+  }, []);
+
+  useEffect(() => {
+    checkFormValidation();
+  }, [checkoutCntxt.tmpUserInfo]);
 
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" sx={{ marginBottom: "1.5em" }} gutterBottom>
         Shipping address
       </Typography>
       <Grid container spacing={3}>
@@ -157,6 +181,67 @@ export default function AddressForm() {
           />
         </Grid>
       </Grid>
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          variant="contained"
+          onClick={handleNext}
+          sx={{ mt: 3, ml: 1 }}
+          disabled={!isNextAvailable}
+        >
+          Next
+        </Button>
+      </Box>
     </React.Fragment>
   );
 }
+
+
+// import React from "react";
+// import { Formik, Form, Field, ErrorMessage } from "formik";
+
+// function MyForm() {
+//   return (
+//     <Formik
+//       initialValues={{ name: "", email: "", password: "" }}
+//       validate={(values) => {
+//         const errors = {};
+//         if (!values.name) {
+//           errors.name = "Name is required";
+//         }
+//         if (!values.email) {
+//           errors.email = "Email is required";
+//         } else if (
+//           !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+//         ) {
+//           errors.email = "Invalid email address";
+//         }
+//         if (!values.password) {
+//           errors.password = "Password is required";
+//         } else if (values.password.length < 8) {
+//           errors.password = "Password must be at least 8 characters";
+//         }
+//         return errors;
+//       }}
+//       onSubmit={(values, { setSubmitting }) => {
+//         setTimeout(() => {
+//           alert(JSON.stringify(values, null, 2));
+//           setSubmitting(false);
+//         }, 400);
+//       }}
+//     >
+//       {({ isSubmitting }) => (
+//         <Form>
+//           <Field type="text" name="name" placeholder="Name" />
+//           <ErrorMessage name="name" component="div" />
+//           <Field type="email" name="email" placeholder="Email" />
+//           <ErrorMessage name="email" component="div" />
+//           <Field type="password" name="password" placeholder="Password" />
+//           <ErrorMessage name="password" component="div" />
+//           <button type="submit" disabled={isSubmitting}>
+//             Submit
+//           </button>
+//         </Form>
+//       )}
+//     </Formik>
+//   );
+// }

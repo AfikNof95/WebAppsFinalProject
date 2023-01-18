@@ -1,56 +1,55 @@
 import React, { useState, useEffect } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
 
-// Add Validations
-
 const steps = ["Shipping address", "Payment details", "Review your order"];
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <PaymentForm />;
-    case 2:
-      return <Review />;
-    default:
-      throw new Error("Unknown step");
-  }
-}
-
 const theme = createTheme();
 
 export default function NewCheckout() {
   const [activeStep, setActiveStep] = useState(0);
   const [isNextAvailable, setIsNextAvailable] = useState(true);
-  const [contactInfo, setContactInfo] = useState({
-    fName: "",
-    lName: "",
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    zip: "",
-    country: "",
-  });
-  const [userPayment, setUserPayment] = useState({
-    cardName: "",
-    cardNumber: "",
-    expDate: "",
-    cvv: null,
-  });
+
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <AddressForm
+            isNextAvailable={isNextAvailable}
+            setIsNextAvailable={setIsNextAvailable}
+            handleNext={handleNext}
+          />
+        );
+      case 1:
+        return (
+          <PaymentForm
+            isNextAvailable={isNextAvailable}
+            setIsNextAvailable={setIsNextAvailable}
+            handleNext={handleNext}
+            handleBack={handleBack}
+          />
+        );
+      case 2:
+        return (
+          <Review
+            isNextAvailable={isNextAvailable}
+            setIsNextAvailable={setIsNextAvailable}
+            handleNext={handleNext}
+            handleBack={handleBack}
+          />
+        );
+      default:
+        throw new Error("Unknown step");
+    }
+  }
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -59,25 +58,6 @@ export default function NewCheckout() {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
-
-  const checkFormValidation = () => {
-    // can also use value.filled ?
-    // for (let contactInfoField of Object.keys(contactInfo)) {
-    //   if (
-    //     contactInfo[contactInfoField].trim() === "" &&
-    //     !(contactInfoField == "address2")
-    //   ) {
-    //     setIsNextAvailable(false);
-    //     return;
-    //   }
-    // }
-    // setIsNextAvailable(true);
-    return;
-  };
-
-  useEffect(() => {
-    checkFormValidation();
-  }, [contactInfo, userPayment]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -109,26 +89,7 @@ export default function NewCheckout() {
               </Typography>
             </React.Fragment>
           ) : (
-            <React.Fragment>
-              {getStepContent(activeStep)}
-              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                {activeStep !== 0 && (
-                  <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                    Back
-                  </Button>
-                )}
-
-                {/* Should be disable when not validated */}
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
-                  disabled={activeStep < steps.length - 1 && !isNextAvailable}
-                >
-                  {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                </Button>
-              </Box>
-            </React.Fragment>
+            <React.Fragment>{getStepContent(activeStep)}</React.Fragment>
           )}
         </Paper>
       </Container>
