@@ -12,15 +12,16 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 import MoreIcon from "@mui/icons-material/MoreVert";
 import LoginIcon from "@mui/icons-material/Login";
 import Button from "@mui/material/Button";
-import { Link as RouterLink } from "react-router-dom";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
-// import { useContext } from "react";
+
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import AuthContext from '../../store/auth-context';
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,13 +63,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navbar() {
+  const authCtx = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const { openCart, getCartQuantity } = useShoppingCart();
-
-  // const authContext = useContext(AuthContext);
-  // const isLogged = authContext.isLoggedin;
-  const isLogged = true; // For Testing Only!!!!
+  const isLogged = authCtx.isLoggedin; 
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -149,14 +148,12 @@ function Navbar() {
           aria-haspopup="true"
           color="inherit"
         >
+          
           <AccountCircle />
         </IconButton>
         <p>Profile</p>
-      </MenuItem>
-      <MenuItem>
-        <p>Signup</p>
-      </MenuItem>
-      <MenuItem>
+        </MenuItem>
+        <MenuItem>
         <IconButton size="large" aria-label="Login" color="inherit">
           <LoginIcon />
         </IconButton>
@@ -185,7 +182,7 @@ function Navbar() {
             color="inherit"
           >
             <Button
-              component={RouterLink}
+              component={Link}
               to={"/"}
               style={{ color: "#ffffff" }}
             >
@@ -230,12 +227,16 @@ function Navbar() {
               </>
             ) : (
               <>
-                <Button component={RouterLink} to={"/Signup"} color="inherit">
-                  Sign Up
-                </Button>
-                <Button component={RouterLink} to={"/Login"} color="inherit">
-                  Log In
-                </Button>
+              { !isLogged && (
+                <Link to="/login">
+                <Button color="inherit">Log In</Button>
+                </Link>
+              )}
+              { isLogged && (
+                <Link to="/profile">
+                <Button color="inherit">My Profile</Button>
+                </Link>
+              )}
               </>
             )}
           </Box>

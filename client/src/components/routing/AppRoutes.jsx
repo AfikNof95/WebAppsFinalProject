@@ -3,16 +3,13 @@ import CartPage from "../../pages/Cart/Cart";
 import Homepage from "../Homepage/Homepage";
 import NotFound from "../NotFound/NotFound";
 import NewCheckout from "../NewCheckout/NewCheckout";
+import AuthForm from "../Auth/Login"
 
 const appRoutes = [
   { path: "/", element: <Homepage />, exact: true },
   {
-    path: "/auth",
-    element: <div style={{ paddingTop: "100px" }}>To Do Auth</div>,
-  },
-  {
     path: "/login",
-    element: <div style={{ paddingTop: "100px" }}>To Do login</div>,
+    element: <AuthForm/>
   },
   {
     path: "/checkout",

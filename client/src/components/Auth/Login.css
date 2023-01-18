@@ -1,0 +1,59 @@
+#outlined-input-pass 
+{
+  width: 15cm;
+}
+
+#outlined-input-email 
+{
+  width: 15cm;
+}
+
+span {
+  margin: 0.3cm;
+}
+
+#pass.form-control 
+{
+  max-width: 35rem;
+  text-align: center;
+  margin-left: 29.5%;
+}
+
+#email.form-control 
+{
+  max-width: 35rem;
+  text-align: center;
+  margin-left: 29.5%;
+  margin-top: 1cm;
+}
+
+#forPass
+{
+  margin-left: 3cm;
+  /* padding: 0.2cm;
+  margin-bottom: 3cm; */
+}
+
+#signIn
+{
+  width: 37rem;
+  /* text-align: center; */
+  /* padding: 0.15rem; */
+}  
+
+h1 
+{
+  font-style:oblique;
+  text-align: center;
+  /* padding-top: 6%; */
+  text-align: center;
+  color: black;
+  font-size: 2cm;
+  margin-bottom: 0;
+}
+
+#google 
+{
+  font-size: small;
+  max-height: 30px;
+}
