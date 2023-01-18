@@ -1,6 +1,8 @@
+import Checkout from "../Checkout/Checkout";
 import CartPage from "../../pages/Cart/Cart";
 import Homepage from "../Homepage/Homepage";
 import NotFound from "../NotFound/NotFound";
+import NewCheckout from "../NewCheckout/NewCheckout";
 
 const appRoutes = [
   { path: "/", element: <Homepage />, exact: true },
@@ -11,6 +13,14 @@ const appRoutes = [
   {
     path: "/login",
     element: <div style={{ paddingTop: "100px" }}>To Do login</div>,
+  },
+  {
+    path: "/checkout",
+    element: <Checkout />,
+  },
+  {
+    path: "/NewCheckout",
+    element: <NewCheckout />,
   },
   {
     path: "/cart",
