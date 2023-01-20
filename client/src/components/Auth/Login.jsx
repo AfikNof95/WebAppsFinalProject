@@ -17,7 +17,7 @@ const AuthForm = () => {
   const authCtx = useContext (AuthContext); 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
@@ -113,12 +113,8 @@ const AuthForm = () => {
         />
         </span>
         <Grid item xs>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
           <Link id="forPass" onClick={passwordReset} href="#" variant="body2">
-            Forgot password?
+          {isLogin ? 'Forgot password?' : ''}
           </Link>
         </Grid>
         <Button type="submit" variant="contained" id="signIn" endIcon={<SendIcon />}>
