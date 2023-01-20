@@ -8,16 +8,19 @@ import GoogleIcon from '@mui/icons-material/Google';
 import SendIcon from '@mui/icons-material/Send';
 import { auth, provider } from './firebaseConfig'
 import { signInWithPopup, sendPasswordResetEmail  } from "firebase/auth";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 
 const AuthForm = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef(); 
+  const emailPassReset = useRef(); 
   const navigate = useNavigate();
   const authCtx = useContext (AuthContext); 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [isShownModal, setIsShownModal] = useState(false)
+
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
@@ -72,12 +75,26 @@ const AuthForm = () => {
   }
 
   const passwordReset = async () => {
-    const email = prompt("Please enter you email: ")
-    await sendPasswordResetEmail(auth, email)
-    alert("Password reset sent to " + email)
+    // const email = prompt("Please enter you email: ")
+    const email = emailPassReset.current.value;
+    try {
+      await sendPasswordResetEmail(auth, email)
+      setIsShownModal(false);
+      alert("Password reset sent to " + email)
+    } catch(error) {
+      alert("Password reset failed " + error)
+    }
+
   }
 
-  
+  const showModal = () => {
+    setIsShownModal(true);
+  };
+
+  const closeModal = () => {
+    setIsShownModal(false);
+  };
+
   return (
     <section className={classes.auth}>
       <form onSubmit={submitHandler} id="loginForm">
@@ -113,10 +130,32 @@ const AuthForm = () => {
         />
         </span>
         <Grid item xs>
-          <Link id="forPass" onClick={passwordReset} href="#" variant="body2">
+          <Link id="forPass" onClick={showModal} href="#" variant="body2">
           {isLogin ? 'Forgot password?' : ''}
           </Link>
-        </Grid>
+          </Grid>
+            <Dialog open={isShownModal} onClose={closeModal}>
+            <DialogTitle>Password Reset</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter your email for reset password email:
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Email Address"
+                type="email"
+                fullWidth
+                variant="standard"
+                inputRef = {emailPassReset}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeModal}>Cancel</Button>
+              <Button onClick={passwordReset}>Send</Button>
+            </DialogActions>
+          </Dialog>
         <Button type="submit" variant="contained" id="signIn" endIcon={<SendIcon />}>
           {isLogin? 'LOG IN': 'SIGN IN'}
         </Button>
