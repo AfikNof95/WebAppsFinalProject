@@ -2,8 +2,7 @@ import { useState , useRef, useContext } from 'react';
 import AuthContext from '../../store/auth-context';
 import { useNavigate } from 'react-router-dom';
 import classes from "./Login.css";
-import { Button, Grid , TextField, Link, FormControlLabel, Checkbox, CssBaseline, Box, 
-  Container } from '@material-ui/core';
+import { Button, Grid , TextField, Link, CssBaseline, Box, Container } from '@material-ui/core';
 import GoogleIcon from '@mui/icons-material/Google';
 import SendIcon from '@mui/icons-material/Send';
 import { auth, provider } from './firebaseConfig'
@@ -51,8 +50,8 @@ const AuthForm = () => {
       }).then ( res => {
         setIsLoading(false);
         if(res.ok) {
-        return res.json();
-        }else{
+          return res.json();
+        } else {
           return res.json ().then((data) => {
           let errorMessage = 'Auth failed';
         
@@ -61,7 +60,7 @@ const AuthForm = () => {
         }
       }).then( (data) => {
         console.log(data);
-        authCtx.login (data.idToken);
+        authCtx.login(data.idToken);
         navigate('/');
       }).catch (err => {
         alert (err.message);
@@ -69,8 +68,12 @@ const AuthForm = () => {
   }
 
   const signInWithGoogle = () => {
+    setIsLoading(true);
     signInWithPopup(auth, provider).then((data) => {
-      localStorage.clear();
+      authCtx.login(data.user.uid);
+      navigate('/');
+      setIsLoading(false);
+      // localStorage.clear();
     })
   }
 
