@@ -12,26 +12,14 @@ span {
   margin: 0.3cm;
 }
 
-#pass.form-control 
-{
-  max-width: 35rem;
-  text-align: center;
-  margin-left: 29.5%;
-}
-
-#email.form-control 
-{
-  max-width: 35rem;
-  text-align: center;
-  margin-left: 29.5%;
-  margin-top: 1cm;
-}
-
 #forPass
 {
-  margin-left: 3cm;
-  /* padding: 0.2cm;
-  margin-bottom: 3cm; */
+  position: relative;
+  margin-left: 7.5cm;
+  margin-bottom: 1cm;
+  margin-top: 2cm;
+  height: 30cm;
+  padding-bottom: 1%;
 }
 
 #signIn
