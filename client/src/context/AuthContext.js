@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext, useEffect } from "react";
+import React, { useState, useContext, createContext } from "react";
 import firebaseAPI from "./firebase";
 const AuthContext = createContext({
   signUp: (email, password) => {},
@@ -11,7 +11,7 @@ export function useAuth() {
 }
 
 export const AuthContextProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
 
   function signUp(email, password) {
     return firebaseAPI.signUpWithEmailAndPassword(email, password);
@@ -19,6 +19,7 @@ export const AuthContextProvider = ({ children }) => {
   async function signIn(email, password) {
     const user = await firebaseAPI.signInWithEmailAndPassword(email, password);
     setCurrentUser(user.data);
+    return user.data;
   }
 
   function getUserToken() {
@@ -28,13 +29,6 @@ export const AuthContextProvider = ({ children }) => {
   function isUserSignedIn() {
     return currentUser != null;
   }
-
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     setCurrentUser(user);
-  //   });
-  //   return unsubscribe;
-  // }, []);
 
   const value = {
     currentUser,
