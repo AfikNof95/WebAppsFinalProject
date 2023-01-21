@@ -128,11 +128,15 @@ export default function PaymentForm(props) {
         <Grid item xs={12} md={6}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              label="Exp Date Option"
+              required
+              id="expDate"
+              name="expDate"
+              label="Expiration Date Option"
               value={expDate}
               onChange={(newexpDate) => {
                 setExpDate(newexpDate);
               }}
+              // Damn that doesnot change
               renderInput={(params) => <TextField {...params} />}
             />
           </LocalizationProvider>

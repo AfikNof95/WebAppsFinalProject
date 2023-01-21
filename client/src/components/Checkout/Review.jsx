@@ -4,10 +4,10 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid";
-import CheckoutContext from "../../context/checkoutContext";
-import omit from "lodash/omit";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import omit from "lodash/omit";
+import CheckoutContext from "../../context/checkoutContext";
 
 export default function Review(props) {
   const checkoutCtx = useContext(CheckoutContext);

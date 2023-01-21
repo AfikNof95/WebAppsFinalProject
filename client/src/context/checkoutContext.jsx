@@ -46,7 +46,7 @@ export const CheckoutContextProvider = (props) => {
   const [tmpPayment, setTmpPayment] = useState({
     cardName: "omer kaplan",
     cardNumber: "5555111156149999",
-    expDate: "01/27",
+    expDate: "",
     cvv: "111",
   });
   const tmpProducts = [
