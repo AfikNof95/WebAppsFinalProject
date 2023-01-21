@@ -13,6 +13,7 @@ import MinusIcon from "@mui/icons-material/Remove";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import { Box } from "@mui/system";
 import { formatPrice } from "../../utils/formatPrice";
+import { Link } from "react-router-dom";
 
 export function SideCartProduct({ id, name, imageURL, quantity, price }) {
   const { removeFromCart, increaseProductQuantity, decreaseProductQuantity } =
@@ -30,21 +31,27 @@ export function SideCartProduct({ id, name, imageURL, quantity, price }) {
       <Stack direction={"row"} gap={1} display="flex" padding={1}>
         <img
           src={imageURL}
-          style={{ width: "125px", height: "125px", objectFit: "contain" }}
+          style={{ width: "80px", height: "80px", objectFit: "contain" }}
         ></img>
 
         <Stack direction={"column"} gap={1} display="flex">
           <Box
             display={"flex"}
-            flexDirection="row"
+            flexDirection="column"
             flexWrap={"wrap"}
             justifyContent={"space-between"}
             marginTop={1}
           >
             <Typography
+              component={Link}
+              to={`/product/${id}`}
+              display={"block"}
               color="text.black"
               fontWeight={"bold"}
-              flexBasis={"100%"}
+              maxWidth={150}
+              textOverflow={"ellipsis"}
+              noWrap
+              sx={{ textDecoration: "none", color: "black" }}
             >
               {name}
             </Typography>

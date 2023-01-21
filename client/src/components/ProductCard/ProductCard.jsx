@@ -10,13 +10,10 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { tmpFood } from "../../data";
-import { Grid, Tooltip } from "@mui/material";
+import { Grid, List, ListItem, Tooltip } from "@mui/material";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import { formatPrice } from "../../utils/formatPrice";
 import { Link } from "react-router-dom";
-
-const storeProducts = tmpFood;
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -29,7 +26,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const ProductCard = () => {
+const ProductCard = ({ product }) => {
   const [expanded, setExpanded] = React.useState(false);
   const { addToCart, openCart } = useShoppingCart();
 
@@ -38,75 +35,82 @@ const ProductCard = () => {
   };
 
   return (
-    <Grid container spacing={1}>
-      {storeProducts.map((product, index) => (
-        <Grid item xs={"auto"} key={product._id}>
-          <Card raised sx={{ width: 270, padding: "1em" }}>
-            <Link to={`/product/${product._id}`}>
-              <CardMedia
-                component="img"
-                height="250px"
-                image={product.images[0]}
-                alt={product.Title}
-                sx={{
-                  cursor: "pointer",
-                  objectFit: "contain",
-                }}
-              />
+    <Grid item xs={6} sm={3} md={2} lg={2} xl={2}>
+      <Card variant="outlined" sx={{ padding: "1em", borderRadius: 0 }}>
+        <Link to={`/product/${product._id}`}>
+          <CardMedia
+            component="img"
+            height="150px"
+            image={product.images[0]}
+            alt={product.Title}
+            sx={{
+              cursor: "pointer",
+              objectFit: "contain",
+            }}
+          />
+        </Link>
+        <CardContent sx={{ textOverflow: "ellipsis" }}>
+          <Typography
+            variant="body1"
+            color="text.primary"
+            fontWeight={"bold"}
+            textAlign="start"
+            textOverflow={"ellipsis"}
+            noWrap
+            sx={{ wordBreak: "break-word" }}
+          >
+            <Link
+              to={`product/${product._id}`}
+              className="product-link product-name"
+            >
+              {product.name}
             </Link>
-            <CardContent>
-              <Typography
-                variant="body1"
-                color="text.primary"
-                fontWeight={"bold"}
-                textAlign="start"
-              >
-                {product.name}
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                fontWeight={"bold"}
-                textAlign="start"
-              >
-                {formatPrice(product.price)}
-              </Typography>
-            </CardContent>
-            <CardActions disableSpacing>
-              <Tooltip title="Add to cart">
-                <IconButton
-                  aria-label="add to cart"
-                  onClick={() => {
-                    addToCart(product);
-                    openCart();
-                  }}
-                >
-                  <AddIcon />
-                </IconButton>
-              </Tooltip>
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
-              >
-                <ExpandMoreIcon />
-              </ExpandMore>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <CardContent>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  textAlign={"start"}
-                >
-                  {product.description}
-                </Typography>
-              </CardContent>
-            </Collapse>
-          </Card>
-        </Grid>
-      ))}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            fontWeight={"bold"}
+            textAlign="start"
+          >
+            {formatPrice(product.price)}
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <Tooltip title="Add to cart">
+            <IconButton
+              aria-label="add to cart"
+              onClick={() => {
+                addToCart(product);
+                openCart();
+              }}
+            >
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+          <ExpandMore
+            expand={expanded}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </ExpandMore>
+        </CardActions>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent sx={{ padding: 0 }}>
+            <Typography
+              component={Link}
+              to={`product/${product._id}`}
+              variant="caption"
+              color="text.secondary"
+              textAlign={"start"}
+              className="product-description product-link"
+            >
+              {product.name}
+            </Typography>
+          </CardContent>
+        </Collapse>
+      </Card>
     </Grid>
   );
 };

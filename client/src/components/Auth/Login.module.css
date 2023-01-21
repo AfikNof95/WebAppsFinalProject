@@ -8,7 +8,7 @@
   width: 15cm;
 }
 
-span {
+span.login-span {
   margin: 0.3cm;
 }
 
@@ -29,7 +29,7 @@ span {
   /* padding: 0.15rem; */
 }  
 
-h1 
+h1.login-h1 
 {
   font-style:oblique;
   text-align: center;
