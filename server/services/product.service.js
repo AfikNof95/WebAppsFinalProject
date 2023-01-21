@@ -2,8 +2,15 @@ const ProductModel = require("../models/product.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const ProductService = {
-  async getAllProducts() {
-    return await ProductModel.find();
+  async getAllProducts(page) {
+    const pages = Math.ceil((await ProductModel.count()) / 24);
+    return {
+      pages,
+      products: await ProductModel.find()
+        .skip((page - 1) * 24)
+        .limit(24)
+        .exec(),
+    };
   },
   async getProduct(productId) {
     return await ProductModel.find({ _id: new ObjectId(productId) });
@@ -36,26 +43,71 @@ const ProductService = {
   },
   async getAllProductsByFilters(filters) {
     const queryFilters = {};
-    if (filters.minPrice) {
-      queryFilters["$and"] = [
-        { price: { $lte: filters.maxPrice } },
-        { price: { $gte: filters.minPrice } },
-      ];
-    }
-    if (filters.freeText) {
-      queryFilters["$or"] = [
-        { name: { $regex: "^.*" + filters.freeText, $options: "i" } },
-        { description: { $regex: "^.*" + filters.freeText, $options: "i" } },
-      ];
+    let sortBy = {name:1};
+
+    for (let filter of Object.keys(filters)) {
+      switch (filter) {
+        case "categoryId":
+          queryFilters.category = filters.categoryId;
+          break;
+        case "minPrice":
+          if (!queryFilters["$and"]) {
+            queryFilters["$and"] = [];
+          }
+          queryFilters["$and"].push(
+            { price: { $lte: filters.maxPrice } },
+            { price: { $gte: filters.minPrice } }
+          );
+          break;
+        case "freeText":
+          if (!queryFilters["$or"]) {
+            queryFilters["$or"] = [];
+          }
+          queryFilters["$or"].push(
+            { name: { $regex: "^.*" + filters.freeText, $options: "i" } },
+            {
+              description: { $regex: "^.*" + filters.freeText, $options: "i" },
+            }
+          );
+          break;
+        case "sort":
+          sortBy = JSON.parse(filters.sort);
+          break;
+        case "filterOutOfStock":
+          if (!queryFilters["$and"]) {
+            queryFilters["$and"] = [];
+          }
+          queryFilters["$and"].push({ quantity: { $gte: 1 } });
+          break;
+      }
     }
 
-    return await Product.find({
-      active: true,
+    const pages = Math.ceil(
+      (await ProductModel.count({ isActive: true, ...queryFilters })) / 24
+    );
+
+    let minPrice = await ProductModel.findOne({}).sort({ price: 1 }).exec();
+    let maxPrice = await ProductModel.findOne({}).sort({ price: -1 }).exec();
+
+    minPrice = Math.floor(minPrice.price);
+    maxPrice = Math.ceil(maxPrice.price);
+
+    const products = await ProductModel.find({
+      isActive: true,
       ...queryFilters,
     })
-      .sort({ price: filters.sortByPrice })
+      .sort(sortBy)
+      .populate("category")
+      .skip((filters.pageNumber ? filters.pageNumber - 1 : 0) * 24)
+      .limit(24)
       .lean()
       .exec();
+
+    return {
+      products,
+      pages,
+      priceRange: [minPrice, maxPrice],
+    };
   },
 };
 

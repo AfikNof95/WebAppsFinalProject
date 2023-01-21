@@ -26,21 +26,6 @@ app.use(logger("combined"));
 app.use("/", require("./routes/index"));
 app.use(errorHandler);
 
-const connectToMongo = async () => {
-  // Try to connect mongo
-  try {
-    console.log("\nTrying to connect to mongoDB");
-    await mongoose.connect(process.env.MONGOURI);
-    // mongoose.connect(process.env.MONGOURI, (err) => {
-    //   if (err) throw err;
-    // });
-    console.log("MongoDB connected successfully");
-  } catch (ex) {
-    console.error(ex.message);
-    console.log(ex.stack);
-  }
-};
-
 const runScraper = async () => {
   try {
     console.log("Scraping Amazon: ");
@@ -52,9 +37,20 @@ const runScraper = async () => {
 };
 
 const startServer = async () => {
-  await connectToMongo();
+  try {
+    console.log("\nTrying to connect to mongoDB");
+    await mongoose.connect(process.env.MONGOURI);
+    console.log("MongoDB connected successfully");
+  } catch (ex) {
+    console.error(ex.message);
+    console.log(ex.stack);
+  }
 
-  await runScraper();
+  if (process.argv.indexOf("run-scraper=true") !== -1) {
+    await runScraper();
+  }
+
+  app.use("/", require("./routes/index"));
 
   // catch 404 and forward to error handler
   app.use(function (req, res, next) {

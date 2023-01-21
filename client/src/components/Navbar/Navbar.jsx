@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Navbar.css";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -17,15 +17,13 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import LoginIcon from "@mui/icons-material/Login";
 import Button from "@mui/material/Button";
+import { Link as RouterLink, useSearchParams } from "react-router-dom";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
-
-import { useContext } from "react";
-import { Link } from "react-router-dom";
-import AuthContext from '../../store/auth-context';
+import { useAuth } from "../../context/AuthContext";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: 50,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
@@ -35,7 +33,7 @@ const Search = styled("div")(({ theme }) => ({
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
-    width: "auto",
+    width: "400px",
   },
 }));
 
@@ -57,17 +55,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "20ch",
+      width: "40ch",
     },
   },
 }));
 
 function Navbar() {
-  const authCtx = useContext(AuthContext);
+  const { isUserSignedIn } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchInputValue, setSearchInputValue] = React.useState(() => {
+    return searchParams.get("freeText") || "";
+  });
   const { openCart, getCartQuantity } = useShoppingCart();
-  const isLogged = authCtx.isLoggedin; 
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -88,6 +89,25 @@ function Navbar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const handleNavBarSearch = (event) => {
+    if (event.keyCode === 13) {
+      let key = searchParams.keys().next();
+      while (key.done === false) {
+        searchParams.delete(key.value);
+        key = searchParams.keys().next();
+      }
+
+      searchParams.set("freeText", event.currentTarget.value);
+      setSearchParams(searchParams);
+    }
+  };
+
+  useEffect(() => {
+    if (searchParams.get("freeText")) {
+      setSearchInputValue(searchParams.get("freeText"));
+    }
+  }, [searchParams]);
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -134,7 +154,7 @@ function Navbar() {
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
+          <Badge badgeContent={0} color="error">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
@@ -152,8 +172,8 @@ function Navbar() {
           <AccountCircle />
         </IconButton>
         <p>Profile</p>
-        </MenuItem>
-        <MenuItem>
+      </MenuItem>
+      <MenuItem>
         <IconButton size="large" aria-label="Login" color="inherit">
           <LoginIcon />
         </IconButton>
@@ -165,11 +185,13 @@ function Navbar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
+        elevation={3}
         position="fixed"
         sx={{
-          backgroundImage: "linear-gradient(15deg, #13547a 0%, #80d0c7 100%);",
-          // backgroundColor: "white",
-          // color: "black",
+          // backgroundImage: "linear-gradient(15deg, #13547a 0%, #80d0c7 100%);",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: "#24344c",
+          color: "white",
         }}
       >
         <Toolbar>
@@ -182,7 +204,7 @@ function Navbar() {
             color="inherit"
           >
             <Button
-              component={Link}
+              component={RouterLink}
               to={"/"}
               style={{ color: "#ffffff" }}
             >
@@ -197,17 +219,19 @@ function Navbar() {
             <StyledInputBase
               placeholder="Search Products..."
               inputProps={{ "aria-label": "search" }}
+              defaultValue={searchInputValue}
+              onKeyDown={handleNavBarSearch}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {isLogged ? (
+            {isUserSignedIn() ? (
               <>
                 <IconButton
                   size="large"
                   aria-label="show 17 new notifications"
                   color="inherit"
-                  onClick={() => openCart()}
+                  onClick={() => getCartQuantity() > 0 && openCart()}
                 >
                   <Badge badgeContent={getCartQuantity()} color="error">
                     <ShoppingCartIcon />
@@ -227,16 +251,31 @@ function Navbar() {
               </>
             ) : (
               <>
-              { !isLogged && (
-                <Link to="/login">
-                <Button color="inherit">Log In</Button>
-                </Link>
-              )}
-              { isLogged && (
-                <Link to="/profile">
-                <Button color="inherit">My Profile</Button>
-                </Link>
-              )}
+                {(() => {
+                  if (!isUserSignedIn()) {
+                    return (
+                      <>
+                        <Button
+                          component={RouterLink}
+                          to={"/login"}
+                          color="inherit"
+                        >
+                          Log In
+                        </Button>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <Button
+                        component={RouterLink}
+                        to="/profile"
+                        color="inherit"
+                      >
+                        My Profile
+                      </Button>
+                    );
+                  }
+                })()}
               </>
             )}
           </Box>

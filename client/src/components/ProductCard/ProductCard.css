@@ -1,4 +1,23 @@
 .seperator {
-    border-bottom: 1px dashed rgb(200, 186, 186);
-    margin: 5px 0;
+  border-bottom: 1px dashed rgb(200, 186, 186);
+  margin: 5px 0;
+}
+
+.product-link {
+  text-decoration: none;
+  color: rgb(78, 78, 78);
+}
+
+.product-link:visited {
+  color: rgb(78, 78, 78);
+}
+
+.product-name:hover {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.product-description:hover {
+  text-decoration: underline;
 }
