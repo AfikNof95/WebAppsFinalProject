@@ -42,6 +42,9 @@ const firebaseAPI = {
       }
     );
   },
+  async refreshUserToken(){
+    
+  }
 };
 
 export default firebaseAPI;

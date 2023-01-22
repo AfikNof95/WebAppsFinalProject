@@ -1,9 +1,12 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext, useEffect } from "react";
 import firebaseAPI from "./firebase";
+import { useCookies } from "react-cookie";
 const AuthContext = createContext({
   signUp: (email, password) => {},
   signIn: (email, password) => {},
   isUserSignedIn: () => {},
+  getUser: () => {},
+  currentUser: null,
 });
 
 export function useAuth() {
@@ -11,14 +14,23 @@ export function useAuth() {
 }
 
 export const AuthContextProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [cookies, setCookie] = useCookies(["user-session"]);
 
-  function signUp(email, password) {
-    return firebaseAPI.signUpWithEmailAndPassword(email, password);
+  debugger;
+  const [currentUser, setCurrentUser] = useState(cookies["user-session"]);
+
+  async function signUp(email, password) {
+    const response = await firebaseAPI.signUpWithEmailAndPassword(
+      email,
+      password
+    );
+    setCookie("user-session", response.data);
+    return response.data;
   }
   async function signIn(email, password) {
     const user = await firebaseAPI.signInWithEmailAndPassword(email, password);
     setCurrentUser(user.data);
+    setCookie("user-session", user.data);
     return user.data;
   }
 
@@ -30,12 +42,17 @@ export const AuthContextProvider = ({ children }) => {
     return currentUser != null;
   }
 
+  function getUser() {
+    return currentUser;
+  }
+
   const value = {
     currentUser,
     isUserSignedIn,
     signUp,
     signIn,
     getUserToken,
+    getUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

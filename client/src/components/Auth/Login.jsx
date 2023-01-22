@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ERROR_MESSAGES } from "./enums";
@@ -40,7 +40,7 @@ const AuthForm = () => {
   const passwordInputRef = useRef();
   const emailPassReset = useRef();
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, isUserSignedIn } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isShownModal, setIsShownModal] = useState(false);
@@ -62,12 +62,12 @@ const AuthForm = () => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
     setIsLoading(true);
-    let response;
+
     try {
       if (isLogin) {
-        response = await signIn(enteredEmail, enteredPassword);
+        await signIn(enteredEmail, enteredPassword);
       } else {
-        response = await signUp(enteredEmail, enteredPassword);
+        await signUp(enteredEmail, enteredPassword);
       }
       setIsLoading(false);
       navigate("/");
@@ -144,6 +144,12 @@ const AuthForm = () => {
     delete emailInputRef.current.value;
     delete passwordInputRef.current.value;
   }, [isLogin]);
+
+  useEffect(() => {
+    if (isUserSignedIn()) {
+      navigate({ pathname: "/" });
+    }
+  }, [isUserSignedIn, navigate]);
 
   return (
     <section className={styles.auth}>
