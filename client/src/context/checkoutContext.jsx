@@ -7,48 +7,28 @@ const CheckoutContext = React.createContext({
   handleFormChange: () => {},
   handlePaymentChange: () => {},
   tmpProducts: [],
-  tmpUserInfo: [],
-  tmpPayment: [],
+  // tmpUserInfo: [],
+  // tmpPayment: [],
 });
 
 export const CheckoutContextProvider = (props) => {
-  // const [userInfo, setUserInfo] = useState([
-  //   {
-  //     fName: "",
-  //     lName: "",
-  //     address1: "",
-  //     address2: "",
-  //     city: "",
-  //     state: "",
-  //     zip: "",
-  //     country: "",
-  //   },
-  // ]);
-  // const [paymentInfo, setPaymentInfo] = useState([
-  //   {
-  //     cardName: "",
-  //     cardNumber: "",
-  //     expDate: "",
-  //     cvv: ,
-  //   },
-  // ]);
-
-  const [tmpUserInfo, setTmpUserInfo] = useState({
-    fName: "omer",
-    lName: "kaplan",
-    address1: "Arbel",
+  const [userInfo, setUserInfo] = useState({
+    fName: "",
+    lName: "",
+    address1: "",
     address2: "",
-    city: "reut",
-    state: "Israel",
-    zip: "7179902",
-    country: "IL",
+    city: "",
+    state: "",
+    zip: "",
+    country: "",
   });
-  const [tmpPayment, setTmpPayment] = useState({
-    cardName: "omer kaplan",
-    cardNumber: "5555111156149999",
+  const [paymentInfo, setPaymentInfo] = useState({
+    cardName: "",
+    cardNumber: "",
     expDate: "",
-    cvv: "111",
+    cvv: "",
   });
+
   const tmpProducts = [
     {
       name: "Product 1",
@@ -64,27 +44,27 @@ export const CheckoutContextProvider = (props) => {
   ];
 
   const handleFormChange = async (event) => {
-    setTmpUserInfo({
-      ...tmpUserInfo,
+    setUserInfo({
+      ...userInfo,
       [event.target.name]: event.target.value,
     });
   };
 
   const handlePaymentChange = async (event) => {
-    setTmpPayment({
-      ...tmpPayment,
+    setPaymentInfo({
+      ...paymentInfo,
       [event.target.name]: event.target.value,
     });
   };
 
   const checkoutContextValue = {
-    // userInfo: userInfo,
-    // paymentInfo: paymentInfo,
+    userInfo: userInfo,
+    paymentInfo: paymentInfo,
     handleFormChange: handleFormChange,
     handlePaymentChange: handlePaymentChange,
     tmpProducts: tmpProducts,
-    tmpUserInfo: tmpUserInfo,
-    tmpPayment: tmpPayment,
+    // tmpUserInfo: tmpUserInfo,
+    // tmpPayment: tmpPayment,
   };
 
   return (

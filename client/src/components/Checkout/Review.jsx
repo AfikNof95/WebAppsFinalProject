@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -11,14 +11,14 @@ import CheckoutContext from "../../context/checkoutContext";
 
 export default function Review(props) {
   const checkoutCtx = useContext(CheckoutContext);
-  const { isNextAvailable, setIsNextAvailable, handleNext, handleBack } = props;
+  const { handleNext, handleBack } = props;
+
   const sumOrder = "$34.06"; // temp of course
 
-  const last4digits = checkoutCtx.tmpPayment.cardNumber.substr(-4);
+  const last4digits = checkoutCtx?.paymentInfo?.cardNumber.substr(-4);
   const payments = [
-    { name: "Card holder", detail: checkoutCtx.tmpPayment.cardName },
+    { name: "Card holder", detail: checkoutCtx.paymentInfo.cardName },
     { name: "Card number", detail: `xxxx-xxxx-xxxx-${last4digits}` },
-    { name: "Expiry date", detail: checkoutCtx.tmpPayment.expDate },
   ];
 
   return (
@@ -48,10 +48,21 @@ export default function Review(props) {
             Shipping
           </Typography>
           <Typography gutterBottom>
-            {checkoutCtx.tmpPayment.cardName}
+            {Object.values(
+              omit(checkoutCtx.userInfo, [
+                "address1",
+                "address2",
+                "city",
+                "state",
+                "zip",
+                "country",
+              ])
+            )
+              .filter(Boolean)
+              .join(" ")}
           </Typography>
           <Typography gutterBottom>
-            {Object.values(omit(checkoutCtx.tmpUserInfo, ["fName", "lName"]))
+            {Object.values(omit(checkoutCtx.userInfo, ["fName", "lName"]))
               .filter(Boolean)
               .join(", ")}
           </Typography>
@@ -79,12 +90,7 @@ export default function Review(props) {
           Back
         </Button>
 
-        <Button
-          variant="contained"
-          onClick={handleNext}
-          sx={{ mt: 3, ml: 1 }}
-          disabled={!isNextAvailable}
-        >
+        <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1 }}>
           Place order
         </Button>
       </Box>

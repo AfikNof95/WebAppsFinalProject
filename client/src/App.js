@@ -11,18 +11,6 @@ const App = () => {
         <ShoppingCartProvider>
           <MainRouter />
         </ShoppingCartProvider>
-        {/* <Layout>
-          <Switch>
-            <Route path="/" exact>
-              HomePage component
-              {/* then change to  <Route exact path="/" element={<Home />} /> */}
-            {/* </Route>
-            <Route path="/login"> <AuthPage/> </Route>
-            <Route path="/user">User component</Route> */}
-            {/* <Route path="*" element={<NotFound />} /> */}
-          {/* </Switch>
-        </Layout> } */}
-        
       </Router>
     </div>
   );

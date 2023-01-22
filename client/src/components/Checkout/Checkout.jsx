@@ -16,36 +16,15 @@ const theme = createTheme();
 
 export default function NewCheckout() {
   const [activeStep, setActiveStep] = useState(0);
-  const [isNextAvailable, setIsNextAvailable] = useState(true);
 
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return (
-          <AddressForm
-            isNextAvailable={isNextAvailable}
-            setIsNextAvailable={setIsNextAvailable}
-            handleNext={handleNext}
-          />
-        );
+        return <AddressForm handleNext={handleNext} />;
       case 1:
-        return (
-          <PaymentForm
-            isNextAvailable={isNextAvailable}
-            setIsNextAvailable={setIsNextAvailable}
-            handleNext={handleNext}
-            handleBack={handleBack}
-          />
-        );
+        return <PaymentForm handleNext={handleNext} handleBack={handleBack} />;
       case 2:
-        return (
-          <Review
-            isNextAvailable={isNextAvailable}
-            setIsNextAvailable={setIsNextAvailable}
-            handleNext={handleNext}
-            handleBack={handleBack}
-          />
-        );
+        return <Review handleNext={handleNext} handleBack={handleBack} />;
       default:
         throw new Error("Unknown step");
     }
