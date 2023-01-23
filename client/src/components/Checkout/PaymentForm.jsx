@@ -1,26 +1,19 @@
 import React, { useContext, useState, useEffect } from "react";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
+import { Typography, Grid, TextField, Box, Button } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import CheckoutContext from "../../context/checkoutContext";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import { useShoppingCart } from "../../context/ShoppingCartContext";
 
 export default function PaymentForm(props) {
-  const checkoutCntxt = useContext(CheckoutContext);
+  const { paymentInfo, handlePaymentChange } = useShoppingCart();
   const { handleNext, handleBack } = props;
   const [isNextAvailable, setIsNextAvailable] = useState(false);
   const [expDate, setExpDate] = useState(null);
 
   const checkFormValidation = () => {
-    for (let payInfo of Object.keys(checkoutCntxt.paymentInfo)) {
-      if (
-        checkoutCntxt.paymentInfo[payInfo].trim() === "" &&
-        !(payInfo == "expDate")
-      ) {
+    for (let payInfo of Object.keys(paymentInfo)) {
+      if (paymentInfo[payInfo].trim() === "" && !(payInfo == "expDate")) {
         setIsNextAvailable(false);
         return;
       }
@@ -30,12 +23,17 @@ export default function PaymentForm(props) {
   };
 
   useEffect(() => {
+    resetPayment();
     checkFormValidation();
   }, []);
 
   useEffect(() => {
     checkFormValidation();
-  }, [checkoutCntxt.paymentInfo]);
+  }, [paymentInfo]);
+
+  const resetPayment = () => {
+    return handlePaymentChange;
+  };
 
   return (
     <React.Fragment>
@@ -52,15 +50,10 @@ export default function PaymentForm(props) {
             fullWidth
             autoComplete="cc-name"
             variant="standard"
-            value={
-              checkoutCntxt?.paymentInfo?.cardName &&
-              checkoutCntxt.paymentInfo.cardName
-            }
-            placeholder={
-              !checkoutCntxt?.paymentInfo?.cardName && "Card holder..."
-            }
+            value={paymentInfo?.cardName && paymentInfo.cardName}
+            placeholder={!paymentInfo?.cardName && "Card holder..."}
             inputProps={{ maxLength: 25, minLength: 2 }}
-            onChange={checkoutCntxt.handlePaymentChange}
+            onChange={handlePaymentChange}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -72,15 +65,10 @@ export default function PaymentForm(props) {
             fullWidth
             autoComplete="cc-number"
             variant="standard"
-            value={
-              checkoutCntxt?.paymentInfo?.cardNumber &&
-              checkoutCntxt.paymentInfo.cardNumber
-            }
-            placeholder={
-              !checkoutCntxt?.paymentInfo?.cardNumber && "Card number..."
-            }
+            value={paymentInfo?.cardNumber && paymentInfo.cardNumber}
+            placeholder={!paymentInfo?.cardNumber && "Card number..."}
             inputProps={{ maxLength: 19, minLength: 10 }}
-            onChange={checkoutCntxt.handlePaymentChange}
+            onChange={handlePaymentChange}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -109,12 +97,10 @@ export default function PaymentForm(props) {
             fullWidth
             autoComplete="cc-csc"
             variant="standard"
-            value={
-              checkoutCntxt?.paymentInfo?.cvv && checkoutCntxt.paymentInfo.cvv
-            }
-            placeholder={!checkoutCntxt?.paymentInfo?.cvv && "CVV..."}
+            value={paymentInfo?.cvv && paymentInfo.cvv}
+            placeholder={!paymentInfo?.cvv && "CVV..."}
             inputProps={{ maxLength: 3, minLength: 3 }}
-            onChange={checkoutCntxt.handlePaymentChange}
+            onChange={handlePaymentChange}
           />
         </Grid>
       </Grid>
@@ -122,7 +108,6 @@ export default function PaymentForm(props) {
         <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
           Back
         </Button>
-
         <Button
           variant="contained"
           onClick={handleNext}

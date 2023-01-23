@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from "react";
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Typography from "@mui/material/Typography";
+import React, { useState } from "react";
+import { CssBaseline, Container, Paper, Stepper } from "@mui/material";
+import { StepLabel, Typography, Step } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PaymentForm";
@@ -62,7 +57,7 @@ export default function NewCheckout() {
                 Thank you for your order.
               </Typography>
               <Typography variant="subtitle1">
-                Your order number is #11223344. We have emailed your order
+                Your order number is #122344. We have emailed your order
                 confirmation, and will send you an update when your order has
                 shipped.
               </Typography>

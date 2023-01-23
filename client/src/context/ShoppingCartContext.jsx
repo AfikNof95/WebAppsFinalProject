@@ -17,6 +17,7 @@ const ShoppingCartContext = createContext({
   userInfo: [],
   paymentInfo: [],
   handleFormChange: () => {},
+  resetePaymentState: () => {},
   handlePaymentChange: () => {},
 });
 
@@ -189,12 +190,22 @@ export function ShoppingCartProvider({ children }) {
       sum += product.quantity * product.product.price;
     }
     return formatPrice(sum);
+    // return cartProducts.reduce((all, current) => all + current.quantity * current.price, 0);
   }
 
   const handleFormChange = async (event) => {
     setUserInfo({
       ...userInfo,
       [event.target.name]: event.target.value,
+    });
+  };
+
+  const resetePaymentState = () => {
+    setPaymentInfo({
+      cardName: "",
+      cardNumber: "",
+      expDate: "",
+      cvv: "",
     });
   };
 
@@ -222,6 +233,7 @@ export function ShoppingCartProvider({ children }) {
         userInfo: userInfo,
         paymentInfo: paymentInfo,
         handleFormChange: handleFormChange,
+        resetePaymentState: resetePaymentState,
         handlePaymentChange: handlePaymentChange,
       }}
     >
