@@ -5,8 +5,8 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Paper,
 } from "@mui/material";
-import Paper from "@mui/material/Paper";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlusIcon from "@mui/icons-material/Add";
 import MinusIcon from "@mui/icons-material/Remove";

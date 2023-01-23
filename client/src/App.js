@@ -9,7 +9,6 @@ const App = () => {
   return (
     <div className="App">
       <Router>
-      
         <AuthContextProvider>
           <ShoppingCartProvider>
             <MainRouter />
