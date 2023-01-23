@@ -12,6 +12,7 @@ const errorHandler = (ex, req, res, next) => {
     }
     return res.status(400).json({ errors: errorMessages });
   } else {
+    console.error(ex.message)
     return res.status(400).json({ errors: [ex.message] });
   }
 };

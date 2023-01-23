@@ -8,6 +8,7 @@ import {
   IconButton,
   Tooltip,
   Divider,
+  Toolbar,
 } from "@mui/material";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import Stack from "@mui/material/Stack";
@@ -40,6 +41,7 @@ export function SideCart({ isCartOpen }) {
           },
         }}
       >
+        <Toolbar />
         <Box display={"flex"} justifyContent="flex-end" marginBottom={2}>
           <Tooltip title="Close cart">
             <IconButton onClick={closeCart}>
@@ -50,7 +52,7 @@ export function SideCart({ isCartOpen }) {
         <Divider></Divider>
         <Box sx={{ padding: "15px" }}>
           <Stack spacing={3} direction={"column"}>
-            <Stack spacing={2}>
+            <Stack spacing={2} maxHeight={450} overflow={"auto"}>
               <CartProductList />
             </Stack>
 
