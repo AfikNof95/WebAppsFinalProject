@@ -2,16 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./Homepage.css";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
-import ProductCardList from "../ProductCardList/ProductCardList";
 import { Box, Toolbar, Pagination, CircularProgress } from "@mui/material";
 import SideNavigation from "../SideNavigation/SideNavigation";
-import {
-  createSearchParams,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import ProductCardList from "../ProductCardList/ProductCardList";
 
-const Homepage = (props) => {
+const Homepage = () => {
   const [products, setProducts] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(() => {
