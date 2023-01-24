@@ -39,6 +39,7 @@ const AuthForm = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const emailPassReset = useRef();
+  const displayNameInputRef = useRef();
   const navigate = useNavigate();
   const { signIn, signUp, isUserSignedIn } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
@@ -52,6 +53,11 @@ const AuthForm = () => {
     useState(false);
   const [showSnackBar, setShowSnackBar] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState({});
+  const [showInputErrors, setShowInputErrors] = useState({
+    email: false,
+    password: false,
+    displayName: false,
+  });
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -59,15 +65,35 @@ const AuthForm = () => {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
+    const email = emailInputRef.current.value.trim();
+    const password = passwordInputRef.current.value.trim();
+    const displayName = displayNameInputRef.current
+      ? displayNameInputRef.current.value.trim()
+      : true;
+
+    const emailInputError = email === "";
+    const passwordInputError = password === "";
+    const displayNameError = displayName === "";
+
+    setShowInputErrors({
+      email: emailInputError,
+      password: passwordInputError,
+      displayName: displayNameError,
+    });
+
+    if (emailInputError || passwordInputError || displayNameError) {
+      return;
+    }
+
     setIsLoading(true);
+
+    const payload = { email, password };
 
     try {
       if (isLogin) {
-        await signIn(enteredEmail, enteredPassword);
+        await signIn(payload);
       } else {
-        await signUp(enteredEmail, enteredPassword);
+        await signUp({ ...payload, displayName });
       }
       setIsLoading(false);
       navigate("/");
@@ -143,6 +169,7 @@ const AuthForm = () => {
     setShowError(false);
     delete emailInputRef.current.value;
     delete passwordInputRef.current.value;
+    displayNameInputRef.current && delete displayNameInputRef.current.value;
   }, [isLogin]);
 
   useEffect(() => {
@@ -238,8 +265,21 @@ const AuthForm = () => {
                     flexDirection={"column"}
                     width={"50%"}
                   >
+                    {!isLogin && (
+                      <TextField
+                        id="display-name-input"
+                        label="Display name"
+                        sx={{ marginBottom: 2 }}
+                        inputRef={displayNameInputRef}
+                        error={showInputErrors.displayName}
+                        helperText={
+                          showInputErrors.displayName
+                            ? ERROR_MESSAGES.DISPLAY_NAME_EMPTY
+                            : ""
+                        }
+                      ></TextField>
+                    )}
                     <TextField
-                      required
                       id="outlined-input-email"
                       label="Email"
                       type="Email"
@@ -248,14 +288,23 @@ const AuthForm = () => {
                       sx={{
                         marginBottom: 2,
                       }}
+                      error={showInputErrors.email}
+                      helperText={
+                        showInputErrors.email ? ERROR_MESSAGES.EMAIL_EMPTY : ""
+                      }
                     />
                     <TextField
-                      required
                       id="outlined-input-pass"
                       label="Password"
                       type="password"
                       autoComplete="current-password"
                       inputRef={passwordInputRef}
+                      error={showInputErrors.password}
+                      helperText={
+                        showInputErrors.password
+                          ? ERROR_MESSAGES.WEAK_PASSWORD
+                          : ""
+                      }
                     />
                     <Box
                       display={"flex"}
