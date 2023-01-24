@@ -2,7 +2,6 @@ import Checkout from "../../pages/Checkout/Checkout";
 import CartPage from "../../pages/Cart/Cart";
 import Homepage from "../Homepage/Homepage";
 import NotFound from "../NotFound/NotFound";
-import NewCheckout from "../../pages/NewCheckout/NewCheckout";
 import AuthForm from "../Auth/Login";
 
 const appRoutes = [
@@ -16,19 +15,22 @@ const appRoutes = [
     element: <Checkout />,
   },
   {
-    path: "/NewCheckout",
-    element: <NewCheckout />,
+    path: "/cart",
+    element: <CartPage />,
   },
   {
-    path: "/cart",
-    element: <CartPage></CartPage>,
+    path: "/categories",
+    element: "", // Will be
+  },
+  {
+    path: "/about",
+    element: "", // Will be
   },
   {
     path: "*",
     element: (
       <>
-        <div style={{ paddingTop: "100px" }}></div>
-        {<NotFound />}
+        <div style={{ paddingTop: "100px" }}>{<NotFound />}</div>
       </>
     ),
   },
