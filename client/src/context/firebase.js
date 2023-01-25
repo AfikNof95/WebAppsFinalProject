@@ -15,6 +15,8 @@ const FIREBASE_REST_API = {
     "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=",
   signUpWithEmailAndPassword:
     "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=",
+  refreshToken: "https://identitytoolkit.googleapis.com/v1/token?key=",
+  updateUser: "https://identitytoolkit.googleapis.com/v1/accounts:update?key=",
 };
 
 const getAPIURL = (url) => {
@@ -41,6 +43,15 @@ const firebaseAPI = {
         returnSecureToken: true,
       }
     );
+  },
+  async updateUser(user) {
+    return await axios.post(getAPIURL(FIREBASE_REST_API.updateUser), user);
+  },
+  async refreshToken(refreshToken) {
+    return await axios.post(getAPIURL(FIREBASE_REST_API.refreshToken), {
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+    });
   },
 };
 

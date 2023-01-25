@@ -1,4 +1,4 @@
-import Checkout from "../Checkout/Checkout";
+import Checkout from "../../pages/Checkout/Checkout";
 import CartPage from "../../pages/Cart/Cart";
 import Homepage from "../Homepage/Homepage";
 import NotFound from "../NotFound/NotFound";

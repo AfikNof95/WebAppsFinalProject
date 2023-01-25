@@ -61,7 +61,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navbar() {
-  const { isUserSignedIn } = useAuth();
+  const { isUserSignedIn, signOut } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -84,6 +84,11 @@ function Navbar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+  };
+
+  const handleSignOutClick = () => {
+    setAnchorEl(null);
+    signOut();
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -128,6 +133,7 @@ function Navbar() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleSignOutClick}>Sign out</MenuItem>
     </Menu>
   );
 
@@ -168,7 +174,6 @@ function Navbar() {
           aria-haspopup="true"
           color="inherit"
         >
-          
           <AccountCircle />
         </IconButton>
         <p>Profile</p>
