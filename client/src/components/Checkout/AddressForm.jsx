@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import { Grid, Typography, TextField, Box, Button } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 export default function AddressForm(props) {
   const { userInfo, handleFormChange } = useShoppingCart();
@@ -154,6 +155,13 @@ export default function AddressForm(props) {
         </Grid>
       </Grid>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          to="/"
+          sx={{ mt: 3, ml: 1 }}
+          component={RouterLink}
+        >
+          Back home
+        </Button>
         <Button
           variant="contained"
           onClick={handleNext}

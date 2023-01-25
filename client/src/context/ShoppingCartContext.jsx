@@ -17,8 +17,10 @@ const ShoppingCartContext = createContext({
   userInfo: [],
   paymentInfo: [],
   handleFormChange: () => {},
-  resetePaymentState: () => {},
   handlePaymentChange: () => {},
+  deleteCart: () => {},
+  removePaymentInfo: () => {},
+  removeUserInfo: () => {},
 });
 
 export function useShoppingCart() {
@@ -56,6 +58,32 @@ export function ShoppingCartProvider({ children }) {
 
   function getCartProducts() {
     return cartProducts;
+  }
+
+  function deleteCart() {
+    setCartProducts([]);
+  }
+
+  function removePaymentInfo() {
+    setPaymentInfo({
+      cardName: "",
+      cardNumber: "",
+      expDate: "",
+      cvv: "",
+    });
+  }
+
+  function removeUserInfo() {
+    setUserInfo({
+      fName: "",
+      lName: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "",
+    });
   }
 
   function getProductQuantity(productId) {
@@ -200,15 +228,6 @@ export function ShoppingCartProvider({ children }) {
     });
   };
 
-  const resetePaymentState = () => {
-    setPaymentInfo({
-      cardName: "",
-      cardNumber: "",
-      expDate: "",
-      cvv: "",
-    });
-  };
-
   const handlePaymentChange = async (event) => {
     setPaymentInfo({
       ...paymentInfo,
@@ -227,14 +246,16 @@ export function ShoppingCartProvider({ children }) {
         getCartTotalPrice,
         addToCart,
         removeFromCart,
+        deleteCart,
         increaseProductQuantity,
         decreaseProductQuantity,
         updateProductQuantity,
         userInfo: userInfo,
         paymentInfo: paymentInfo,
         handleFormChange: handleFormChange,
-        resetePaymentState: resetePaymentState,
         handlePaymentChange: handlePaymentChange,
+        removePaymentInfo,
+        removeUserInfo,
       }}
     >
       {children}

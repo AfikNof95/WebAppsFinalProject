@@ -78,8 +78,8 @@ export default function PaymentForm(props) {
               id="expDate"
               name="expDate"
               label="Expiration Date Option"
-              value={expDate}
-              inputFormat="MM/YYYY"
+              value={expDate ? expDate : "MM / YYYY"}
+              format="MM/YYYY"
               onChange={(newexpDate) => {
                 setExpDate(newexpDate);
               }}
