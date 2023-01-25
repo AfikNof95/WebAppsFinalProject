@@ -71,17 +71,16 @@ const ProductPage = (props) => {
       } else {
         setCurrent(current + 1)
       }
-    }, 1800);
+    }, 5000);
     return (() => {
       clearInterval(interval)
     })
   })
   return (
     <div>
-    <Box marginLeft={8} sx={{ width: 80/85 }}>
-      <Typography component="h3" variant="h3" marginTop={8} marginBottom={2}> {productName} </Typography>
-      <Grid container spacing={1}>
-        {/* <Grid item md={10} xs={8}> */}
+      <Box marginLeft={8} sx={{ width: 80/85 }}>
+        <Typography component="h3" variant="h3" marginTop={8} marginBottom={2}> {productName} </Typography>
+        <Grid container spacing={1}>
           <Card sx={{ width: 2/3 }}>
             <List>
               <Box>
@@ -93,20 +92,15 @@ const ProductPage = (props) => {
             </List>
           </Card>
           <Grid marginTop={3} marginLeft={7} textAlign={"center"}>
-            <Typography  marginBottom={10} component="h3" variant="h3"> ${product.price} </Typography>
+            <Typography marginBottom={10} component="h3" variant="h3"> ${product.price} </Typography>
             <Button marginBottom={10} marginTop={5} variant="contained" color="inherit" onClick={()=> { addToCart(product); openCart(); }} fullWidth > Add to cart </Button>
-            <AnimateOnChange
-              className="foo"
-              animationOut="bounceOut" animationIn="bounceIn" durationOut="1000" durationIn="1000"
-            > <h4>
-              {massageType[current]}    
-              {stockCount} Left in stock
-              </h4>
+            <AnimateOnChange className="foo" animationOut="bounceOut" animationIn="bounceIn" durationOut="1000" durationIn="1000">
+              <h4> {massageType[current]} {stockCount} Left in stock </h4>
             </AnimateOnChange>
           </Grid>
-      </Grid>
-      <Typography marginRight={10}>{product.description}</Typography>
-    </Box>
+        </Grid>
+        <Typography marginRight={10}>{product.description}</Typography>
+      </Box>
   </div>
   );
 };
