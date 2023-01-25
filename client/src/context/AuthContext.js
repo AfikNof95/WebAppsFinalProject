@@ -21,7 +21,8 @@ export const AuthContextProvider = ({ children }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["user-session"]);
   const [currentUser, setCurrentUser] = useState(cookies["user-session"]);
 
-  async function signUp({ email, password, imageURL, displayName }) {
+  async function signUp({ email, password, displayName }) {
+
     const response = await firebaseAPI.signUpWithEmailAndPassword(
       email,
       password
