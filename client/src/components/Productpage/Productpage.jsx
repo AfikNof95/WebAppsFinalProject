@@ -12,14 +12,36 @@ import {
   ImageList,
   ImageListItem,
 } from "@mui/material";
+import { AnimateOnChange } from 'react-animation';
 
 const ProductPage = (props) => {
+  const shortStock = [
+    'Low On Stock!   Only ',
+    'About to run out!   Only '
+  ]
+
+  const mediumStock = [
+    'Not much left  ',
+    'Great product  ',
+    'Great Availabilty  '
+  ]
+
+  const largeStock = [
+    'Take you time  ',
+    'You are lucky! :)  ',
+    'High Availability  '
+  ]
+
   const { state } = useLocation();
   const { product } = state.product;
   const [index, setIndex] = useState(0);
+  const [stockCount, setStockCount] = useState(product.quantity)
+  const [current, setCurrent] = useState(0)
   const { addToCart, openCart } = useShoppingCart();
+  const firstMassage = ['Available in stock ']
+  const [massageType, setMassageType] = useState(firstMassage)
   let productName = product.name;
-  console.log(productName);
+  console.log(product);
 
   try {
     productName = product.name.split("|")[0];
@@ -30,13 +52,37 @@ const ProductPage = (props) => {
     setIndex(pressedIndex);
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStockCount(product.quantity)
+      let message = mediumStock
+
+      if(!stockCount) 
+        message=['Out of stock ']
+      else if(stockCount < 10) 
+        message = shortStock
+      else if(stockCount > 30)
+        message = largeStock
+      
+
+      setMassageType(message)
+      if (current === message.length - 1) {
+        setCurrent(0)
+      } else {
+        setCurrent(current + 1)
+      }
+    }, 1800);
+    return (() => {
+      clearInterval(interval)
+    })
+  })
   return (
     <div>
-    <Box marginRight={100} marginLeft={8} sx={{ width: 5/6 }}>
+    <Box marginLeft={8} sx={{ width: 80/85 }}>
       <Typography component="h3" variant="h3" marginTop={8} marginBottom={2}> {productName} </Typography>
       <Grid container spacing={1}>
-        <Grid item md={10} xs={8}>
-          <Card sx={{ width: 3 / 4 }}>
+        {/* <Grid item md={10} xs={8}> */}
+          <Card sx={{ width: 2/3 }}>
             <List>
               <Box>
                 <Box sx={{ width: 1 / 2 }} maxHeight={700} component="img" src={product.images[index]} />
@@ -45,12 +91,19 @@ const ProductPage = (props) => {
                   </ImageListItem> ))} </ImageList>
               </Box>
             </List>
-            <Grid marginTop={3}>
-              <Typography component="h3" variant="h3"> ${product.price} </Typography>
-            </Grid>
-            <Button variant="contained" color="inherit" onClick={()=> { addToCart(product); openCart(); }} fullWidth > Add to cart </Button>
           </Card>
-        </Grid>
+          <Grid marginTop={3} marginLeft={7} textAlign={"center"}>
+            <Typography  marginBottom={10} component="h3" variant="h3"> ${product.price} </Typography>
+            <Button marginBottom={10} marginTop={5} variant="contained" color="inherit" onClick={()=> { addToCart(product); openCart(); }} fullWidth > Add to cart </Button>
+            <AnimateOnChange
+              className="foo"
+              animationOut="bounceOut" animationIn="bounceIn" durationOut="1000" durationIn="1000"
+            > <h4>
+              {massageType[current]}    
+              {stockCount} Left in stock
+              </h4>
+            </AnimateOnChange>
+          </Grid>
       </Grid>
       <Typography marginRight={10}>{product.description}</Typography>
     </Box>
