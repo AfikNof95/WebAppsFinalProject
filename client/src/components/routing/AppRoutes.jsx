@@ -4,6 +4,7 @@ import Homepage from "../Homepage/Homepage";
 import NotFound from "../NotFound/NotFound";
 import NewCheckout from "../NewCheckout/NewCheckout";
 import AuthForm from "../Auth/Login"
+import ProductPage from "../ProductPage/Productpage";
 
 const appRoutes = [
   { path: "/", element: <Homepage />, exact: true },
@@ -24,14 +25,9 @@ const appRoutes = [
     element: <CartPage></CartPage>,
   },
   {
-    path: "*",
-    element: (
-      <>
-        <div style={{ paddingTop: "100px" }}></div>
-        {<NotFound />}
-      </>
-    ),
-  },
+    path:"/product/:id",
+    element: <ProductPage></ProductPage>
+  }
 ];
 
 export default appRoutes;
