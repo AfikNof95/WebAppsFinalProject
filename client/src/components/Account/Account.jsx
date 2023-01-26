@@ -339,17 +339,37 @@ const AccountPage = () => {
                 <Button> </Button>
             }
             
-            
+            {
+                isUserSignedIn() ? 
+                <Button onClick={logOut} sx= {{marginLeft:"1200px"}}> Sign Out </Button>
+                :
+                <Button sx= {{marginLeft:"1225px", color:"blue"}}
+                    component={RouterLink}
+                    to={"/login"}
+                    color="inherit"
+                >
+                    Log In
+                </Button>
+            }
         </Typography>
         <Typography marginBottom={2} variant="h5" component="h2">Email &emsp;  {email} &ensp;
             <EditRoundedIcon onClick={() => setEditEmail(true)}/>
-            
+            {
+                insertEmail? 
+                <div>
+                    <Input sx={{marginLeft:"20px"}} placeholder="enter new email" inputRef={newEmail} />
+                    <SendRoundedIcon onClick={editEmail}/>
+                </div>
+                :
+                <Button> </Button>
+            }
             
             <Button onClick={handleUsageOpen} sx= {{marginLeft:"1105px"}}> Usage Policy </Button>
         </Typography>  
         <Typography  variant="h5" component="h2">Password &emsp; &ensp; {pass} &ensp;
             <EditRoundedIcon onClick={editPass}/>
             <Button onClick={handlePrivacyOpen} sx= {{marginLeft:"1175px"}}> Privacy Policy  </Button>
+
         </Typography> 
     </Card>    
     </div>
