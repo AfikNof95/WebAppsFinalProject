@@ -353,7 +353,7 @@ const AccountPage = () => {
             }
         </Typography>
         <Typography marginBottom={2} variant="h5" component="h2">Email &emsp;  {email} &ensp;
-            <EditRoundedIcon onClick={() => setEditEmail(true)}/>
+            <EditRoundedIcon onClick={() => setEditName(true)}/>
             {
                 insertEmail? 
                 <div>
@@ -365,11 +365,53 @@ const AccountPage = () => {
             }
             
             <Button onClick={handleUsageOpen} sx= {{marginLeft:"1105px"}}> Usage Policy </Button>
+            <Modal
+                open={openUsage}
+                onClose={handleUsageClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx ={modalStyle}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                 Acceptable Usage Policy
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                This Acceptable Usage Policy covers the security and use of all (Acme Corporation’s)
+                information and IT equipment. It also includes the use of email, internet, voice and mobile IT
+                equipment. This policy applies to all (Acme Corporation’s) employees, contractors and
+                agents (hereafter referred to as ‘individuals’).
+                This policy applies to all information, in whatever form, relating to (Acme Corporation’s)
+                business activities worldwide, and to all information handled by (Acme Corporation) relating
+                to other organisations with whom it deals. It also covers all IT and information
+                communications facilities operated by (Acme Corporation) or on its behalf.
+                
+                Individuals must not:
+                • Allow anyone else to use their user ID/token and password on any (Acme Corporation)
+                IT system.
+                • Leave their user accounts logged in at an unattended and unlocked computer.
+                • Use someone else’s user ID and password to access (Acme Corporation’s) IT systems.
+                </Typography>
+                </Box>
+            </Modal>
         </Typography>  
         <Typography  variant="h5" component="h2">Password &emsp; &ensp; {pass} &ensp;
             <EditRoundedIcon onClick={editPass}/>
             <Button onClick={handlePrivacyOpen} sx= {{marginLeft:"1175px"}}> Privacy Policy  </Button>
-
+            <Modal
+                open={openPrivacy}
+                onClose={handlePrivacyClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx ={modalStyle}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Acceptable Privacy Policy
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    We are committed to maintaining the accuracy, confidentiality, and security of your personally identifiable information ("Personal Information"). As part of this commitment, our privacy policy governs our actions as they relate to the collection, use and disclosure of Personal Information.
+                </Typography>
+                </Box>
+            </Modal>
         </Typography> 
     </Card>    
     </div>
