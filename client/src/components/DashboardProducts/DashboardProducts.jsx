@@ -1,11 +1,19 @@
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import firebaseAPI from "../../context/firebase";
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Close";
 
 const DashboardProducts = ({ token }) => {
+  const handleDeleteClick = () => {};
+  const handleEditClick = () => {};
+
   const [cols, setColumns] = useState([
     {
       field: "_id",
@@ -53,6 +61,29 @@ const DashboardProducts = ({ token }) => {
       editable: true,
       hideable: false,
       flex: 1,
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 100,
+      getActions: ({ id }) => {
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
     },
   ]);
   const [rows, setRows] = useState([]);
