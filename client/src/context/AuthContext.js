@@ -25,48 +25,36 @@ export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(cookies["user-session"]);
   const [userIcon, setIcon] = useState(0)
 
-  async function signUp({ email, password, displayName }) {
-    // setIcon(displayName)
-    try {
-      const response = await firebaseAPI.signUpWithEmailAndPassword(
-        email,
-        password
-      );
-      const userDetails = await firebaseAPI.updateUser({
-        ...response.data,
-        displayName,
-      });
-      const { data } = userDetails;
-      const user = { ...response.data, ...data };
-  
-      user.expireDate = getTokenExpireDate(data.expiresIn);
-  
-      setCurrentUser(user);
-      setCookie("user-session", user);
-      return data;
-    } catch(error) {
-      console.log("error in sign up")
-      console.log(error)
-    }
-    
+  async function signUp({ email, password, imageURL, displayName }) {
+    const response = await firebaseAPI.auth.signUpWithEmailAndPassword(
+      email,
+      password
+    );
+    const userDetails = await firebaseAPI.user.update({
+      ...response.data,
+      displayName,
+    });
+    const { data } = userDetails;
+    const user = { ...response.data, ...data };
+
+    user.expireDate = getTokenExpireDate(data.expiresIn);
+
+    setCurrentUser(user);
+    setCookie("user-session", user);
+    return data;
   }
 
   async function signIn({ email, password }) {
-    try {
-      const response = await firebaseAPI.signInWithEmailAndPassword(
-        email,
-        password
-      );
-      const { data } = response;
-
-      //Set the expiry date of the token, so we can use the refresh token to revoke our token.
-      data.expireDate = getTokenExpireDate(data.expiresIn);
-      setCurrentUser(data);
-      setCookie("user-session", data);
-      return data;
-    } catch(error) {
-      console.log(error + " in signIn")
-    }
+    const response = await firebaseAPI.auth.signInWithEmailAndPassword(
+      email,
+      password
+    );
+    const { data } = response;
+    //Set the expiry date of the token, so we can use the refresh token to revoke our token.
+    data.expireDate = getTokenExpireDate(data.expiresIn);
+    setCurrentUser(data);
+    setCookie("user-session", data);
+    return data;
   }
 
   function signOut() {
@@ -75,13 +63,20 @@ export const AuthContextProvider = ({ children }) => {
     // auth.signOut()
   }
 
-
-  function getUserToken() {
-    return isUserSignedIn() ? currentUser.getIdToken() : null;
+  async function updateUser(newUserDetails) {
+    const response = await firebaseAPI.user.update({
+      ...currentUser,
+      ...newUserDetails,
+    });
+    setCurrentUser((currentUserState) => {
+      return { ...currentUserState, ...response.data };
+    });
   }
 
   async function refreshToken() {
-    const response = await firebaseAPI.refreshToken(currentUser.refreshToken);
+    const response = await firebaseAPI.auth.refreshToken(
+      currentUser.refreshToken
+    );
     const {
       id_token: idToken,
       refresh_token: refreshToken,
