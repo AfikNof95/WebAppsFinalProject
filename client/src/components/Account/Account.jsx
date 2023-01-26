@@ -1,12 +1,11 @@
 import React from "react";
 import { useAuth } from "../../context/AuthContext";
-import Box from "@mui/material/Box";
-import { CardMedia, Card, Typography, Avatar } from '@mui/material';
-import { styled, alpha } from '@mui/material/styles';
+import { CardMedia, Card, Typography, Avatar, Modal, Box, Input } from '@mui/material';
+import { Link as RouterLink } from "react-router-dom";
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useState } from "react";
+import { useState, useRef } from "react";
 import EmojiNatureRoundedIcon from '@mui/icons-material/EmojiNatureRounded';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AttractionsRoundedIcon from '@mui/icons-material/AttractionsRounded';
@@ -30,21 +29,40 @@ import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded';
 import Diversity1RoundedIcon from '@mui/icons-material/Diversity1Rounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import icons from "./icons";
-
 
 const AccountPage = () => {
 
-    const { userIcon, setIcon, getUser, updateUser } = useAuth();
+    const { userIcon, setIcon, getUser, updateUser, signOut, isUserSignedIn } = useAuth();
+    const newName = useRef();
+    const newEmail = useRef();
     const [anchorEl, setAnchorEl] = useState(null);
-    const iniUser = getUser()
-    const [email, setEmail] = useState(iniUser.email)
-    const [name, setName] = useState(iniUser.displayName)
+    const [insertName, setEditName] = useState(false);
+    const [insertEmail, setEditEmail] = useState(false);
+    const [openPrivacy, setOpenPrivacy] = useState(false);
+    const handlePrivacyOpen = () => setOpenPrivacy(true);
+    const handlePrivacyClose = () => setOpenPrivacy(false);
+    const [openUsage, setOpenUsage] = useState(false);
+    const handleUsageOpen = () => setOpenUsage(true);
+    const handleUsageClose = () => setOpenUsage(false);
+    let user = getUser()
+    
+    if(!user) {
+        user = {
+            email: "Signed out",
+            displayName: "Signed out"
+        }
+    }
+
+    const [email, setEmail] = useState(user.email)
+    const [name, setName] = useState(user.displayName)
+    const [pass, setPass] = useState("* * * * * * ")
     const open = Boolean(anchorEl);
+    
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-        getCurUser()
     };
     const handleClose = (event) => {
         setAnchorEl(null);
@@ -53,24 +71,42 @@ const AccountPage = () => {
     const changeIcon = (newIcon) => {
         setIcon(newIcon)
     }
-
-    const getCurUser = () => {
-        const curUser = getUser()
-        setEmail(curUser.email)
-        setName(curUser.displayName)
-        console.log(curUser)
-    }
     
     const editEmail = () => {
-        console.log("edit email")
+        setEditEmail(false)
+        console.log(newEmail.current.value)
+        setEmail(newEmail.current.value)
+        // updateUser(newEmail)
     } 
 
     const editName = () => {
-        console.log("edit name")
+        setEditName(false)
+        console.log(newName.current.value)
+        setName(newName.current.value)
+        // updateUser(newName.current.value)
     }
 
     const editPass = () => {
 
+    }
+
+    const modalStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
+
+    const logOut = () => {
+        setEmail("Signed out")
+        setName("Signed out")
+        setPass("Signed out")
+        signOut()
     }
 
     return (
@@ -79,7 +115,7 @@ const AccountPage = () => {
             <h1>Account</h1>
             <CardMedia
                 component="img"
-                height="400"
+                height="350"
                 src={require("./theme.jpg")}
                 title="Account"
             />
@@ -290,7 +326,32 @@ const AccountPage = () => {
             <div>
         </div>
     </Card>
-       
+    <Card sx={{marginLeft:"20px", marginTop:"20px"}} >
+        <Typography marginBottom={2} variant="h5" component="h2">Name &emsp; {name}  &ensp;
+            <EditRoundedIcon onClick={() => setEditName(true)}/>
+            {
+                insertName? 
+                <div>
+                    <Input sx={{marginLeft:"20px"}} placeholder="enter new name" inputRef={newName} />
+                    <SendRoundedIcon onClick={editName}/>
+                </div>
+                :
+                <Button> </Button>
+            }
+            
+            
+        </Typography>
+        <Typography marginBottom={2} variant="h5" component="h2">Email &emsp;  {email} &ensp;
+            <EditRoundedIcon onClick={() => setEditEmail(true)}/>
+            
+            
+            <Button onClick={handleUsageOpen} sx= {{marginLeft:"1105px"}}> Usage Policy </Button>
+        </Typography>  
+        <Typography  variant="h5" component="h2">Password &emsp; &ensp; {pass} &ensp;
+            <EditRoundedIcon onClick={editPass}/>
+            <Button onClick={handlePrivacyOpen} sx= {{marginLeft:"1175px"}}> Privacy Policy  </Button>
+        </Typography> 
+    </Card>    
     </div>
   );
 };
