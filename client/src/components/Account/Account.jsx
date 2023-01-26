@@ -37,9 +37,11 @@ const AccountPage = () => {
     const { userIcon, setIcon, getUser, updateUser, signOut, isUserSignedIn } = useAuth();
     const newName = useRef();
     const newEmail = useRef();
+    const newPass = useRef();
     const [anchorEl, setAnchorEl] = useState(null);
     const [insertName, setEditName] = useState(false);
     const [insertEmail, setEditEmail] = useState(false);
+    const [insertPass, setEditPass] = useState(false);
     const [openPrivacy, setOpenPrivacy] = useState(false);
     const handlePrivacyOpen = () => setOpenPrivacy(true);
     const handlePrivacyClose = () => setOpenPrivacy(false);
@@ -87,7 +89,10 @@ const AccountPage = () => {
     }
 
     const editPass = () => {
-
+        setEditPass(false)
+        console.log(newPass.current.value)
+        setPass("* * * * * * ")
+        // updateUser(newPass.current.value)
     }
 
     const modalStyle = {
@@ -395,7 +400,16 @@ const AccountPage = () => {
             </Modal>
         </Typography>  
         <Typography  variant="h5" component="h2">Password &emsp; &ensp; {pass} &ensp;
-            <EditRoundedIcon onClick={editPass}/>
+            <EditRoundedIcon onClick={() => setEditPass(true)}/>
+            {
+                insertPass? 
+                <div>
+                    <Input sx={{marginLeft:"20px"}} placeholder="enter new password" inputRef={newEmail} />
+                    <SendRoundedIcon onClick={editPass}/>
+                </div>
+                :
+                <Button> </Button>
+            }
             <Button onClick={handlePrivacyOpen} sx= {{marginLeft:"1175px"}}> Privacy Policy  </Button>
             <Modal
                 open={openPrivacy}
