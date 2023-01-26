@@ -131,9 +131,15 @@ function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleSignOutClick}>Sign out</MenuItem>
+      <RouterLink to="/account"><MenuItem onClick={handleMenuClose}>Account 
+        </MenuItem>
+      </RouterLink>
+      <RouterLink to={`/profile`} >
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      </RouterLink>
+      <RouterLink to={`/`} >
+        <MenuItem onClick={handleSignOutClick}>Sign out</MenuItem>
+      </RouterLink>
     </Menu>
   );
 
