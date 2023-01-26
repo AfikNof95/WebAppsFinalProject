@@ -42,14 +42,6 @@ export function SideCart({ isCartOpen }) {
         }}
       >
         <Toolbar />
-        <Box display={"flex"} justifyContent="flex-end" marginBottom={2}>
-          <Tooltip title="Close cart">
-            <IconButton onClick={closeCart}>
-              <ClearIcon></ClearIcon>
-            </IconButton>
-          </Tooltip>
-        </Box>
-        <Divider></Divider>
         <Box sx={{ padding: "15px" }}>
           <Stack spacing={3} direction={"column"}>
             <Stack spacing={2} maxHeight={450} overflow={"auto"}>

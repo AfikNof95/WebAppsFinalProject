@@ -2,15 +2,18 @@ const ProductModel = require("../models/product.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const ProductService = {
-  async getAllProducts(page) {
-    const pages = Math.ceil((await ProductModel.count()) / 24);
-    return {
-      pages,
-      products: await ProductModel.find()
-        .skip((page - 1) * 24)
-        .limit(24)
-        .exec(),
-    };
+  // async getAllProducts(page) {
+  //   const pages = Math.ceil((await ProductModel.count()) / 24);
+  //   return {
+  //     pages,
+  //     products: await ProductModel.find()
+  //       .skip((page - 1) * 24)
+  //       .limit(24)
+  //       .exec(),
+  //   };
+  // },
+  async getAllProducts() {
+    return { products: await ProductModel.find() };
   },
   async getProduct(productId) {
     return await ProductModel.find({ _id: new ObjectId(productId) });
@@ -43,7 +46,7 @@ const ProductService = {
   },
   async getAllProductsByFilters(filters) {
     const queryFilters = {};
-    let sortBy = {name:1};
+    let sortBy = { name: 1 };
 
     for (let filter of Object.keys(filters)) {
       switch (filter) {

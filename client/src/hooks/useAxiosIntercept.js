@@ -6,26 +6,31 @@ export const useAxiosIntercept = () => {
   const { currentUser, refreshToken, signOut } = useAuth();
   const navigate = useNavigate();
 
-  const interceptor = axios.interceptors.request.use(async (value) => {
-    if (
-      value.url.startsWith(`https://identitytoolkit.googleapis.com/v1/token`)
-    ) {
-      return value;
-    }
-
-    let user = currentUser;
-    if (user && new Date(user.expireDate) < new Date()) {
-      try {
-        user = refreshToken();
-      } catch (ex) {
-        console.error(ex.message);
-        signOut();
-        navigate({ pathname: "/signIn" });
+  const interceptor = axios.interceptors.request.use(
+    async (value) => {
+      if (
+        value.url.startsWith(`https://identitytoolkit.googleapis.com/v1/token`)
+      ) {
+        return value;
       }
-    }
 
-    return value;
-  });
+      let user = currentUser;
+      if (user && new Date(user.expireDate) < new Date()) {
+        try {
+          user = await refreshToken();
+        } catch (ex) {
+          console.error(ex.message);
+          signOut();
+          navigate({ pathname: "/login" });
+        }
+      }
+
+      return value;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
 
   return () => {
     axios.interceptors.request.eject(interceptor);

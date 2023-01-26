@@ -11,12 +11,29 @@ const firebaseConfig = {
 };
 
 const FIREBASE_REST_API = {
-  signInWithEmailAndPassword:
-    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=",
-  signUpWithEmailAndPassword:
-    "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=",
-  refreshToken: "https://identitytoolkit.googleapis.com/v1/token?key=",
-  updateUser: "https://identitytoolkit.googleapis.com/v1/accounts:update?key=",
+  auth: {
+    signInWithEmailAndPassword:
+      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=",
+    signUpWithEmailAndPassword:
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=",
+    refreshToken: "https://identitytoolkit.googleapis.com/v1/token?key=",
+  },
+  user: {
+    updateUser:
+      "https://identitytoolkit.googleapis.com/v1/accounts:update?key=",
+  },
+  admin: {
+    user: {
+      isAdmin: "http://localhost:2308/Admin",
+      getAll: "http://localhost:2308/Admin/User/All",
+      update: "http://localhost:2308/Admin/User",
+    },
+    product: {
+      getAll: "http://localhost:2308/Admin/Product",
+      update: "http://localhost:2308/Admin/Product",
+    },
+    order: {},
+  },
 };
 
 const getAPIURL = (url) => {
@@ -24,37 +41,101 @@ const getAPIURL = (url) => {
 };
 
 const firebaseAPI = {
-  async signInWithEmailAndPassword(email, password) {
-    return await axios.post(
-      getAPIURL(FIREBASE_REST_API.signInWithEmailAndPassword),
-      {
-        email,
-        password,
-        returnSecureToken: true,
-      }
-    );
-  },
-  
-  async signUpWithEmailAndPassword(email, password) {
-    return await axios.post(
-      getAPIURL(FIREBASE_REST_API.signUpWithEmailAndPassword),
-      {
-        email,
-        password,
-        returnSecureToken: true,
-      }
-    );
+  /** Auth API */
+  auth: {
+    async signInWithEmailAndPassword(email, password) {
+      return await axios.post(
+        getAPIURL(FIREBASE_REST_API.auth.signInWithEmailAndPassword),
+        {
+          email,
+          password,
+          returnSecureToken: true,
+        }
+      );
+    },
+    async signUpWithEmailAndPassword(email, password) {
+      return await axios.post(
+        getAPIURL(FIREBASE_REST_API.auth.signUpWithEmailAndPassword),
+        {
+          email,
+          password,
+          returnSecureToken: true,
+        }
+      );
+    },
+    async refreshToken(refreshToken) {
+      return await axios.post(getAPIURL(FIREBASE_REST_API.auth.refreshToken), {
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+      });
+    },
   },
 
-  async updateUser(user) {
-    return await axios.post(getAPIURL(FIREBASE_REST_API.updateUser), user);
+  /**User API */
+  user: {
+    async update(user) {
+      return await axios.post(getAPIURL(FIREBASE_REST_API.updateUser), user);
+    },
   },
-  
-  async refreshToken(refreshToken) {
-    return await axios.post(getAPIURL(FIREBASE_REST_API.refreshToken), {
-      grant_type: "refresh_token",
-      refresh_token: refreshToken,
-    });
+
+  /**Admin API */
+  admin: {
+    user: {
+      async isAdmin(token) {
+        return await axios.post(
+          FIREBASE_REST_API.admin.user.isAdmin,
+          { token },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+      },
+      async getAll(token) {
+        return await axios.get(FIREBASE_REST_API.admin.user.getAll, {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        });
+      },
+      async update(newUserDetails, token) {
+        return await axios.put(
+          FIREBASE_REST_API.admin.user.update,
+          {
+            ...newUserDetails,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+      },
+    },
+    product: {
+      async getAll(token) {
+        return await axios.get(FIREBASE_REST_API.admin.product.getAll, {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        });
+      },
+      async update(newProductDetails, token) {
+        return await axios.put(
+          FIREBASE_REST_API.admin.product.update + `/${newProductDetails._id}`,
+          {
+            ...newProductDetails,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+      },
+    },
+    order: {},
   },
 };
 

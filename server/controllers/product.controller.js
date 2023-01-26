@@ -12,7 +12,7 @@ const ProductController = {
   },
   async getAllProducts(req, res, next) {
     try {
-      const response = await ProductService.getAllProducts(req.query.page);
+      const response = await ProductService.getAllProducts();
       return res.json(response);
     } catch (ex) {
       console.log(ex);

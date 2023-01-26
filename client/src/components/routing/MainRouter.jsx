@@ -13,7 +13,7 @@ const MainRouter = () => {
           exact={route.exact}
           element={
             <>
-              {<Navbar />}
+              {!/401|dashboard|403/.test(route.path) && <Navbar />}
               <CssBaseline>{route.element}</CssBaseline>
             </>
           }
