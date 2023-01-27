@@ -16,9 +16,7 @@ root.render(
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <AuthContextProvider>
           <ShoppingCartProvider>
-            <React.StrictMode>
-              <App />
-            </React.StrictMode>
+            <App />
           </ShoppingCartProvider>
         </AuthContextProvider>
       </LocalizationProvider>

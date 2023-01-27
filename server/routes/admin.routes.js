@@ -1,4 +1,6 @@
 const ProductController = require("../controllers/product.controller");
+const CategoryController = require("../controllers/category.controller");
+
 const {
   listAllUsers,
   updateUser,
@@ -13,7 +15,6 @@ router.post("/", async (req, res, next) => {
     const isAdmin = await getIsAdmin(req.body.token);
     res.send(isAdmin);
   } catch (ex) {
-    res.status(401);
     next(ex);
   }
 });
@@ -46,6 +47,9 @@ router.put("/User", async (req, res, next) => {
 });
 
 router.get("/Product", ProductController.getAllProducts);
+router.post("/Product", ProductController.createProduct);
 router.put("/Product/:productId", ProductController.updateProduct);
+
+router.get("/Category", CategoryController.getAllCategories);
 
 module.exports = router;

@@ -45,8 +45,8 @@ const appRoutes = [
     element: <DashboardPage></DashboardPage>,
   },
   {
-    path:"/401",
-    element:<div>Unauthorized</div>
+    path: "/401",
+    element: <div>Unauthorized</div>,
   },
   {
     path:"/product/:id",

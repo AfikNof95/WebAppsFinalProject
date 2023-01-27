@@ -30,7 +30,7 @@ const Homepage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       const response = await axios.get("http://localhost:2308/Category");
-      setProductCategories(response.data);
+      setProductCategories(response.data.categories);
     };
     fetchCategories();
   }, []);

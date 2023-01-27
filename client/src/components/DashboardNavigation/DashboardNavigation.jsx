@@ -24,7 +24,11 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { borderRadius, height } from "@mui/system";
 
-const DashboardNavigation = ({ drawerWidth = 300, handlePageClick }) => {
+const DashboardNavigation = ({
+  drawerWidth = 300,
+  handlePageClick,
+  selectedPage,
+}) => {
   const { currentUser } = useAuth();
 
   const pages = [
@@ -105,7 +109,10 @@ const DashboardNavigation = ({ drawerWidth = 300, handlePageClick }) => {
               key={page.name}
               onClick={() => handlePageClick(page.name)}
             >
-              <ListItemButton sx={{ borderRadius: "30px" }} selected={true}>
+              <ListItemButton
+                sx={{ borderRadius: "30px" }}
+                selected={selectedPage === page.name.toLowerCase()}
+              >
                 <ListItemIcon color="info">{page.icon}</ListItemIcon>
                 <ListItemText primary={page.name}></ListItemText>
               </ListItemButton>
