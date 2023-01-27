@@ -13,7 +13,7 @@ const ProductService = {
   //   };
   // },
   async getAllProducts() {
-    return { products: await ProductModel.find() };
+    return { products: await ProductModel.find().populate("category").exec() };
   },
   async getProduct(productId) {
     return await ProductModel.find({ _id: new ObjectId(productId) });

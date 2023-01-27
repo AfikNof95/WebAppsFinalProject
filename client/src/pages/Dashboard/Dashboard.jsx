@@ -8,36 +8,56 @@ import { useAuth } from "../../context/AuthContext";
 import DashboardProducts from "../../components/DashboardProducts/DashboardProducts";
 
 const DashboardPage = (props) => {
-  const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(
-    <DashboardUsers token={currentUser.idToken}></DashboardUsers>
-  );
+  const [currentPage, setCurrentPage] = useState({ name: "users" });
   useEffect(() => {
+    if (!currentUser) {
+      navigate({ pathname: "/login" });
+    }
     const fetchIsAdmin = async () => {
       try {
         await firebaseAPI.admin.user.isAdmin(currentUser.idToken);
+        setCurrentPage({
+          name: "users",
+          element: (
+            <DashboardUsers token={currentUser.idToken}></DashboardUsers>
+          ),
+        });
         setIsLoading(false);
-      } catch (ex) {
-        navigate({ pathname: "/401" });
-      }
+      } catch (ex) {}
     };
 
     fetchIsAdmin();
-  }, [navigate, currentUser]);
+  }, [currentUser, navigate]);
 
   const handlePageClick = (pageName) => {
     setCurrentPage(() => {
       switch (pageName.toLowerCase()) {
         case "users":
-          return <DashboardUsers token={currentUser.idToken}></DashboardUsers>;
+          return {
+            name: "users",
+            element: (
+              <DashboardUsers token={currentUser.idToken}></DashboardUsers>
+            ),
+          };
         case "products":
-          return (
-            <DashboardProducts token={currentUser.idToken}></DashboardProducts>
-          );
+          return {
+            name: "products",
+            element: (
+              <DashboardProducts
+                token={currentUser.idToken}
+              ></DashboardProducts>
+            ),
+          };
         default:
-          return <DashboardUsers token={currentUser.idToken}></DashboardUsers>;
+          return {
+            name: "users",
+            element: (
+              <DashboardUsers token={currentUser.idToken}></DashboardUsers>
+            ),
+          };
       }
     });
   };
@@ -46,9 +66,10 @@ const DashboardPage = (props) => {
     !isLoading && (
       <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-start"}>
         <DashboardNavigation
+          selectedPage={currentPage.name}
           handlePageClick={handlePageClick}
         ></DashboardNavigation>
-        {currentPage}
+        {currentPage.element}
       </Box>
     )
   );

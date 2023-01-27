@@ -1,4 +1,4 @@
-import { DataGrid ,GridActionsCellItem} from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import firebaseAPI from "../../context/firebase";
@@ -30,7 +30,7 @@ const DashboardUsers = ({ token }) => {
     {
       field: "email",
       headerName: "Email",
-      type: "text",
+      type: "string",
       flex: 1,
       editable: true,
       hideable: false,
@@ -51,13 +51,6 @@ const DashboardUsers = ({ token }) => {
       width: 100,
       getActions: ({ id }) => {
         return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"

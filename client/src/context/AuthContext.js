@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext,useEffect } from "react";
 import firebaseAPI from "./firebase";
 import { useCookies } from "react-cookie";
 import { getTokenExpireDate } from "../utils/getTokenExpireDate";
@@ -40,7 +40,6 @@ export const AuthContextProvider = ({ children }) => {
     user.expireDate = getTokenExpireDate(data.expiresIn);
 
     setCurrentUser(user);
-    setCookie("user-session", user);
     return data;
   }
 
@@ -94,25 +93,16 @@ export const AuthContextProvider = ({ children }) => {
         },
       };
     });
-    return currentUser;
-  } 
+  }
 
-  async function updateUser(newUserDetails, currentPass) {
-    // Re sign to restart timeout counting of cerdiantial. 
-    await signIn({ email: currentUser.email, password: currentPass }) 
-    
-    // Refresh token to restart timeout counting of token id.
-    await refreshToken()
-    const response = await firebaseAPI.updateUser({
-      ...currentUser,
-      ...newUserDetails,
-    });
-    setCurrentUser((currentUserState) => {
-      return { ...currentUserState, ...response.data };
-    });
+  useEffect(() => {
+    if (currentUser) {
+      setCookie("user-session", currentUser);
+    }
+  }, [currentUser]);
 
-    // Maybe: there is need to re sign in after updating user
-    // so that firebase sync information with cookie.  
+  function getUserToken() {
+    return isUserSignedIn() ? currentUser.getIdToken() : null;
   }
 
   function isUserSignedIn() {

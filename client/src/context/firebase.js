@@ -28,8 +28,12 @@ const FIREBASE_REST_API = {
       getAll: "http://localhost:2308/Admin/User/All",
       update: "http://localhost:2308/Admin/User",
     },
+    category: {
+      getAll: "http://localhost:2308/Admin/Category",
+    },
     product: {
       getAll: "http://localhost:2308/Admin/Product",
+      create: "http://localhost:2308/Admin/Product",
       update: "http://localhost:2308/Admin/Product",
     },
     order: {},
@@ -121,18 +125,23 @@ const firebaseAPI = {
           },
         });
       },
+      async create(newProductDetails) {
+        return await axios.post(FIREBASE_REST_API.admin.product.create, {
+          ...newProductDetails,
+        });
+      },
       async update(newProductDetails, token) {
         return await axios.put(
           FIREBASE_REST_API.admin.product.update + `/${newProductDetails._id}`,
           {
             ...newProductDetails,
-          },
-          {
-            headers: {
-              Authorization: "Bearer " + token,
-            },
           }
         );
+      },
+    },
+    category: {
+      async getAll(token) {
+        return await axios.get(FIREBASE_REST_API.admin.category.getAll);
       },
     },
     order: {},
