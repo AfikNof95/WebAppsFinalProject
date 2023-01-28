@@ -1,12 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import { Grid, Typography, TextField, Box, Button } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 export default function AddressForm(props) {
+
   const { userInfo, handleFormChange } = useShoppingCart();
   const { handleNext } = props;
   const [isNextAvailable, setIsNextAvailable] = useState(false);
+  const firstName = useRef();
+  const lastName = useRef();
+  const zipCode = useRef();
+  const city = useRef();
+  const country = useRef();
+  const houseNumber = useRef();
+  const street = useRef();
+  let updateUserAdress = useRef()
+  const { getUser } = useAuth()
+  const user = getUser()
 
   const checkFormValidation = () => {
     for (let contactInfoField of Object.keys(userInfo)) {
@@ -30,10 +43,24 @@ export default function AddressForm(props) {
     checkFormValidation();
   }, [userInfo]);
 
+  useEffect(() => {
+    updateUserAdress.current = async () => {
+      const response = await axios.post(`http://localhost:2309/Address`, {
+        country: country.current.value,
+        city: city.current.value,
+        street: street.current.value, 
+        houseNumber: houseNumber.current.value,
+        zipCode: zipCode.current.value,
+        user: user.localId
+      });
+      handleNext()
+    };
+  }, []);
+
   return (
     <React.Fragment>
       <Typography variant="h6" sx={{ marginBottom: "1.5em" }} gutterBottom>
-        Shipping address
+        Address for shipping
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
@@ -49,6 +76,7 @@ export default function AddressForm(props) {
             variant="standard"
             inputProps={{ maxLength: 14, minLength: 2 }}
             onChange={handleFormChange}
+            inputRef={firstName}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -64,6 +92,7 @@ export default function AddressForm(props) {
             variant="standard"
             inputProps={{ maxLength: 14, minLength: 2 }}
             onChange={handleFormChange}
+            inputRef={lastName}
           />
         </Grid>
         <Grid item xs={12}>
@@ -71,7 +100,7 @@ export default function AddressForm(props) {
             required
             id="address1"
             name="address1"
-            label="Address line 1"
+            label="Street Address"
             value={userInfo?.address1 && userInfo.address1}
             placeholder={!userInfo?.address1 && "Address..."}
             fullWidth
@@ -79,13 +108,15 @@ export default function AddressForm(props) {
             variant="standard"
             inputProps={{ maxLength: 22, minLength: 2 }}
             onChange={handleFormChange}
+            inputRef={street}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
+            required
             id="address2"
             name="address2"
-            label="Address line 2"
+            label="House Number"
             value={userInfo?.address2 && userInfo.address2}
             placeholder={!userInfo?.address2 && "Address 2..."}
             fullWidth
@@ -93,6 +124,7 @@ export default function AddressForm(props) {
             variant="standard"
             inputProps={{ maxLength: 22, minLength: 2 }}
             onChange={handleFormChange}
+            inputRef={houseNumber}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -108,6 +140,7 @@ export default function AddressForm(props) {
             variant="standard"
             inputProps={{ maxLength: 18, minLength: 2 }}
             onChange={handleFormChange}
+            inputRef={city}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -136,6 +169,7 @@ export default function AddressForm(props) {
             variant="standard"
             inputProps={{ maxLength: 8, minLength: 4 }}
             onChange={handleFormChange}
+            inputRef={zipCode}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -151,6 +185,7 @@ export default function AddressForm(props) {
             variant="standard"
             inputProps={{ maxLength: 22, minLength: 2 }}
             onChange={handleFormChange}
+            inputRef={country}
           />
         </Grid>
       </Grid>
@@ -164,7 +199,7 @@ export default function AddressForm(props) {
         </Button>
         <Button
           variant="contained"
-          onClick={handleNext}
+          onClick={() => updateUserAdress.current()}
           sx={{ mt: 3, ml: 1 }}
           disabled={!isNextAvailable}
         >

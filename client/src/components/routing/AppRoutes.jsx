@@ -1,8 +1,10 @@
-import Checkout from "../Checkout/Checkout";
+import Checkout from "../../pages/Checkout/Checkout";
 import CartPage from "../../pages/Cart/Cart";
 import Homepage from "../Homepage/Homepage";
 import NotFound from "../NotFound/NotFound";
 import AuthForm from "../Auth/Login";
+import AccountPage from "../Account/Account";
+import ProfilePage from "../Profile/Profile";
 
 const appRoutes = [
   { path: "/", element: <Homepage />, exact: true },
@@ -17,6 +19,14 @@ const appRoutes = [
   {
     path: "/cart",
     element: <CartPage />,
+  },
+  {
+    path: "/account",
+    element: <AccountPage />,
+  },
+  {
+    path: "/profile",
+    element: <ProfilePage />,
   },
   {
     path: "/categories",
