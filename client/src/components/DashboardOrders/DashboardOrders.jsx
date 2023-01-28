@@ -19,18 +19,17 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import RestoreIcon from "@mui/icons-material/Undo";
-import DashboardProductsDialog from "./DashboardProductsDialog";
-import DashboardProductsRemoveDialog from "./DashboardProductRemoveDialog";
-import DashboardProductRestoreDialog from "./DashboardProductRestoreDialog";
+import DashboardOrdersEditDialog from "./DashboardOrdersEditDialog";
+import DashboardOrdersRemoveDialog from "./DashboardOrdersRemoveDialog";
+import DashboardOrdersRestoreDialog from "./DashboardOrdersRestoreDialog";
 
-const DashboardProducts = ({ token, productsArray }) => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+const DashboardOrders = ({ token, ordersArray, users }) => {
+  const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState(false);
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
-  const [currentProduct, setCurrentProduct] = useState({});
+  const [currentOrder, setCurrentOrder] = useState({});
   const [snackBarState, setSnackBarState] = useState({
     show: false,
     message: "",
@@ -38,51 +37,38 @@ const DashboardProducts = ({ token, productsArray }) => {
   });
 
   useEffect(() => {
-    setProducts(productsArray);
+    setOrders(ordersArray);
     setIsLoading(false);
-  }, [productsArray]);
+  }, [ordersArray]);
 
   const handleEditClick = useCallback(
-    (productId) => {
-      setCurrentProduct(() => {
-        return products.filter((product) => product._id === productId)[0];
+    (orderId) => {
+      setCurrentOrder(() => {
+        return orders.filter((order) => order._id === orderId)[0];
       });
       setIsEditDialogOpen(true);
     },
-    [products]
+    [orders]
   );
 
-  const handleAddProductClick = useCallback(() => {
-    setCurrentProduct({
-      name: "",
-      description: "",
-      category: {},
-      price: 0,
-      quantity: 0,
-      isActive: true,
-      images: [],
-    });
-    setIsEditDialogOpen(true);
-  }, []);
-
   const handleDeleteClick = useCallback(
-    (productId) => {
-      setCurrentProduct(() => {
-        return products.filter((product) => product._id === productId)[0];
+    (orderId) => {
+      setCurrentOrder(() => {
+        return orders.filter((order) => order._id === orderId)[0];
       });
       setIsRemoveDialogOpen(true);
     },
-    [products]
+    [orders]
   );
 
   const handleRestoreClick = useCallback(
-    (productId) => {
-      setCurrentProduct(() => {
-        return products.filter((product) => product._id === productId)[0];
+    (orderId) => {
+      setCurrentOrder(() => {
+        return orders.filter((order) => order._id === orderId)[0];
       });
       setIsRestoreDialogOpen(true);
     },
-    [products]
+    [orders]
   );
 
   const cols = useMemo(
@@ -95,50 +81,53 @@ const DashboardProducts = ({ token, productsArray }) => {
         hideable: false,
       },
       {
-        field: "name",
-        headerName: "Display name",
-        flex: 1,
-        editable: true,
-        hideable: false,
-      },
-      {
-        field: "description",
-        headerName: "Description",
-        type: "string",
-        flex: 1,
-        editable: true,
-        hideable: false,
-      },
-      {
-        field: "category",
-        headerName: "Category",
-        type: "string",
+        field: "user",
+        headerName: "User",
         flex: 1,
         editable: false,
         hideable: false,
         valueGetter: (params) => {
-          if (params.row.category) {
-            return params.row.category.name;
+          if (params.row.user) {
+            const user = users.filter((user) => user.uid === params.row.user);
+            if (user[0]) {
+              return user[0].email;
+            }
           }
           return params.value;
         },
       },
       {
-        field: "price",
-        headerName: "Price($)",
-        type: "number",
-        editable: true,
-        hideable: false,
+        field: "address",
+        headerName: "Address",
+        type: "string",
         flex: 1,
+        editable: false,
+        hideable: false,
+        valueGetter: (params) => {
+          if (params.row.address) {
+            return `${params.row.address.city}, ${params.row.address.street} ${params.row.address.houseNumber}`;
+          }
+          return params.value;
+        },
       },
       {
-        field: "quantity",
-        headerName: "Quantity",
+        field: "totalPrice",
+        headerName: "Total Price($)",
         type: "number",
+        flex: 1,
         editable: true,
         hideable: false,
-        flex: 1,
       },
+      {
+        field: "status",
+        headerName: "Status",
+        flex: 1,
+        type: "singleSelect",
+        valueOptions: ["Created", "Packed", "Delivered"],
+        editable: true,
+        hideable: false,
+      },
+
       {
         field: "isActive",
         headerName: "Is active?",
@@ -201,35 +190,19 @@ const DashboardProducts = ({ token, productsArray }) => {
         },
       },
     ],
-    [handleEditClick, handleDeleteClick, handleRestoreClick]
+    [handleEditClick, handleDeleteClick, handleRestoreClick, users]
   );
 
-  const tableToolbar = () => {
-    return (
-      <GridToolbarContainer sx={{ justifyContent: "flex-end" }}>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon></AddIcon>}
-          onClick={() => {
-            handleAddProductClick();
-          }}
-        >
-          Add Product
-        </Button>
-      </GridToolbarContainer>
-    );
-  };
-
-  const toggleProductIsActive = async (product, callback) => {
+  const toggleOrderIsActive = async (order, callback) => {
     try {
-      product.isActive = !product.isActive;
-      await backendAPI.admin.product.update(product);
-      setProducts((currentProductsState) => {
-        return currentProductsState.map((prod) => {
-          if (prod._id === product._id) {
-            return product;
+      order.isActive = !order.isActive;
+      await backendAPI.admin.product.update(order);
+      setOrders((currentOrdersState) => {
+        return currentOrdersState.map((ord) => {
+          if (ord._id === order._id) {
+            return order;
           }
-          return prod;
+          return ord;
         });
       });
       showSuccessSnackbar();
@@ -240,65 +213,62 @@ const DashboardProducts = ({ token, productsArray }) => {
   };
 
   const handleRemoveDialogClose = () => {
-    setCurrentProduct({});
+    setCurrentOrder({});
     setIsRemoveDialogOpen(false);
   };
   const handleRemoveDialogConfirm = (product) => {
-    toggleProductIsActive(product, () => {
+    toggleOrderIsActive(product, () => {
       setIsRemoveDialogOpen(false);
     });
   };
 
   const handleRestoreDialogClose = () => {
-    setCurrentProduct({});
+    setCurrentOrder({});
     setIsRestoreDialogOpen(false);
   };
 
   const handleRestoreDialogConfirm = (product) => {
-    toggleProductIsActive(product, () => {
+    toggleOrderIsActive(product, () => {
       setIsRestoreDialogOpen(false);
     });
   };
 
-  const updateProductDetails = async (params, event, details) => {
-    if (params.field === "id") {
-      return;
-    }
-
-    const updatedProduct = products.filter(
-      (product) => product._id === params.id
-    )[0];
-
-    if (updatedProduct[params.field] !== params.value) {
-      updatedProduct[params.field] = params.value;
-      try {
-        showSuccessSnackbar();
-      } catch (ex) {
-        showErrorSnackbar();
+  const updateOrderDetails = async (params, event, details) => {
+    try {
+      if (params.field === "id") {
+        return;
       }
-      await backendAPI.admin.product.update(updatedProduct, token);
+      const updatedOrder = orders.filter((order) => order._id === params.id)[0];
+      if (updatedOrder[params.field] == params.value) {
+        return;
+      }
+      updatedOrder[params.field] = params.value;
+      await backendAPI.admin.order.update(updatedOrder);
+      showSuccessSnackbar();
+    } catch (ex) {
+      showErrorSnackbar();
     }
   };
 
   const handleDialogClose = () => {
     setIsEditDialogOpen(false);
-    setCurrentProduct({});
+    setCurrentOrder({});
   };
 
-  const handleDialogSave = async (updatedProduct) => {
+  const handleDialogSave = async (updatedOrder) => {
     try {
-      if (!updatedProduct._id) {
-        await backendAPI.admin.product.create(updatedProduct);
+      if (!updatedOrder._id) {
+        await backendAPI.admin.product.create(updatedOrder);
       } else {
-        await backendAPI.admin.product.update(updatedProduct);
+        await backendAPI.admin.product.update(updatedOrder);
       }
 
-      setProducts((currentProductState) => {
-        return currentProductState.map((product) => {
-          if (product._id === updatedProduct._id) {
-            return { ...product, ...updatedProduct };
+      setOrders((currentOrdersState) => {
+        return currentOrdersState.map((order) => {
+          if (order._id === updatedOrder._id) {
+            return { ...order, ...updatedOrder };
           }
-          return product;
+          return order;
         });
       });
       setIsEditDialogOpen(false);
@@ -312,7 +282,7 @@ const DashboardProducts = ({ token, productsArray }) => {
   const showErrorSnackbar = () => {
     updateSnackBarState({
       show: true,
-      message: "Couldn't update product details!",
+      message: "Couldn't update order details!",
       severity: "error",
     });
   };
@@ -320,7 +290,7 @@ const DashboardProducts = ({ token, productsArray }) => {
   const showSuccessSnackbar = () => {
     updateSnackBarState({
       show: true,
-      message: "Product updated successfully!",
+      message: "Order updated successfully!",
       severity: "success",
     });
   };
@@ -346,39 +316,37 @@ const DashboardProducts = ({ token, productsArray }) => {
         <>
           <DataGrid
             getRowId={(row) => row._id}
-            rows={products}
+            rows={orders}
             columns={cols}
             pageSize={20}
-            components={{ Toolbar: tableToolbar }}
             rowsPerPageOptions={[20]}
             sx={{ height: "100vh" }}
-            onCellEditCommit={updateProductDetails}
+            onCellEditCommit={updateOrderDetails}
           ></DataGrid>
 
           {isEditDialogOpen && (
-            <DashboardProductsDialog
+            <DashboardOrdersEditDialog
               handleDialogClose={handleDialogClose}
               handleDialogSave={handleDialogSave}
               open={isEditDialogOpen}
-              product={currentProduct}
-              categories={categories}
-            ></DashboardProductsDialog>
+              order={currentOrder}
+            ></DashboardOrdersEditDialog>
           )}
           {isRemoveDialogOpen && (
-            <DashboardProductsRemoveDialog
+            <DashboardOrdersRemoveDialog
               handleDialogClose={handleRemoveDialogClose}
               handleDialogConfirm={handleRemoveDialogConfirm}
               open={isRemoveDialogOpen}
-              product={currentProduct}
-            ></DashboardProductsRemoveDialog>
+              product={currentOrder}
+            ></DashboardOrdersRemoveDialog>
           )}
           {isRestoreDialogOpen && (
-            <DashboardProductRestoreDialog
+            <DashboardOrdersRestoreDialog
               handleDialogClose={handleRestoreDialogClose}
               handleDialogConfirm={handleRestoreDialogConfirm}
               open={isRestoreDialogOpen}
-              product={currentProduct}
-            ></DashboardProductRestoreDialog>
+              product={currentOrder}
+            ></DashboardOrdersRestoreDialog>
           )}
           <Snackbar
             open={snackBarState.show}
@@ -400,4 +368,4 @@ const DashboardProducts = ({ token, productsArray }) => {
   );
 };
 
-export default DashboardProducts;
+export default DashboardOrders;

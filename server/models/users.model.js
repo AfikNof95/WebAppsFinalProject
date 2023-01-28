@@ -24,7 +24,7 @@ const listAllUsers = async () => {
 };
 
 const updateUser = (user) => {
-  getAuth(app).updateUser(user.uid, {
+  return getAuth(app).updateUser(user.uid, {
     ...user,
   });
 };

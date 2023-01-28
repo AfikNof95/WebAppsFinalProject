@@ -26,7 +26,9 @@ const REST_API = {
     user: {
       isAdmin: "http://localhost:2308/Admin",
       getAll: "http://localhost:2308/Admin/User/All",
+      getAddresses: "http://localhost:2308/Admin/Address/User",
       update: "http://localhost:2308/Admin/User",
+      analytics: "http://localhost:2308/Admin/User/Analytics",
     },
     category: {
       getAll: "http://localhost:2308/Admin/Category",
@@ -35,8 +37,13 @@ const REST_API = {
       getAll: "http://localhost:2308/Admin/Product",
       create: "http://localhost:2308/Admin/Product",
       update: "http://localhost:2308/Admin/Product",
+      analytics: "http://localhost:2308/Admin/Product/Analytics",
     },
-    order: {},
+    order: {
+      getAll: "http://localhost:2308/Admin/Order",
+      update: "http://localhost:2308/Admin/Order",
+      analytics: "http://localhost:2308/Admin/Order/Analytics",
+    },
   },
 };
 
@@ -103,6 +110,9 @@ const backendAPI = {
           },
         });
       },
+      async getAddresses(userId) {
+        return await axios.get(REST_API.admin.user.getAddresses + `/${userId}`);
+      },
       async update(newUserDetails, token) {
         return await axios.put(
           REST_API.admin.user.update,
@@ -115,6 +125,9 @@ const backendAPI = {
             },
           }
         );
+      },
+      async analytics() {
+        return await axios.get(REST_API.admin.user.analytics);
       },
     },
     product: {
@@ -130,7 +143,7 @@ const backendAPI = {
           ...newProductDetails,
         });
       },
-      async update(newProductDetails, token) {
+      async update(newProductDetails) {
         return await axios.put(
           REST_API.admin.product.update + `/${newProductDetails._id}`,
           {
@@ -138,13 +151,29 @@ const backendAPI = {
           }
         );
       },
+      async analytics() {
+        return await axios.get(REST_API.admin.product.analytics);
+      },
     },
     category: {
       async getAll(token) {
         return await axios.get(REST_API.admin.category.getAll);
       },
     },
-    order: {},
+    order: {
+      async getAll() {
+        return await axios.get(REST_API.admin.order.getAll);
+      },
+      async update(updatedOrder) {
+        return await axios.put(
+          REST_API.admin.order.update + `/${updatedOrder._id}`,
+          updatedOrder
+        );
+      },
+      async analytics() {
+        return await axios.get(REST_API.admin.order.analytics);
+      },
+    },
   },
 };
 

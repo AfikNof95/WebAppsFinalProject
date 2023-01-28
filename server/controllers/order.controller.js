@@ -25,7 +25,7 @@ const OrderController = {
   async getAllOrders(req, res, next) {
     try {
       const response = await OrderService.getAllOrders();
-      return res.json(response);
+      return res.json({ orders: response });
     } catch (ex) {
       next(ex);
     }
@@ -55,6 +55,14 @@ const OrderController = {
       const { orderId } = req.params;
       const response = await OrderService.deleteOrder(orderId);
       return res.json({ message: "Order deleted successfully!" });
+    } catch (ex) {
+      next(ex);
+    }
+  },
+  async getOrdersAnalytics(req, res, next) {
+    try {
+      const response = await OrderService.getOrdersAnalytics();
+      return res.json(response);
     } catch (ex) {
       next(ex);
     }
