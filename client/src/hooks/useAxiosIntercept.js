@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 export const useAxiosIntercept = () => {
   const { currentUser, refreshToken, signOut } = useAuth();
   const navigate = useNavigate();
@@ -10,7 +9,7 @@ export const useAxiosIntercept = () => {
     async (config) => {
       if (config.url.indexOf("/token") === -1 && currentUser) {
         config.headers["Authorization"] = "Bearer " + currentUser.idToken;
-        if (config.data) {
+        if (config.data && config.url.indexOf("/signIn" === -1)) {
           config.data.token = currentUser.idToken;
         }
       }
