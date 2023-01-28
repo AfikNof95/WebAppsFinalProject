@@ -147,6 +147,16 @@ const DashboardProductsDialog = ({
     setIsShowAddImage(false);
   };
 
+  const handleRemoveImage = (url) => {
+    setProductDetails((currentProductDetails) => {
+      currentProductDetails.images.splice(
+        currentProductDetails.images.indexOf(url),
+        1
+      );
+      return { ...currentProductDetails };
+    });
+  };
+
   return (
     <Dialog
       open={open}
@@ -193,6 +203,7 @@ const DashboardProductsDialog = ({
                           right: -25,
                           zIndex: 99,
                         }}
+                        onClick={() => handleRemoveImage(image)}
                       >
                         <Close></Close>
                       </IconButton>
