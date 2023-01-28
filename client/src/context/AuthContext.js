@@ -1,5 +1,5 @@
-import React, { useState, useContext, createContext,useEffect } from "react";
-import firebaseAPI from "./firebase";
+import React, { useState, useContext, createContext, useEffect } from "react";
+import backendAPI from "../api";
 import { useCookies } from "react-cookie";
 import { getTokenExpireDate } from "../utils/getTokenExpireDate";
 
@@ -26,11 +26,11 @@ export const AuthContextProvider = ({ children }) => {
   const [userIcon, setIcon] = useState(0)
 
   async function signUp({ email, password, imageURL, displayName }) {
-    const response = await firebaseAPI.auth.signUpWithEmailAndPassword(
+    const response = await backendAPI.auth.signUpWithEmailAndPassword(
       email,
       password
     );
-    const userDetails = await firebaseAPI.user.update({
+    const userDetails = await backendAPI.user.update({
       ...response.data,
       displayName,
     });
@@ -44,7 +44,7 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   async function signIn({ email, password }) {
-    const response = await firebaseAPI.auth.signInWithEmailAndPassword(
+    const response = await backendAPI.auth.signInWithEmailAndPassword(
       email,
       password
     );
@@ -63,7 +63,7 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   async function updateUser(newUserDetails) {
-    const response = await firebaseAPI.user.update({
+    const response = await backendAPI.user.update({
       ...currentUser,
       ...newUserDetails,
     });
@@ -73,7 +73,7 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   async function refreshToken() {
-    const response = await firebaseAPI.auth.refreshToken(
+    const response = await backendAPI.auth.refreshToken(
       currentUser.refreshToken
     );
     const {

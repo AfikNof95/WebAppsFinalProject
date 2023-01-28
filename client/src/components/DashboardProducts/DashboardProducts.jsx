@@ -5,7 +5,7 @@ import {
 } from "@mui/x-data-grid";
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import firebaseAPI from "../../context/firebase";
+import backendAPI from "../../api";
 import {
   Alert,
   Button,
@@ -154,7 +154,7 @@ const DashboardProducts = ({ token }) => {
             <GridActionsCellItem
               icon={
                 <Tooltip title="Delete Product">
-                  <DeleteIcon />
+                  <DeleteIcon color="error" />
                 </Tooltip>
               }
               label="Delete"
@@ -167,7 +167,7 @@ const DashboardProducts = ({ token }) => {
             <GridActionsCellItem
               icon={
                 <Tooltip title="Restore product">
-                  <RestoreIcon />
+                  <RestoreIcon color="info" />
                 </Tooltip>
               }
               label="Delete"
@@ -201,7 +201,7 @@ const DashboardProducts = ({ token }) => {
 
   const tableToolbar = () => {
     return (
-      <GridToolbarContainer>
+      <GridToolbarContainer sx={{ justifyContent: "flex-end" }}>
         <Button
           variant="contained"
           startIcon={<AddIcon></AddIcon>}
@@ -217,8 +217,8 @@ const DashboardProducts = ({ token }) => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      let responseProducts = await firebaseAPI.admin.product.getAll(token);
-      let responseCategories = await firebaseAPI.admin.category.getAll(token);
+      let responseProducts = await backendAPI.admin.product.getAll(token);
+      let responseCategories = await backendAPI.admin.category.getAll(token);
       let { products: prods } = responseProducts.data;
       const { categories } = responseCategories.data;
       setProducts(prods);
@@ -232,7 +232,7 @@ const DashboardProducts = ({ token }) => {
   const toggleProductIsActive = async (product, callback) => {
     try {
       product.isActive = !product.isActive;
-      await firebaseAPI.admin.product.update(product);
+      await backendAPI.admin.product.update(product);
       setProducts((currentProductsState) => {
         return currentProductsState.map((prod) => {
           if (prod._id === product._id) {
@@ -285,7 +285,7 @@ const DashboardProducts = ({ token }) => {
       } catch (ex) {
         showErrorSnackbar();
       }
-      await firebaseAPI.admin.product.update(updatedProduct, token);
+      await backendAPI.admin.product.update(updatedProduct, token);
     }
   };
 
@@ -297,9 +297,9 @@ const DashboardProducts = ({ token }) => {
   const handleDialogSave = async (updatedProduct) => {
     try {
       if (!updatedProduct._id) {
-        await firebaseAPI.admin.product.create(updatedProduct);
+        await backendAPI.admin.product.create(updatedProduct);
       } else {
-        await firebaseAPI.admin.product.update(updatedProduct);
+        await backendAPI.admin.product.update(updatedProduct);
       }
 
       setProducts((currentProductState) => {

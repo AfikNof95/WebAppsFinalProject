@@ -10,7 +10,7 @@ const firebaseConfig = {
   measurementId: "G-W9X24DV2PJ",
 };
 
-const FIREBASE_REST_API = {
+const REST_API = {
   auth: {
     signInWithEmailAndPassword:
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=",
@@ -44,12 +44,12 @@ const getAPIURL = (url) => {
   return url + firebaseConfig.apiKey;
 };
 
-const firebaseAPI = {
+const backendAPI = {
   /** Auth API */
   auth: {
     async signInWithEmailAndPassword(email, password) {
       return await axios.post(
-        getAPIURL(FIREBASE_REST_API.auth.signInWithEmailAndPassword),
+        getAPIURL(REST_API.auth.signInWithEmailAndPassword),
         {
           email,
           password,
@@ -59,7 +59,7 @@ const firebaseAPI = {
     },
     async signUpWithEmailAndPassword(email, password) {
       return await axios.post(
-        getAPIURL(FIREBASE_REST_API.auth.signUpWithEmailAndPassword),
+        getAPIURL(REST_API.auth.signUpWithEmailAndPassword),
         {
           email,
           password,
@@ -68,7 +68,7 @@ const firebaseAPI = {
       );
     },
     async refreshToken(refreshToken) {
-      return await axios.post(getAPIURL(FIREBASE_REST_API.auth.refreshToken), {
+      return await axios.post(getAPIURL(REST_API.auth.refreshToken), {
         grant_type: "refresh_token",
         refresh_token: refreshToken,
       });
@@ -78,7 +78,7 @@ const firebaseAPI = {
   /**User API */
   user: {
     async update(user) {
-      return await axios.post(getAPIURL(FIREBASE_REST_API.updateUser), user);
+      return await axios.post(getAPIURL(REST_API.updateUser), user);
     },
   },
 
@@ -87,7 +87,7 @@ const firebaseAPI = {
     user: {
       async isAdmin(token) {
         return await axios.post(
-          FIREBASE_REST_API.admin.user.isAdmin,
+          REST_API.admin.user.isAdmin,
           { token },
           {
             headers: {
@@ -97,7 +97,7 @@ const firebaseAPI = {
         );
       },
       async getAll(token) {
-        return await axios.get(FIREBASE_REST_API.admin.user.getAll, {
+        return await axios.get(REST_API.admin.user.getAll, {
           headers: {
             Authorization: "Bearer " + token,
           },
@@ -105,7 +105,7 @@ const firebaseAPI = {
       },
       async update(newUserDetails, token) {
         return await axios.put(
-          FIREBASE_REST_API.admin.user.update,
+          REST_API.admin.user.update,
           {
             ...newUserDetails,
           },
@@ -119,20 +119,20 @@ const firebaseAPI = {
     },
     product: {
       async getAll(token) {
-        return await axios.get(FIREBASE_REST_API.admin.product.getAll, {
+        return await axios.get(REST_API.admin.product.getAll, {
           headers: {
             Authorization: "Bearer " + token,
           },
         });
       },
       async create(newProductDetails) {
-        return await axios.post(FIREBASE_REST_API.admin.product.create, {
+        return await axios.post(REST_API.admin.product.create, {
           ...newProductDetails,
         });
       },
       async update(newProductDetails, token) {
         return await axios.put(
-          FIREBASE_REST_API.admin.product.update + `/${newProductDetails._id}`,
+          REST_API.admin.product.update + `/${newProductDetails._id}`,
           {
             ...newProductDetails,
           }
@@ -141,11 +141,11 @@ const firebaseAPI = {
     },
     category: {
       async getAll(token) {
-        return await axios.get(FIREBASE_REST_API.admin.category.getAll);
+        return await axios.get(REST_API.admin.category.getAll);
       },
     },
     order: {},
   },
 };
 
-export default firebaseAPI;
+export default backendAPI;

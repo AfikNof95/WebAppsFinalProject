@@ -27,6 +27,7 @@ import {
 } from "@mui/material";
 import Close from "@mui/icons-material/Close";
 import { useRef, useState } from "react";
+import Add from "@mui/icons-material/Add";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -48,7 +49,13 @@ const DashboardProductsDialog = ({
 }) => {
   const [productDetails, setProductDetails] = useState(product);
   const [errors, setErrors] = useState(defaultErrors);
+  const [isShowAddImage, setIsShowAddImage] = useState(false);
+  const [addImageErrorState, setAddImageErrorState] = useState({
+    show: false,
+    message: "",
+  });
   const mainImage = useRef();
+  const imageURLInput = useRef();
   const handleImageClick = (img) => {
     mainImage.current.src = img;
   };
@@ -106,6 +113,38 @@ const DashboardProductsDialog = ({
     setProductDetails((currentProductDetails) => {
       return { ...currentProductDetails, ...{ [key]: value } };
     });
+  };
+
+  const handleAddImageClick = () => {
+    setIsShowAddImage(true);
+  };
+  const handleAddImageSubmit = async () => {
+    try {
+      const imageURL = imageURLInput.current.value;
+      if (
+        imageURL.indexOf("http") === -1 &&
+        imageURL.indexOf("data:image") === -1
+      ) {
+        throw new Error("Image not found!");
+      }
+      await fetch({
+        url: imageURL,
+        method: "GET",
+      });
+      setProductDetails((currentProductDetails) => {
+        currentProductDetails.images.push(imageURL);
+        return { ...currentProductDetails };
+      });
+      setIsShowAddImage(false);
+    } catch (ex) {
+      setAddImageErrorState({
+        show: true,
+        message: "Image is not valid!",
+      });
+    }
+  };
+  const handleCloseAddImage = () => {
+    setIsShowAddImage(false);
   };
 
   return (
@@ -169,6 +208,22 @@ const DashboardProductsDialog = ({
                     </Box>
                   );
                 })}
+              </Stack>
+              <Stack direction={"column"}>
+                <IconButton
+                  size="sm"
+                  color="success"
+                  sx={{
+                    color: "white",
+                    backgroundColor: "rgb(46, 125, 50)",
+                    "&:hover": {
+                      backgroundColor: "rgb(56 159 61)",
+                    },
+                  }}
+                  onClick={handleAddImageClick}
+                >
+                  <Add></Add>
+                </IconButton>
               </Stack>
               <Box width={600}>
                 <img
@@ -326,6 +381,42 @@ const DashboardProductsDialog = ({
           Save
         </Button>
       </DialogActions>
+      <Dialog open={isShowAddImage} fullWidth maxWidth="md">
+        <AppBar sx={{ position: "relative" }}>
+          <Toolbar sx={{ backgroundColor: "#24344c" }}>
+            <Typography variant="body2">Add New Image</Typography>
+            <IconButton
+              edge="end"
+              sx={{ color: "white", right: 15, position: "absolute" }}
+              onClick={handleCloseAddImage}
+            >
+              <Close></Close>
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <DialogContent>
+          <TextField
+            required
+            fullWidth
+            inputRef={imageURLInput}
+            type={"text"}
+            variant="standard"
+            label="Image URL"
+            error={addImageErrorState.show}
+            helperText={
+              addImageErrorState.show ? addImageErrorState.message : ""
+            }
+          ></TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAddImage} variant="contained">
+            Cancel
+          </Button>
+          <Button onClick={handleAddImageSubmit} variant="contained">
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Dialog>
   );
 };
