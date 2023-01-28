@@ -1,3 +1,4 @@
+const categoryModel = require("../models/category.model");
 const ProductModel = require("../models/product.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
@@ -111,6 +112,24 @@ const ProductService = {
       pages,
       priceRange: [minPrice, maxPrice],
     };
+  },
+
+  async getProductsAnalytics() {
+    let byCategories = await ProductModel.aggregate([
+      { $match: { isActive: true } },
+      {
+        $group: {
+          _id: "$category",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    for (let cat of byCategories) {
+      const category = await categoryModel.findById(cat._id);
+      cat.name = category.name;
+    }
+
+    return { byCategories };
   },
 };
 

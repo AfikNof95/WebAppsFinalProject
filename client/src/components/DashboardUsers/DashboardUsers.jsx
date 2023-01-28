@@ -7,8 +7,8 @@ import RestoreIcon from "@mui/icons-material/Undo";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import DashboardUserRestoreDialog from "./DashboardUserRestoreDialog";
 import DashboardUserRemoveDialog from "./DashboardUserRemoveDialog";
-const DashboardUsers = ({ token }) => {
-  const [rows, setRows] = useState([]);
+const DashboardUsers = ({ token, usersArray,updateUserAnalytics }) => {
+  const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [snackBarState, setSnackBarState] = useState({
     show: false,
@@ -21,24 +21,24 @@ const DashboardUsers = ({ token }) => {
 
   const handleDeleteClick = useCallback(
     (uid) => {
-      const user = rows.filter((row) => {
+      const user = users.filter((row) => {
         return row.uid === uid;
       });
       setCurrentUser(user[0]);
       setIsShowRemoveDialog(true);
     },
-    [rows]
+    [users]
   );
 
   const handleRestoreClick = useCallback(
     (uid) => {
-      const user = rows.filter((row) => {
+      const user = users.filter((row) => {
         return row.uid === uid;
       });
       setCurrentUser(user[0]);
       setIsShowRestoreDialog(true);
     },
-    [rows]
+    [users]
   );
   const cols = useMemo(
     () => [
@@ -111,15 +111,11 @@ const DashboardUsers = ({ token }) => {
   );
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      let response = await backendAPI.admin.user.getAll(token);
-      let { users } = response.data;
-      setRows(users);
+    if (usersArray.length) {
+      setUsers(usersArray);
       setIsLoading(false);
-    };
-
-    fetchUsers();
-  }, [token]);
+    }
+  }, [usersArray]);
 
   const showErrorSnackbar = () => {
     updateSnackBarState({
@@ -149,7 +145,7 @@ const DashboardUsers = ({ token }) => {
         return;
       }
 
-      const updatedUser = rows.filter((user) => user.uid === params.id)[0];
+      const updatedUser = users.filter((user) => user.uid === params.id)[0];
       if (updatedUser[params.field] === params.value) {
         return;
       }
@@ -165,7 +161,6 @@ const DashboardUsers = ({ token }) => {
     setCurrentUser({});
     setIsShowRestoreDialog(false);
     setIsShowRemoveDialog(false);
-
   };
 
   const handleDialogConfirm = (user) => {
@@ -178,6 +173,7 @@ const DashboardUsers = ({ token }) => {
       setIsShowRestoreDialog(false);
       setIsShowRemoveDialog(false);
       showSuccessSnackbar();
+      updateUserAnalytics();
     } catch (ex) {
       showErrorSnackbar();
     }
@@ -197,7 +193,7 @@ const DashboardUsers = ({ token }) => {
       ) : (
         <DataGrid
           getRowId={(row) => row.uid}
-          rows={rows}
+          rows={users}
           columns={cols}
           pageSize={20}
           rowsPerPageOptions={[20]}

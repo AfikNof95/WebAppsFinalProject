@@ -16,6 +16,11 @@ const OrderModel = new Schema(
         },
       },
     ],
+    totalPrice: {
+      type: "Number",
+      required: true,
+      min: [0, "Price should be higher than 0!"],
+    },
     status: {
       type: String,
       enum: ["Created", "Packed", "Delivered"],

@@ -3,7 +3,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const OrderService = {
   async getAllOrders() {
-    return await OrderModel.find();
+    return await OrderModel.find().populate(["address", "products.product"]);
   },
 
   async getOrderById(orderId) {
@@ -23,7 +23,6 @@ const OrderService = {
         product: new ObjectId(product.product),
       };
     });
-    console.log(order);
     return (await OrderModel.create(order)).populate("products.product");
   },
 
@@ -40,18 +39,38 @@ const OrderService = {
 
     return updatedOrder;
   },
-
-  async updateOrder(orderId) {
-    const updatedOrder = await OrderModel.findOneAndUpdate(
-      { _id: new ObjectId(orderId) },
-      { isActive: false }
-    );
-
-    if (!updatedOrder) {
-      throw new Error("Order not found!");
-    }
-
-    return updatedOrder;
+  async getOrdersAnalytics() {
+    const count = await OrderModel.count({ isActive: true });
+    const byStatus = await OrderModel.aggregate([
+      {
+        $match: {
+          isActive: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const monthlyProfit = await OrderModel.aggregate([
+      { $match: { isActive: true } },
+      {
+        $group: {
+          _id: {
+            month: { $month: "$createdAt" },
+            year: { $year: "$createdAt" },
+          },
+          profit: { $sum: "$totalPrice" },
+        },
+      },
+    ]);
+    return {
+      count,
+      monthlyProfit,
+      byStatus,
+    };
   },
 };
 

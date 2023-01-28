@@ -53,6 +53,14 @@ const ProductController = {
       next(ex);
     }
   },
+  async getProductsAnalytics(req, res, next) {
+    try {
+      const productsAnalytics = await ProductService.getProductsAnalytics();
+      return res.json(productsAnalytics);
+    } catch (ex) {
+      next(ex);
+    }
+  },
 };
 
 module.exports = ProductController;

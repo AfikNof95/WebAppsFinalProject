@@ -1,7 +1,7 @@
 const AddressController = require("../controllers/address.controller");
 const router = require("express").Router();
 
-router.get("/user/:userId", AddressController.getAddressByUserId);
+router.get("/User/:userId", AddressController.getAddressByUserId);
 router.get("/id/:addressId", AddressController.getAddress);
 
 router.post("/", AddressController.createAddress);
