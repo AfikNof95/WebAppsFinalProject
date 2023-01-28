@@ -54,6 +54,7 @@ const AccountPage = () => {
     const [insertEmail, setEditEmail] = useState(false);
     const [insertPass, setEditPass] = useState(false);
     const [insertCurrentPass, setCurrentPass] = useState(false);
+    const [currentPassValue, setCurrentPassValue] = useState("");
     const [changeType, setChangeType] = useState(0);
     const [openPrivacy, setOpenPrivacy] = useState(false);
     const handlePrivacyOpen = () => setOpenPrivacy(true);
@@ -88,7 +89,7 @@ const AccountPage = () => {
     }
 
     const matchFunction = () => {
-        console.log(currentPass)
+        setCurrentPassValue(currentPass.current.value)
         setCurrentPass(false)
         
         if(changeType == 1)
@@ -104,18 +105,15 @@ const AccountPage = () => {
     const editEmail = () => {
         setEditEmail(false)
         const newRecEmail = newEmail.current.value
-        const newPass = currentPass.current.value
         setEmail(newRecEmail)
-        updateUser({ email: newRecEmail })
+        updateUser({ email: newRecEmail }, currentPassValue)
     } 
 
     const editName = () => {
         setEditName(false)
         const newRecName = newName.current.value
-        console.log(newRecName)
-        console.log(newRecName)
         setName(newRecName)
-        updateUser({ displayName: newRecName })
+        updateUser({ displayName: newRecName }, currentPassValue)
     }
 
     const editPass = () => {
@@ -362,9 +360,9 @@ const AccountPage = () => {
     </Card>
     <Card sx={{marginLeft:"20px", marginTop:"20px"}} >
         <Typography marginBottom={2} variant="h5" component="h2">Name &emsp; {name}  &ensp;
-            <EditRoundedIcon onClick={() => { setEditName(true)
-                // setChangeType(1)
-                // setCurrentPass(true)
+            <EditRoundedIcon onClick={() => { //setEditName(true)
+                setChangeType(1)
+                setCurrentPass(true)
             }}/>
             {
                 insertName? 
@@ -390,9 +388,9 @@ const AccountPage = () => {
             }
         </Typography>
         <Typography marginBottom={2} variant="h5" component="h2">Email &emsp;  {email} &ensp;
-            <EditRoundedIcon onClick={() => { setEditEmail(true)
-                // setChangeType(2)
-                // setCurrentPass(true)
+            <EditRoundedIcon onClick={() => { //setEditEmail(true)
+                setChangeType(2)
+                setCurrentPass(true)
             }}/>
             {
                 insertEmail? 
@@ -464,36 +462,36 @@ const AccountPage = () => {
         </Typography> 
 
         {
-            // insertCurrentPass ? 
-            // <Dialog open={insertCurrentPass} onClose={() => setCurrentPass(false)}>
-            // <DialogTitle>Enter Your Current Password</DialogTitle>
-            //     <DialogContent>
-            //     <DialogContentText>
-            //             For user changes
-            //             Please enter your current password
-            //           </DialogContentText>
-            //         <Box component={"form"}>
-            //         <TextField
-            //             autoFocus
-            //             autoComplete="false"
-            //             required
-            //             margin="dense"
-            //             id="password"
-            //             label="current password"
-            //             // type="password"
-            //             fullWidth
-            //             variant="standard"
-            //             inputRef={currentPass}
-            //             />
-            //             </Box>
-            //         </DialogContent>
-            //     <DialogActions>
-            //         <Button onClick={() => setCurrentPass(false)}>Cancel</Button>
-            //         <Button onClick={matchFunction}>Change</Button>
-            //     </DialogActions>
-            // </Dialog>
-            // :
-            // <Button> </Button>
+            insertCurrentPass ? 
+            <Dialog open={insertCurrentPass} onClose={() => setCurrentPass(false)}>
+            <DialogTitle>Enter Your Current Password</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                        For user changes
+                        Please enter your current password
+                      </DialogContentText>
+                    <Box component={"form"}>
+                    <TextField
+                        autoFocus
+                        autoComplete="false"
+                        required
+                        margin="dense"
+                        id="password"
+                        label="current password"
+                        type="password"
+                        fullWidth
+                        variant="standard"
+                        inputRef={currentPass}
+                        />
+                        </Box>
+                    </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setCurrentPass(false)}>Cancel</Button>
+                    <Button onClick={matchFunction}>Change</Button>
+                </DialogActions>
+            </Dialog>
+            :
+            <Button> </Button>
         }
         </Card>    
     </div>
