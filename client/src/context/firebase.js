@@ -34,6 +34,7 @@ const firebaseAPI = {
       }
     );
   },
+  
   async signUpWithEmailAndPassword(email, password) {
     return await axios.post(
       getAPIURL(FIREBASE_REST_API.signUpWithEmailAndPassword),
@@ -44,9 +45,11 @@ const firebaseAPI = {
       }
     );
   },
+
   async updateUser(user) {
     return await axios.post(getAPIURL(FIREBASE_REST_API.updateUser), user);
   },
+  
   async refreshToken(refreshToken) {
     return await axios.post(getAPIURL(FIREBASE_REST_API.refreshToken), {
       grant_type: "refresh_token",
