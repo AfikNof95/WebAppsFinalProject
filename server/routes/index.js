@@ -13,5 +13,7 @@ router.use("/Category", CategoryRoutes);
 router.use("/Cart" /*, isAuthorized*/, CartRoutes);
 router.use("/Product", ProductRoutes);
 router.use("/Order", OrderRoutes);
+router.use("/Account", OrderRoutes);
+router.use("/Profile", OrderRoutes);
 
 module.exports = router;

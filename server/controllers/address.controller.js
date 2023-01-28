@@ -22,6 +22,7 @@ const AddressController = {
       next(ex);
     }
   },
+  
   async createAddress(req, res, next) {
     try {
       const response = await AddressService.createAddress(req.body);
@@ -30,6 +31,7 @@ const AddressController = {
       next(ex);
     }
   },
+
   async updateAddress(req, res, next) {
     try {
       const { addressId } = req.params;

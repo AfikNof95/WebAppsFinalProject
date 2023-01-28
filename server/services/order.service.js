@@ -5,14 +5,17 @@ const OrderService = {
   async getAllOrders() {
     return await OrderModel.find();
   },
+
   async getOrderById(orderId) {
     return await OrderModel.find({ _id: new ObjectId(orderId) }).populate(
       "products.product"
     );
   },
+
   async getOrderByUserId(userId) {
     return await OrderModel.find({ user: userId }).populate("products.product");
   },
+
   async createOrder(order) {
     order.products = order.products.map((product) => {
       return {
@@ -23,7 +26,10 @@ const OrderService = {
     console.log(order);
     return (await OrderModel.create(order)).populate("products.product");
   },
+
   async updateOrder(orderId, order) {
+    console.log("orderId: " + orderId)
+    console.log("order : " + order)
     const updatedOrder = await OrderModel.findOneAndUpdate(
       { _id: new ObjectId(orderId) },
       order
@@ -34,6 +40,7 @@ const OrderService = {
 
     return updatedOrder;
   },
+
   async updateOrder(orderId) {
     const updatedOrder = await OrderModel.findOneAndUpdate(
       { _id: new ObjectId(orderId) },

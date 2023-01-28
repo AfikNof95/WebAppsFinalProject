@@ -1,6 +1,7 @@
 const OrderService = require("../services/order.service");
 
 const OrderController = {
+
   async getOrderById(req, res, next) {
     try {
       const { orderId } = req.params;
@@ -10,6 +11,7 @@ const OrderController = {
       next(ex);
     }
   },
+
   async getOrderByUserId(req, res, next) {
     try {
       const { userId } = req.params;
@@ -19,6 +21,7 @@ const OrderController = {
       next(ex);
     }
   },
+
   async getAllOrders(req, res, next) {
     try {
       const response = await OrderService.getAllOrders();
@@ -27,6 +30,7 @@ const OrderController = {
       next(ex);
     }
   },
+
   async createOrder(req, res, next) {
     try {
       const response = await OrderService.createOrder(req.body);
@@ -35,6 +39,7 @@ const OrderController = {
       next(ex);
     }
   },
+
   async updateOrder(req, res, next) {
     try {
       const { orderId } = req.params;
@@ -44,6 +49,7 @@ const OrderController = {
       next(ex);
     }
   },
+
   async deleteOrder(req, res, next) {
     try {
       const { orderId } = req.params;
