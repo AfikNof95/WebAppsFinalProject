@@ -43,8 +43,7 @@ import {
 
 const AccountPage = () => {
 
-    const { userIcon, setIcon, getUser, updateUser, signOut, isUserSignedIn, 
-        updateNewEmail, updateNewPass } = useAuth();
+    const { userIcon, setIcon, getUser, updateUser, signOut, isUserSignedIn } = useAuth();
     const newName = useRef();
     const newEmail = useRef();
     const newPass = useRef();
@@ -117,9 +116,11 @@ const AccountPage = () => {
     }
 
     const editPass = () => {
+        console.log(user)
         setEditPass(false)
         setPass("* * * * * * ")
-        updateNewPass(newPass.current.value)
+        const newRecPass = newPass.current.value
+        updateUser({ password: newRecPass}, currentPassValue)
     }
 
     const modalStyle = {
@@ -433,11 +434,14 @@ const AccountPage = () => {
             </Modal>
         </Typography>  
         <Typography  variant="h5" component="h2">Password &emsp; &ensp; {pass} &ensp;
-            <EditRoundedIcon onClick={() => setEditPass(true)}/>
+            <EditRoundedIcon onClick={() => {
+                setChangeType(3)
+                setCurrentPass(true)
+            }}/>
             {
                 insertPass? 
                 <div>
-                    <Input sx={{marginLeft:"20px"}} placeholder="enter new password" inputRef={newEmail} />
+                    <Input sx={{marginLeft:"20px"}} placeholder="enter new password" inputRef={newPass} />
                     <SendRoundedIcon onClick={editPass}/>
                 </div>
                 :

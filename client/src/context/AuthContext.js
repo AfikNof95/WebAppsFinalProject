@@ -1,9 +1,8 @@
-import React, { useState, useContext, createContext, useEffect } from "react";
+import React, { useState, useContext, createContext } from "react";
 import firebaseAPI from "./firebase";
 import { useCookies } from "react-cookie";
 import { getTokenExpireDate } from "../utils/getTokenExpireDate";
-import { getAuth, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider,
-  signOut } from "firebase/auth";
+
 
 
 const AuthContext = createContext({
@@ -76,15 +75,6 @@ export const AuthContextProvider = ({ children }) => {
     // auth.signOut()
   }
 
-  
-  async function updateNewPass(newPassword) {
-    updatePassword(currentUser, newPassword).then(() => {
-      // Update successful.
-    }).catch((error) => {
-      // An error ocurred
-      // ...
-    });
-  }
 
   function getUserToken() {
     return isUserSignedIn() ? currentUser.getIdToken() : null;
@@ -112,8 +102,11 @@ export const AuthContextProvider = ({ children }) => {
     return currentUser;
   } 
 
-  async function updateUser(newUserDetails) {
-    await signIn({ email: currentUser.email, password: 'mmmmmm' }) 
+  async function updateUser(newUserDetails, currentPass) {
+    // Re sign to restart timeout counting of cerdiantial. 
+    await signIn({ email: currentUser.email, password: currentPass }) 
+    
+    // Refresh token to restart timeout counting of token id.
     await refreshToken()
     const response = await firebaseAPI.updateUser({
       ...currentUser,
@@ -122,6 +115,9 @@ export const AuthContextProvider = ({ children }) => {
     setCurrentUser((currentUserState) => {
       return { ...currentUserState, ...response.data };
     });
+
+    // Maybe: there is need to re sign in after updating user
+    // so that firebase sync information with cookie.  
   }
 
   function isUserSignedIn() {
@@ -144,7 +140,6 @@ export const AuthContextProvider = ({ children }) => {
     refreshToken,
     setIcon,
     userIcon,
-    updateNewPass
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
