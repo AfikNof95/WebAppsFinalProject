@@ -53,10 +53,10 @@ export default function NewCheckout() {
           </Stepper>
           {activeStep === steps.length ? (
             <React.Fragment>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant="h5" align="center" gutterBottom>
                 Thank you for your order.
               </Typography>
-              <Typography variant="subtitle1">
+              <Typography align="center" variant="subtitle1">
                 Your order number is #122344. We have emailed your order
                 confirmation, and will send you an update when your order has
                 shipped.

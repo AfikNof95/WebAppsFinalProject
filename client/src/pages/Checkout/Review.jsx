@@ -1,35 +1,40 @@
 import React from "react";
 import { Typography, List, ListItem, ListItemText } from "@mui/material";
-import { Grid, Box, Button } from "@mui/material";
+import { Grid, Box, Button, Stack } from "@mui/material";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import omit from "lodash/omit";
+import ReviewProdList from "./ReviewProdList";
 
 export default function Review(props) {
   const { handleNext, handleBack } = props;
-  const { paymentInfo, userInfo, getCartProducts, getCartTotalPrice } =
-    useShoppingCart();
+  const {
+    paymentInfo,
+    userInfo,
+    getCartProducts,
+    getCartTotalPrice,
+    deleteCart,
+    removePaymentInfo,
+    removeUserInfo,
+  } = useShoppingCart();
 
   const products = getCartProducts();
   const sumOrder = getCartTotalPrice();
+
+  const finishReservation = () => {
+    deleteCart();
+    removePaymentInfo();
+    removeUserInfo();
+  };
+
+  const handleFinish = () => {
+    finishReservation();
+    handleNext();
+  };
 
   const last4digits = paymentInfo?.cardNumber.substr(-4);
   const payments = [
     { name: "Card holder", detail: paymentInfo.cardName },
     { name: "Card number", detail: `xxxx-xxxx-xxxx-${last4digits}` },
-  ];
-
-  const PPPproducts = [
-    {
-      name: "Product 1",
-      desc: "A nice thing",
-      price: "$9.99",
-    },
-    {
-      name: "Product 3",
-      desc: "Something else",
-      price: "$6.51",
-    },
-    { name: "Shipping", desc: "", price: "Free" },
   ];
 
   return (
@@ -39,16 +44,10 @@ export default function Review(props) {
       </Typography>
       <hr />
       <List disablePadding>
-        {products.map((product) => (
-          <ListItem key={product.product.name} sx={{ py: 1, px: 0 }}>
-            {/* Sholud be desc of product as well */}
-            <ListItemText
-              primary={product.product.name}
-              secondary={product.desc}
-            />
-            <Typography variant="body2">${product.product.price}</Typography>
-          </ListItem>
-        ))}
+        <Stack direction={"column"} gap={3} minWidth={500}>
+          <ReviewProdList />
+        </Stack>
+        <hr />
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
@@ -56,13 +55,13 @@ export default function Review(props) {
           </Typography>
         </ListItem>
       </List>
-
+      <hr />
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+          <Typography variant="h6" align="center" gutterBottom sx={{ mt: 2 }}>
             Shipping
           </Typography>
-          <Typography gutterBottom>
+          <Typography gutterBottom align="center">
             {Object.values(
               omit(userInfo, [
                 "address1",
@@ -76,24 +75,29 @@ export default function Review(props) {
               .filter(Boolean)
               .join(" ")}
           </Typography>
-          <Typography gutterBottom>
+          <Typography gutterBottom align="center">
             {Object.values(omit(userInfo, ["fName", "lName"]))
               .filter(Boolean)
               .join(", ")}
           </Typography>
         </Grid>
+
         <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+          <Typography variant="h6" align="center" gutterBottom sx={{ mt: 2 }}>
             Payment details
           </Typography>
           <Grid container>
             {payments.map((payment) => (
               <React.Fragment key={payment.name}>
                 <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.name}</Typography>
+                  <Typography align="center" gutterBottom>
+                    {payment.name}
+                  </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.detail}</Typography>
+                  <Typography align="center" gutterBottom>
+                    {payment.detail}
+                  </Typography>
                 </Grid>
               </React.Fragment>
             ))}
@@ -105,7 +109,11 @@ export default function Review(props) {
           Back
         </Button>
 
-        <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1 }}>
+        <Button
+          variant="contained"
+          onClick={handleFinish}
+          sx={{ mt: 3, ml: 1 }}
+        >
           Place order
         </Button>
       </Box>

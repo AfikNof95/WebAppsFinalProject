@@ -1,22 +1,21 @@
-import { Divider } from "@mui/material";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
-import { CartProduct } from "../CartProduct/CartProduct";
+import { ReviewProduct } from "./ReviewProduct";
 
-const CartProductList = () => {
+const ReviewProdList = () => {
   const { getCartProducts } = useShoppingCart();
 
   const products = getCartProducts();
 
   return products.map((productObject) => (
-    <CartProduct
+    <ReviewProduct
       key={productObject.product._id}
       id={productObject.product._id}
       name={productObject.product.name}
       imageURL={productObject.product.images[0]}
       price={productObject.product.price}
       quantity={productObject.quantity}
-    ></CartProduct>
+    ></ReviewProduct>
   ));
 };
 
-export default CartProductList;
+export default ReviewProdList;
