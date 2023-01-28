@@ -1,8 +1,8 @@
 import Checkout from "../../pages/Checkout/Checkout";
 import CartPage from "../../pages/Cart/Cart";
 import Homepage from "../Homepage/Homepage";
-import NotFound from "../NotFound/NotFound";
-import AuthForm from "../Auth/Login";
+import AuthForm from "../Auth/Login"
+import ProductPage from "../ProductPage/Productpage";
 import AccountPage from "../Account/Account";
 import ProfilePage from "../Profile/Profile";
 
@@ -37,13 +37,9 @@ const appRoutes = [
     element: "", // Will be
   },
   {
-    path: "*",
-    element: (
-      <>
-        <div style={{ paddingTop: "100px" }}>{<NotFound />}</div>
-      </>
-    ),
-  },
+    path:"/product/:id",
+    element: <ProductPage></ProductPage>
+  }
 ];
 
 export default appRoutes;
