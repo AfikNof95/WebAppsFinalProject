@@ -31,6 +31,15 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import icons from "./icons";
+import {
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    TextField,
+    DialogContentText
+  } from "@mui/material";
+
 
 const AccountPage = () => {
 
@@ -38,10 +47,14 @@ const AccountPage = () => {
     const newName = useRef();
     const newEmail = useRef();
     const newPass = useRef();
+    const currentPass = useRef();
     const [anchorEl, setAnchorEl] = useState(null);
     const [insertName, setEditName] = useState(false);
     const [insertEmail, setEditEmail] = useState(false);
     const [insertPass, setEditPass] = useState(false);
+    const [insertCurrentPass, setCurrentPass] = useState(false);
+    const [currentPassValue, setCurrentPassValue] = useState("");
+    const [changeType, setChangeType] = useState(0);
     const [openPrivacy, setOpenPrivacy] = useState(false);
     const handlePrivacyOpen = () => setOpenPrivacy(true);
     const handlePrivacyClose = () => setOpenPrivacy(false);
@@ -49,7 +62,7 @@ const AccountPage = () => {
     const handleUsageOpen = () => setOpenUsage(true);
     const handleUsageClose = () => setOpenUsage(false);
     let user = getUser()
-    
+
     if(!user) {
         user = {
             email: "Signed out",
@@ -73,26 +86,41 @@ const AccountPage = () => {
     const changeIcon = (newIcon) => {
         setIcon(newIcon)
     }
+
+    const matchFunction = () => {
+        setCurrentPassValue(currentPass.current.value)
+        setCurrentPass(false)
+        
+        if(changeType == 1)
+            setEditName(true)
+        else if(changeType == 2) 
+            setEditEmail(true)
+        else 
+            setEditPass(true)
+
+        setChangeType(0)
+    }
     
     const editEmail = () => {
         setEditEmail(false)
-        console.log(newEmail.current.value)
-        setEmail(newEmail.current.value)
-        // updateUser(newEmail)
+        const newRecEmail = newEmail.current.value
+        setEmail(newRecEmail)
+        updateUser({ email: newRecEmail }, currentPassValue)
     } 
 
     const editName = () => {
         setEditName(false)
-        console.log(newName.current.value)
-        setName(newName.current.value)
-        // updateUser(newName.current.value)
+        const newRecName = newName.current.value
+        setName(newRecName)
+        updateUser({ displayName: newRecName }, currentPassValue)
     }
 
     const editPass = () => {
+        console.log(user)
         setEditPass(false)
-        console.log(newPass.current.value)
         setPass("* * * * * * ")
-        // updateUser(newPass.current.value)
+        const newRecPass = newPass.current.value
+        updateUser({ password: newRecPass}, currentPassValue)
     }
 
     const modalStyle = {
@@ -333,7 +361,10 @@ const AccountPage = () => {
     </Card>
     <Card sx={{marginLeft:"20px", marginTop:"20px"}} >
         <Typography marginBottom={2} variant="h5" component="h2">Name &emsp; {name}  &ensp;
-            <EditRoundedIcon onClick={() => setEditName(true)}/>
+            <EditRoundedIcon onClick={() => { //setEditName(true)
+                setChangeType(1)
+                setCurrentPass(true)
+            }}/>
             {
                 insertName? 
                 <div>
@@ -346,9 +377,9 @@ const AccountPage = () => {
             
             {
                 isUserSignedIn() ? 
-                <Button onClick={logOut} sx= {{marginLeft:"1200px"}}> Sign Out </Button>
+                <Button onClick={logOut} style={{float:"right", marginRight: "66px"}}> Sign Out </Button>
                 :
-                <Button sx= {{marginLeft:"1225px", color:"blue"}}
+                <Button sx= {{float:"right", marginRight: "60px", color:"blue"}}
                     component={RouterLink}
                     to={"/login"}
                     color="inherit"
@@ -358,18 +389,21 @@ const AccountPage = () => {
             }
         </Typography>
         <Typography marginBottom={2} variant="h5" component="h2">Email &emsp;  {email} &ensp;
-            <EditRoundedIcon onClick={() => setEditName(true)}/>
+            <EditRoundedIcon onClick={() => { //setEditEmail(true)
+                setChangeType(2)
+                setCurrentPass(true)
+            }}/>
             {
                 insertEmail? 
                 <div>
-                    <Input sx={{marginLeft:"20px"}} placeholder="enter new email" inputRef={newEmail} />
+                    <Input type="email" sx={{marginLeft:"20px"}} placeholder="enter new email" inputRef={newEmail} />
                     <SendRoundedIcon onClick={editEmail}/>
                 </div>
                 :
                 <Button> </Button>
             }
             
-            <Button onClick={handleUsageOpen} sx= {{marginLeft:"1105px"}}> Usage Policy </Button>
+            <Button onClick={handleUsageOpen} style={{float:"right", marginRight: "55px"}}> Usage Policy </Button>
             <Modal
                 open={openUsage}
                 onClose={handleUsageClose}
@@ -400,17 +434,20 @@ const AccountPage = () => {
             </Modal>
         </Typography>  
         <Typography  variant="h5" component="h2">Password &emsp; &ensp; {pass} &ensp;
-            <EditRoundedIcon onClick={() => setEditPass(true)}/>
+            <EditRoundedIcon onClick={() => {
+                setChangeType(3)
+                setCurrentPass(true)
+            }}/>
             {
                 insertPass? 
                 <div>
-                    <Input sx={{marginLeft:"20px"}} placeholder="enter new password" inputRef={newEmail} />
+                    <Input sx={{marginLeft:"20px"}} placeholder="enter new password" inputRef={newPass} />
                     <SendRoundedIcon onClick={editPass}/>
                 </div>
                 :
                 <Button> </Button>
             }
-            <Button onClick={handlePrivacyOpen} sx= {{marginLeft:"1175px"}}> Privacy Policy  </Button>
+            <Button onClick={handlePrivacyOpen} style={{float:"right", marginRight: "50px"}}> Privacy Policy  </Button>
             <Modal
                 open={openPrivacy}
                 onClose={handlePrivacyClose}
@@ -427,7 +464,40 @@ const AccountPage = () => {
                 </Box>
             </Modal>
         </Typography> 
-    </Card>    
+
+        {
+            insertCurrentPass ? 
+            <Dialog open={insertCurrentPass} onClose={() => setCurrentPass(false)}>
+            <DialogTitle>Enter Your Current Password</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                        For user changes
+                        Please enter your current password
+                      </DialogContentText>
+                    <Box component={"form"}>
+                    <TextField
+                        autoFocus
+                        autoComplete="false"
+                        required
+                        margin="dense"
+                        id="password"
+                        label="current password"
+                        type="password"
+                        fullWidth
+                        variant="standard"
+                        inputRef={currentPass}
+                        />
+                        </Box>
+                    </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setCurrentPass(false)}>Cancel</Button>
+                    <Button onClick={matchFunction}>Change</Button>
+                </DialogActions>
+            </Dialog>
+            :
+            <Button> </Button>
+        }
+        </Card>    
     </div>
   );
 };
