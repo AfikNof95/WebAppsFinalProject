@@ -8,7 +8,7 @@ import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded';
 import { Link as RouterLink } from "react-router-dom";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import AddressForm from "../../pages/Checkout/AddressForm";
+import AddressForm from "../Checkout/AddressForm";
 
 const ProfilePage = () => {
   const { userIcon, getUser } = useAuth();

@@ -1,8 +1,8 @@
-import Checkout from "../../pages/Checkout/Checkout";
+import Checkout from "../Checkout/Checkout";
 import CartPage from "../../pages/Cart/Cart";
 import Homepage from "../Homepage/Homepage";
 import AuthForm from "../Auth/Login"
-import ProductPage from "../ProductPage/Productpage";
+import ProductPage from "../Productpage/Productpage";
 import AccountPage from "../Account/Account";
 import ProfilePage from "../Profile/Profile";
 
