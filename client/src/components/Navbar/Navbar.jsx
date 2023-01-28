@@ -61,7 +61,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navbar() {
-  const { isUserSignedIn } = useAuth();
+  const { isUserSignedIn, signOut } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -84,6 +84,11 @@ function Navbar() {
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+  };
+
+  const handleSignOutClick = () => {
+    setAnchorEl(null);
+    signOut();
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -126,8 +131,15 @@ function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <RouterLink to="/account"><MenuItem onClick={handleMenuClose}>Account 
+        </MenuItem>
+      </RouterLink>
+      <RouterLink to={`/profile`} >
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      </RouterLink>
+      <RouterLink to={`/`} >
+        <MenuItem onClick={handleSignOutClick}>Sign out</MenuItem>
+      </RouterLink>
     </Menu>
   );
 
@@ -168,7 +180,6 @@ function Navbar() {
           aria-haspopup="true"
           color="inherit"
         >
-          
           <AccountCircle />
         </IconButton>
         <p>Profile</p>

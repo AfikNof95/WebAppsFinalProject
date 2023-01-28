@@ -9,4 +9,6 @@ export const ERROR_MESSAGES = {
   USER_NOT_FOUND: "We couldn't find your email address!",
   TOO_MANY_ATTEMPTS:
     "Access to this account has been temporarily disabled due to many failed login attempts.",
+  EMAIL_EMPTY: "Email cannot be empty!",
+  DISPLAY_NAME_EMPTY: "Display name cannot be empty!",
 };

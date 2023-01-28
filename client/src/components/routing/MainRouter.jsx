@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router";
 import Navbar from "../Navbar/Navbar";
 import appRoutes from "./AppRoutes";
-import {CssBaseline} from "@mui/material";
+import { CssBaseline } from "@mui/material";
 
 const MainRouter = () => {
   return (
@@ -14,8 +14,7 @@ const MainRouter = () => {
           element={
             <>
               {<Navbar />}
-              <CssBaseline></CssBaseline>
-              {route.element}
+              <CssBaseline>{route.element}</CssBaseline>
             </>
           }
         />

@@ -14,6 +14,13 @@ const ShoppingCartContext = createContext({
   decreaseProductQuantity(productId, count) {},
   updateProductQuantity(productId, count) {},
   removeFromCart(productId) {},
+  userInfo: [],
+  paymentInfo: [],
+  handleFormChange: () => {},
+  handlePaymentChange: () => {},
+  deleteCart: () => {},
+  removePaymentInfo: () => {},
+  removeUserInfo: () => {},
 });
 
 export function useShoppingCart() {
@@ -23,6 +30,22 @@ export function useShoppingCart() {
 export function ShoppingCartProvider({ children }) {
   const [cartProducts, setCartProducts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    fName: "",
+    lName: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    zip: "",
+    country: "",
+  });
+  const [paymentInfo, setPaymentInfo] = useState({
+    cardName: "",
+    cardNumber: "",
+    expDate: "",
+    cvv: "",
+  });
 
   const cartQuantity = cartProducts.reduce(
     (quantity, product) => Number(product.quantity) + quantity,
@@ -30,14 +53,37 @@ export function ShoppingCartProvider({ children }) {
   );
 
   useEffect(() => {
-    if (cartQuantity === 0 && isOpen) {
-      closeCart();
-    }
-    return;
+    cartQuantity === 0 && isOpen && closeCart();
   }, [cartQuantity, isOpen]);
 
   function getCartProducts() {
     return cartProducts;
+  }
+
+  function deleteCart() {
+    setCartProducts([]);
+  }
+
+  function removePaymentInfo() {
+    setPaymentInfo({
+      cardName: "",
+      cardNumber: "",
+      expDate: "",
+      cvv: "",
+    });
+  }
+
+  function removeUserInfo() {
+    setUserInfo({
+      fName: "",
+      lName: "",
+      address1: "",
+      address2: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "",
+    });
   }
 
   function getProductQuantity(productId) {
@@ -66,6 +112,18 @@ export function ShoppingCartProvider({ children }) {
         return cartProduct;
       });
     });
+    // const onAddProduct = (product) => {
+    //   setUserShoppingCart((prevState) => {
+    //     const foundProduct = prevState.find((item) => item._id === product._id);
+    //     return !!foundProduct
+    //       ? prevState.map((item) =>
+    //           item._id === product._id
+    //             ? { ...foundProduct, qty: foundProduct.qty + 1 }
+    //             : item
+    //         )
+    //       : [...prevState, { ...product, qty: 1 }];
+    //   });
+    // };
   }
 
   function increaseProductQuantity(productId, count = 1) {
@@ -99,6 +157,19 @@ export function ShoppingCartProvider({ children }) {
         return cartProduct;
       });
     });
+    // const onRemoveProduct = (product) => {
+    //   setUserShoppingCart((prevState) => {
+    //     const foundProduct = prevState.find((item) => item._id === product._id);
+
+    //     return foundProduct.qty > 1
+    //       ? prevState.map((item) =>
+    //           item._id === product._id
+    //             ? { ...foundProduct, qty: foundProduct.qty - 1 }
+    //             : item
+    //         )
+    //       : prevState.filter((item) => item._id !== product._id);
+    //   });
+    // };
   }
 
   function updateProductQuantity(productId, count) {
@@ -147,7 +218,22 @@ export function ShoppingCartProvider({ children }) {
       sum += product.quantity * product.product.price;
     }
     return formatPrice(sum);
+    // return cartProducts.reduce((all, current) => all + current.quantity * current.price, 0);
   }
+
+  const handleFormChange = async (event) => {
+    setUserInfo({
+      ...userInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handlePaymentChange = async (event) => {
+    setPaymentInfo({
+      ...paymentInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
 
   return (
     <ShoppingCartContext.Provider
@@ -160,9 +246,16 @@ export function ShoppingCartProvider({ children }) {
         getCartTotalPrice,
         addToCart,
         removeFromCart,
+        deleteCart,
         increaseProductQuantity,
         decreaseProductQuantity,
         updateProductQuantity,
+        userInfo: userInfo,
+        paymentInfo: paymentInfo,
+        handleFormChange: handleFormChange,
+        handlePaymentChange: handlePaymentChange,
+        removePaymentInfo,
+        removeUserInfo,
       }}
     >
       {children}

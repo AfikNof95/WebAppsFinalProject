@@ -1,24 +1,35 @@
-import React, { useContext } from "react";
-import Typography from "@mui/material/Typography";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Grid from "@mui/material/Grid";
-import CheckoutContext from "../../context/checkoutContext";
+import React from "react";
+import { Typography, List, ListItem, ListItemText } from "@mui/material";
+import { Grid, Box, Button } from "@mui/material";
+import { useShoppingCart } from "../../context/ShoppingCartContext";
 import omit from "lodash/omit";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 
 export default function Review(props) {
-  const checkoutCtx = useContext(CheckoutContext);
-  const { isNextAvailable, setIsNextAvailable, handleNext, handleBack } = props;
-  const sumOrder = "$34.06"; // temp of course
+  const { handleNext, handleBack } = props;
+  const { paymentInfo, userInfo, getCartProducts, getCartTotalPrice } =
+    useShoppingCart();
 
-  const last4digits = checkoutCtx.tmpPayment.cardNumber.substr(-4);
+  const products = getCartProducts();
+  const sumOrder = getCartTotalPrice();
+
+  const last4digits = paymentInfo?.cardNumber.substr(-4);
   const payments = [
-    { name: "Card holder", detail: checkoutCtx.tmpPayment.cardName },
+    { name: "Card holder", detail: paymentInfo.cardName },
     { name: "Card number", detail: `xxxx-xxxx-xxxx-${last4digits}` },
-    { name: "Expiry date", detail: checkoutCtx.tmpPayment.expDate },
+  ];
+
+  const PPPproducts = [
+    {
+      name: "Product 1",
+      desc: "A nice thing",
+      price: "$9.99",
+    },
+    {
+      name: "Product 3",
+      desc: "Something else",
+      price: "$6.51",
+    },
+    { name: "Shipping", desc: "", price: "Free" },
   ];
 
   return (
@@ -28,13 +39,16 @@ export default function Review(props) {
       </Typography>
       <hr />
       <List disablePadding>
-        {checkoutCtx.tmpProducts.map((product) => (
-          <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
+        {products.map((product) => (
+          <ListItem key={product.product.name} sx={{ py: 1, px: 0 }}>
+            {/* Sholud be desc of product as well */}
+            <ListItemText
+              primary={product.product.name}
+              secondary={product.desc}
+            />
+            <Typography variant="body2">${product.product.price}</Typography>
           </ListItem>
         ))}
-
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
@@ -42,16 +56,28 @@ export default function Review(props) {
           </Typography>
         </ListItem>
       </List>
+
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
             Shipping
           </Typography>
           <Typography gutterBottom>
-            {checkoutCtx.tmpPayment.cardName}
+            {Object.values(
+              omit(userInfo, [
+                "address1",
+                "address2",
+                "city",
+                "state",
+                "zip",
+                "country",
+              ])
+            )
+              .filter(Boolean)
+              .join(" ")}
           </Typography>
           <Typography gutterBottom>
-            {Object.values(omit(checkoutCtx.tmpUserInfo, ["fName", "lName"]))
+            {Object.values(omit(userInfo, ["fName", "lName"]))
               .filter(Boolean)
               .join(", ")}
           </Typography>
@@ -79,12 +105,7 @@ export default function Review(props) {
           Back
         </Button>
 
-        <Button
-          variant="contained"
-          onClick={handleNext}
-          sx={{ mt: 3, ml: 1 }}
-          disabled={!isNextAvailable}
-        >
+        <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1 }}>
           Place order
         </Button>
       </Box>

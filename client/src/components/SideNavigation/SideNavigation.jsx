@@ -11,6 +11,8 @@ import {
   List,
   CircularProgress,
   Collapse,
+  Avatar,
+  Typography,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
@@ -21,6 +23,8 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Filters from "./Filters";
+import { useAuth } from "../../context/AuthContext";
+import icons from "../Account/icons"
 
 const SideNavigation = ({ drawerWidth = 300, categories = [], priceRange }) => {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(true);
@@ -28,6 +32,8 @@ const SideNavigation = ({ drawerWidth = 300, categories = [], priceRange }) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(() => {
     return searchParams.get("categoryId");
   });
+
+  const { currentUser, userIcon } = useAuth();
 
   const toggleCategoriesCollapse = () => {
     setIsCategoriesOpen(!isCategoriesOpen);
@@ -98,7 +104,29 @@ const SideNavigation = ({ drawerWidth = 300, categories = [], priceRange }) => {
     >
       <Toolbar />
       {!selectedCategoryId && (
-        <Box sx={{ overflow: "auto", color: "black" }}>
+        <Box sx={{ overflow: "auto", color: "black" }} paddingTop={3}>
+          {currentUser && (
+            <>
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                alignItems={"center"}
+                paddingBottom={3}
+              >
+                <Avatar>
+                  
+                  { icons[userIcon] }
+                </Avatar>
+                <Typography variant="body1" fontWeight={"bold"}>
+                  {currentUser.displayName}
+                </Typography>
+                <Typography variant="caption" color={"GrayText"}>
+                  {currentUser.email}
+                </Typography>
+              </Box>
+              <Divider></Divider>
+            </>
+          )}
           <List>
             {pages.map((page, index) => (
               <ListItem key={page.name} disablePadding>
