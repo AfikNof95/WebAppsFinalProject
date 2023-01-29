@@ -7,7 +7,7 @@ const cors = require("cors");
 const path = require("path");
 const mongoSanitize = require("express-mongo-sanitize");
 const Scraper = require("./scraper/main");
-
+const wsServer = require("./middlewares/webSocketServer");
 require("dotenv").config({ path: path.join(__dirname, "./.env") });
 
 const PORT = process.env.PORT || 2308;
@@ -19,9 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.resolve(__dirname, "./public")));
-
 app.use(mongoSanitize());
-
 app.use(logger("combined"));
 app.use("/", require("./routes/index"));
 app.use(errorHandler);
@@ -41,6 +39,7 @@ const startServer = async () => {
     console.log("\nTrying to connect to mongoDB");
     await mongoose.connect(process.env.MONGOURI);
     console.log("MongoDB connected successfully");
+    wsServer();
   } catch (ex) {
     console.error(ex.message);
     console.log(ex.stack);

@@ -1,15 +1,13 @@
 import './App.css'
 import React from 'react'
+
 import MainRouter from './components/routing/MainRouter'
 import { useAxiosIntercept } from './hooks/useAxiosIntercept'
 
 const App = () => {
-    useAxiosIntercept()
-    return (
-        <div className="App">
-            <MainRouter />
-        </div>
-    )
+    const [isInterceptReady] = useAxiosIntercept()
+    return <div className="App">{isInterceptReady && <MainRouter />}</div>
 }
 
+export default App
 export default App

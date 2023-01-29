@@ -17,7 +17,7 @@ const ProductService = {
     return { products: await ProductModel.find().populate("category").exec() };
   },
   async getProduct(productId) {
-    return await ProductModel.find({ _id: new ObjectId(productId) });
+    return await ProductModel.findOne({ _id: new ObjectId(productId) });
   },
   async createProduct(product) {
     return await ProductModel.create(product);

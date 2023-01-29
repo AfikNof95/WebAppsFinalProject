@@ -37,7 +37,7 @@ export function SideCart({ isCartOpen }) {
         onClose={closeCart}
         PaperProps={{
           sx: {
-            width: 400,
+            width: 450,
           },
         }}
       >

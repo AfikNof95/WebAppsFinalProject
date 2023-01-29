@@ -4,7 +4,7 @@ import Homepage from "../Homepage/Homepage";
 import NotFound from "../NotFound/NotFound";
 
 import AuthForm from "../Auth/Login"
-import ProductPage from "../Productpage/Productpage";
+import ProductPage from "../ProductPage/ProductPage";
 import AccountPage from "../Account/Account";
 import ProfilePage from "../Profile/Profile";
 import DashboardPage from "../../pages/Dashboard/Dashboard";
@@ -34,7 +34,7 @@ const appRoutes = [
   },
   {
     path: "/categories",
-    element: "", // Will be
+    element: <div></div>, // Will be
   },
   {
     path: "/about",
