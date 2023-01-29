@@ -37,7 +37,7 @@ const ProductCard = ({ product }) => {
   return (
     <Grid item xs={6} sm={3} md={2} lg={2} xl={2}>
       <Card variant="outlined" sx={{ padding: "1em", borderRadius: 0 }}>
-        <Link to={`/product/${product._id}`}>
+        <Link to={`/product/${product._id}`} state={product}>
           <CardMedia
             component="img"
             height="150px"
