@@ -30,6 +30,7 @@ import Diversity1RoundedIcon from '@mui/icons-material/Diversity1Rounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import WarningIcon from '@mui/icons-material/Warning';
 import icons from "./icons";
 import {
     Dialog,
@@ -144,7 +145,7 @@ const AccountPage = () => {
 
     return (
         <div>
-        <Card sx={{ maxWidth: 1800, maxHeight:2000 }}>
+        <Card sx={{ width: 1 }}>
             <h1>Account</h1>
             <CardMedia
                 component="img"
@@ -468,11 +469,11 @@ const AccountPage = () => {
         {
             insertCurrentPass ? 
             <Dialog open={insertCurrentPass} onClose={() => setCurrentPass(false)}>
-            <DialogTitle>Enter Your Current Password</DialogTitle>
+            <DialogTitle> <WarningIcon></WarningIcon> To Continue Enter Your Current Password</DialogTitle>
                 <DialogContent>
                 <DialogContentText>
-                        For user changes
-                        Please enter your current password
+                        We are protecting you!
+                        Please enter your current password to proceed
                       </DialogContentText>
                     <Box component={"form"}>
                     <TextField

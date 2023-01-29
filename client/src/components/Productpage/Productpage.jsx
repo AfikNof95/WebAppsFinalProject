@@ -33,7 +33,7 @@ const ProductPage = (props) => {
   ]
 
   const { state } = useLocation();
-  const { product } = state.product;
+  const product = state;
   const [index, setIndex] = useState(0);
   const [stockCount, setStockCount] = useState(product.quantity)
   const [current, setCurrent] = useState(0)
@@ -41,7 +41,6 @@ const ProductPage = (props) => {
   const firstMassage = ['Available in stock ']
   const [massageType, setMassageType] = useState(firstMassage)
   let productName = product.name;
-  console.log(product);
 
   try {
     productName = product.name.split("|")[0];
