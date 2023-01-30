@@ -24,4 +24,4 @@ const CartProductList = () => {
 }
 
 export default CartProductList
-export default CartProductList
+
