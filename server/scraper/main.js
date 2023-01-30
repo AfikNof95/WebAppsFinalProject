@@ -19,6 +19,7 @@ const productLinks = {
 
 const fetchProducts = async () => {
   try {
+    console.log("Scraper Running\n")
     const products = [];
 
     for (let [category, link] of Object.entries(productLinks)) {
@@ -84,6 +85,8 @@ const fetchProducts = async () => {
             category,
             quantity,
           };
+
+          console.log("Adding "+ name);
 
           if (!description) {
             element.description = "Amazing Product!";

@@ -106,7 +106,6 @@ export const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         if (lastJsonMessage !== null) {
             if (lastJsonMessage.type === 'REFRESH_TOKEN') {
-                debugger;
                 refreshToken()
             }
         }

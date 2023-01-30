@@ -47,10 +47,11 @@ const ProductCard = ({ product }) => {
     }
 
     return (
-        <Grid item xs={6} sm={3} md={2} lg={2} xl={2}>
+        <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
             <Card variant="outlined" sx={{ padding: '1em', borderRadius: 0 }}>
                 <CardMedia
                     component="img"
+                    loading='lazy'
                     onClick={() => handleProductClick(product._id)}
                     height="150px"
                     image={product.images[0]}

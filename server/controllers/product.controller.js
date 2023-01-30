@@ -53,6 +53,15 @@ const ProductController = {
       next(ex);
     }
   },
+  async getProductsGroupByCategories(req, res, next) {
+    try {
+      const productsGroupByCategories =
+        await ProductService.getProductsGroupByCategories();
+      return res.json(productsGroupByCategories);
+    } catch (ex) {
+      next(ex);
+    }
+  },
   async getProductsAnalytics(req, res, next) {
     try {
       const productsAnalytics = await ProductService.getProductsAnalytics();

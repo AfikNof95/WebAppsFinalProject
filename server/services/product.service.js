@@ -114,7 +114,7 @@ const ProductService = {
     };
   },
 
-  async getProductsAnalytics() {
+  async getProductsGroupByCategories() {
     let byCategories = await ProductModel.aggregate([
       { $match: { isActive: true } },
       {
@@ -124,6 +124,11 @@ const ProductService = {
         },
       },
     ]);
+    return byCategories;
+  },
+
+  async getProductsAnalytics() {
+    let byCategories = await this.getProductsGroupByCategories();
     for (let cat of byCategories) {
       const category = await categoryModel.findById(cat._id);
       cat.name = category.name;
