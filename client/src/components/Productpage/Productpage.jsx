@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { useShoppingCart } from '../../context/ShoppingCartContext'
 import {
     Box,
@@ -11,9 +11,16 @@ import {
     Typography,
     ImageList,
     ImageListItem,
+    ListItem,
+    ListItemText,
+    Toolbar,
+    Paper,
+    Divider,
 } from '@mui/material'
 import { AnimateOnChange } from 'react-animation'
 import backendAPI from '../../api'
+import { Container, Stack } from '@mui/system'
+import { formatPrice } from '../../utils/formatPrice'
 
 const ProductPage = (props) => {
     const shortStock = ['Low On Stock!   Only ', 'About to run out!   Only ']
@@ -30,8 +37,7 @@ const ProductPage = (props) => {
         'High Availability  ',
     ]
 
-    const location = useLocation()
-    // const { product } = state.product
+    const { productId } = useParams()
     const [product, setProduct] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
     const [index, setIndex] = useState(0)
@@ -43,15 +49,13 @@ const ProductPage = (props) => {
 
     useEffect(() => {
         const fetchProduct = async () => {
-            const response = await backendAPI.product.get(
-                location.state.productId
-            )
+            const response = await backendAPI.product.get(productId)
             setProduct(response.data)
             setStockCount(response.data.quantity)
             setIsLoading(false)
         }
         fetchProduct()
-    }, [location])
+    }, [])
 
     const switchIndex = async (pressedIndex) => {
         setIndex(pressedIndex)
@@ -79,84 +83,105 @@ const ProductPage = (props) => {
     })
     return (
         !isLoading && (
-            <div>
-                <Box marginLeft={8} sx={{ width: 80 / 85 }}>
-                    <Typography variant="h3" marginTop={8} marginBottom={2}>
-                        {product.name}
-                    </Typography>
-                    <Grid container spacing={1}>
-                        <Card sx={{ width: 2 / 3 }}>
-                            <List>
-                                <Box>
-                                    <Box
-                                        sx={{ width: 1 / 2 }}
-                                        maxHeight={700}
-                                        component="img"
-                                        src={product.images[index]}
-                                    />
-                                    <ImageList
-                                        flexWrap="nowrap"
-                                        transform="translateZ(0)"
-                                        cols={9}
-                                    >
-                                        {' '}
-                                        {product.images.map((item, index) => (
-                                            <ImageListItem key={item}>
-                                                <img
-                                                    size="medium"
-                                                    src={item}
-                                                    key={index}
-                                                    alt=""
-                                                    loading="lazy"
-                                                    onClick={() =>
-                                                        switchIndex(index)
-                                                    }
-                                                />
-                                            </ImageListItem>
-                                        ))}{' '}
-                                    </ImageList>
-                                </Box>
-                            </List>
-                        </Card>
-                        <Grid marginTop={3} marginLeft={7} textAlign={'center'}>
-                            <Typography marginBottom={10} variant="h3">
-                                {' '}
-                                ${product.price}{' '}
-                            </Typography>
-                            <Button
-                                marginBottom={10}
-                                marginTop={5}
-                                variant="contained"
-                                color="inherit"
-                                onClick={() => {
-                                    addToCart(product)
-                                    openCart()
-                                }}
-                                fullWidth
-                            >
-                                {' '}
-                                Add to cart{' '}
-                            </Button>
-                            <AnimateOnChange
-                                className="foo"
-                                animationOut="bounceOut"
-                                animationIn="bounceIn"
-                                durationOut="1000"
-                                durationIn="1000"
-                            >
-                                <h4>
-                                    {' '}
-                                    {massageType[current]} {stockCount} Left in
-                                    stock{' '}
-                                </h4>
-                            </AnimateOnChange>
+            <Box
+                component={Paper}
+                sx={{ backgroundColor: 'white' }}
+                padding={5}
+                height={'100vh'}
+                overflow={'auto'}
+            >
+                <Toolbar></Toolbar>
+                <Grid container gap={3}>
+                    <Grid item xs={12} sm={12} md={5}>
+                        <Grid container>
+                            <Grid item xs={2}>
+                                <Stack gap={2}>
+                                    {product.images.map((item, index) => (
+                                        <img
+                                            key={item}
+                                            width={80}
+                                            height={70}
+                                            src={item}
+                                            alt=""
+                                            style={{ objectFit: 'contain' }}
+                                            loading="lazy"
+                                            onClick={() => switchIndex(index)}
+                                        />
+                                    ))}
+                                </Stack>
+                            </Grid>
+                            <Grid item xs={9} sm={10}>
+                                <img
+                                    width={'100%'}
+                                    height={'100%'}
+                                    style={{ objectFit: 'contain' }}
+                                    component="img"
+                                    src={product.images[index]}
+                                    alt=""
+                                />
+                            </Grid>
                         </Grid>
                     </Grid>
-                    <Typography marginRight={10}>
-                        {product.description}
-                    </Typography>
-                </Box>
-            </div>
+
+                    <Grid item xs={12} sm={12} md={4}>
+                        <Typography
+                            variant="body1"
+                            fontWeight={'bold'}
+                            padding={2}
+                        >
+                            {product.name}
+                        </Typography>
+                        <Divider></Divider>
+                        <Typography variant="h6" padding={2}>
+                            {formatPrice(product.price)}
+                        </Typography>
+                        <Divider></Divider>
+                        <List sx={{ listStyleType: 'disc', padding: 2 }}>
+                            {product.description.split('\n').map((desc) => (
+                                <ListItem
+                                    key={desc}
+                                    disablePadding
+                                    sx={{ display: 'list-item' }}
+                                >
+                                    <ListItemText
+                                        primaryTypographyProps={{
+                                            fontWeight: 'bold',
+                                            fontSize: '0.8em',
+                                        }}
+                                        primary={desc}
+                                    ></ListItemText>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={2} textAlign={'center'}>
+                        <AnimateOnChange
+                            className="foo"
+                            animationOut="bounceOut"
+                            animationIn="bounceIn"
+                            durationOut="1000"
+                            durationIn="1000"
+                        >
+                            <h4>
+                                {' '}
+                                {massageType[current]} {stockCount} Left in
+                                stock{' '}
+                            </h4>
+                        </AnimateOnChange>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                addToCart(product)
+                                openCart()
+                            }}
+                            fullWidth
+                        >
+                            Add to cart
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Box>
         )
     )
 }

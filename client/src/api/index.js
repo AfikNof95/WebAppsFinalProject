@@ -24,6 +24,7 @@ const REST_API = {
     },
     product: {
         get: 'http://localhost:2308/Product/id',
+        getGroupByCategories: 'http://localhost:2308/Product/Group/Category',
     },
     cart: {
         get: 'http://localhost:2308/Cart/User',
@@ -100,6 +101,9 @@ const backendAPI = {
     product: {
         async get(productId) {
             return await axios.get(REST_API.product.get + `/${productId}`)
+        },
+        async getGroupByCategories() {
+            return await axios.get(REST_API.product.getGroupByCategories)
         },
     },
 

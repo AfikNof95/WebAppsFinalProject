@@ -150,10 +150,7 @@ const CartPage = () => {
                             </Box>
                         </Box>
 
-                        <Box
-                            display={'flex'}
-                            justifyContent="center"
-                        >
+                        <Box display={'flex'} justifyContent="center">
                             <Button
                                 fullWidth
                                 disabled={getCartQuantity() === 0}

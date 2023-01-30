@@ -33,8 +33,8 @@ export function ShoppingCartProvider({ children }) {
     const { currentUser } = useAuth()
     const [cartProducts, setCartProducts] = useState([])
     const [isOpen, setIsOpen] = useState(false)
-    const [isCartReady, setIsCartReady] = useState(false)
-    const [isFirstLoad, setIsFirstLoad] = useState(true)
+    const [isInitialLoad, setIsInitialLoad] = useState(true)
+    const [isShoppingCartLoading, setIsShoppingCartLoading] = useState(true)
     const [userInfo, setUserInfo] = useState({
         fName: '',
         lName: '',
@@ -60,18 +60,22 @@ export function ShoppingCartProvider({ children }) {
     useEffect(() => {
         const fetchUserCart = async () => {
             try {
-                if (currentUser) {
-                    const response = await backendAPI.cart.get(
-                        currentUser.localId
-                    )
-                    setCartProducts(response.data.products)
-                    setIsCartReady(true)
-                }
+                setIsShoppingCartLoading(true)
+                const response = await backendAPI.cart.get(currentUser.localId)
+                setCartProducts(response.data.products)
+                setIsInitialLoad(false)
+                setIsShoppingCartLoading(false)
             } catch (ex) {
                 console.error(ex.message)
             }
         }
-        fetchUserCart()
+
+        if (currentUser) {
+            fetchUserCart()
+        } else {
+            setIsInitialLoad(true)
+            setCartProducts([])
+        }
     }, [currentUser])
 
     useEffect(() => {
@@ -80,15 +84,14 @@ export function ShoppingCartProvider({ children }) {
 
     useEffect(() => {
         const updateUserCart = async () => {
-            if (isCartReady) {
-                if (isFirstLoad) {
-                    return setIsFirstLoad(false)
-                }
-                backendAPI.cart.update(currentUser.localId, cartProducts)
-            }
+            setIsShoppingCartLoading(true)
+            await backendAPI.cart.update(currentUser.localId, cartProducts)
+            setIsShoppingCartLoading(false)
         }
-        updateUserCart()
-    }, [cartProducts, isCartReady, currentUser])
+        if (currentUser && !isInitialLoad) {
+            updateUserCart()
+        }
+    }, [cartProducts, currentUser, isInitialLoad])
 
     function getCartProducts() {
         return cartProducts
@@ -301,6 +304,7 @@ export function ShoppingCartProvider({ children }) {
                 handlePaymentChange: handlePaymentChange,
                 removePaymentInfo,
                 removeUserInfo,
+                isShoppingCartLoading,
             }}
         >
             {children}
