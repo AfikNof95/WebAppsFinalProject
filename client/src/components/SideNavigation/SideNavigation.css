@@ -1,3 +1,8 @@
 .side-nav-list-item.Mui-selected {
-  background-color: rgba(46, 89, 170, 0.582) !important;
+    background-color: unset !important;
+}
+
+.side-nav-list-item.Mui-selected .MuiListItemText-primary {
+    font-weight: bold;
+    color: #1976d2;
 }

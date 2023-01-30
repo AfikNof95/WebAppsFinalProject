@@ -1,19 +1,23 @@
+const categoryModel = require("../models/category.model");
 const ProductModel = require("../models/product.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const ProductService = {
-  async getAllProducts(page) {
-    const pages = Math.ceil((await ProductModel.count()) / 24);
-    return {
-      pages,
-      products: await ProductModel.find()
-        .skip((page - 1) * 24)
-        .limit(24)
-        .exec(),
-    };
+  // async getAllProducts(page) {
+  //   const pages = Math.ceil((await ProductModel.count()) / 24);
+  //   return {
+  //     pages,
+  //     products: await ProductModel.find()
+  //       .skip((page - 1) * 24)
+  //       .limit(24)
+  //       .exec(),
+  //   };
+  // },
+  async getAllProducts() {
+    return { products: await ProductModel.find().populate("category").exec() };
   },
   async getProduct(productId) {
-    return await ProductModel.find({ _id: new ObjectId(productId) });
+    return await ProductModel.findOne({ _id: new ObjectId(productId) });
   },
   async createProduct(product) {
     return await ProductModel.create(product);
@@ -43,7 +47,7 @@ const ProductService = {
   },
   async getAllProductsByFilters(filters) {
     const queryFilters = {};
-    let sortBy = {name:1};
+    let sortBy = { name: 1 };
 
     for (let filter of Object.keys(filters)) {
       switch (filter) {
@@ -108,6 +112,29 @@ const ProductService = {
       pages,
       priceRange: [minPrice, maxPrice],
     };
+  },
+
+  async getProductsGroupByCategories() {
+    let byCategories = await ProductModel.aggregate([
+      { $match: { isActive: true } },
+      {
+        $group: {
+          _id: "$category",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    return byCategories;
+  },
+
+  async getProductsAnalytics() {
+    let byCategories = await this.getProductsGroupByCategories();
+    for (let cat of byCategories) {
+      const category = await categoryModel.findById(cat._id);
+      cat.name = category.name;
+    }
+
+    return { byCategories };
   },
 };
 

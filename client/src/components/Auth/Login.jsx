@@ -179,15 +179,14 @@ const AuthForm = () => {
   }, [isUserSignedIn, navigate]);
 
   return (
-    <section className={styles.auth}>
+    <Box>
       <Toolbar></Toolbar>
       <Grid
         container
         spacing={0}
-        direction={"column"}
+        direction={"row"}
         alignItems={"center"}
         justifyContent={"center"}
-        height={"80vh"}
       >
         <Card elevation={2} sx={{ width: "750px" }}>
           <Box
@@ -414,7 +413,7 @@ const AuthForm = () => {
           </CardContent>
         </Card>
       </Grid>
-    </section>
+    </Box>
   );
 };
 

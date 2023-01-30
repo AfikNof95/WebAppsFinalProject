@@ -12,7 +12,7 @@ const ProductController = {
   },
   async getAllProducts(req, res, next) {
     try {
-      const response = await ProductService.getAllProducts(req.query.page);
+      const response = await ProductService.getAllProducts();
       return res.json(response);
     } catch (ex) {
       console.log(ex);
@@ -49,6 +49,23 @@ const ProductController = {
     try {
       const products = await ProductService.getAllProductsByFilters(req.query);
       return res.json(products);
+    } catch (ex) {
+      next(ex);
+    }
+  },
+  async getProductsGroupByCategories(req, res, next) {
+    try {
+      const productsGroupByCategories =
+        await ProductService.getProductsGroupByCategories();
+      return res.json(productsGroupByCategories);
+    } catch (ex) {
+      next(ex);
+    }
+  },
+  async getProductsAnalytics(req, res, next) {
+    try {
+      const productsAnalytics = await ProductService.getProductsAnalytics();
+      return res.json(productsAnalytics);
     } catch (ex) {
       next(ex);
     }
