@@ -22,7 +22,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const fetchOrdersByUserId = async () => {
-      const response = await axios.get(`http://localhost:2309/Order`);
+      const response = await axios.get(`http://localhost:2308/Order`);
       setOrders(response.data);
     };
     fetchOrdersByUserId();
@@ -31,7 +31,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     updateUserAdress.current = async () => {
-      const response = await axios.get(`http://localhost:2309/Address/user/${user.localId}`);
+      const response = await axios.get(`http://localhost:2308/Address/user/${user.localId}`);
       const newAddress = response.data[response.data.length - 1]
       console.log(newAddress)
       updateAddres(`${newAddress.street} ${newAddress.houseNumber},
@@ -54,7 +54,7 @@ const ProfilePage = () => {
           variant="outlined"
           sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
         >
-          <Typography component="h1" variant="h4"> 
+          
             <Avatar sx={{width: 80, height: 80}}> { userIcon? icons[userIcon] : <StarOutlineRoundedIcon/>} </Avatar>
             Hello {user.displayName}! 
             {
@@ -63,12 +63,12 @@ const ProfilePage = () => {
                     <AddressForm handleNext={createAddress}></AddressForm>
                 </div>
                 :
-                <Typography  variant="h5" component="h2">
+                <Typography  variant="h5">
                   {adress} &emsp;
                   <EditRoundedIcon onClick={() => { setInsertAdress(true)}}></EditRoundedIcon>
                 </Typography>
             }
-          </Typography>
+        
 
           <Button sx= {{marginLeft:"1225px"}} variant="contained" color="inherit" size="large" width="7cm"
               component={RouterLink}

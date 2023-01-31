@@ -2,7 +2,13 @@ const CartModel = require("../models/cart.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 const CartService = {
   async getCart(userId) {
-    return await CartModel.find({ user: userId });
+    let userCart = await CartModel.findOne({ user: userId }).populate("products.product"
+    ).lean().exec();
+    if (!userCart) {
+      userCart = await this.createCart(userId);
+    }
+
+    return userCart;
   },
   async createCart(userId) {
     const isExist = await CartModel.findOne({ user: userId });
@@ -15,7 +21,7 @@ const CartService = {
     cart.products = cart.products.map((product) => {
       return {
         quantity: product.quantity,
-        product: new ObjectId(product.product),
+        product: new ObjectId(product.product._id),
       };
     });
     const updatedCart = await CartModel.updateOne(

@@ -1,14 +1,23 @@
 import React, { useEffect } from 'react'
 import './Navbar.css'
-import { Link as RouterLink, useSearchParams } from 'react-router-dom'
 import { styled, alpha } from '@mui/material/styles'
-import { AppBar, Box, Toolbar, Typography, IconButton } from '@mui/material'
-import { InputBase, Badge, MenuItem, Menu, Button } from '@mui/material'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import InputBase from '@mui/material/InputBase'
+import Badge from '@mui/material/Badge'
+import MenuItem from '@mui/material/MenuItem'
+import Menu from '@mui/material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+
 import MoreIcon from '@mui/icons-material/MoreVert'
 import LoginIcon from '@mui/icons-material/Login'
+import Button from '@mui/material/Button'
+import { Link as RouterLink, useSearchParams } from 'react-router-dom'
 import { useShoppingCart } from '../../context/ShoppingCartContext'
 import { useAuth } from '../../context/AuthContext'
 
@@ -122,15 +131,27 @@ function Navbar() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <RouterLink to="/account">
-                <MenuItem onClick={handleMenuClose}>Account</MenuItem>
-            </RouterLink>
-            <RouterLink to={`/profile`}>
-                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            </RouterLink>
-            <RouterLink to={`/`}>
-                <MenuItem onClick={handleSignOutClick}>Sign out</MenuItem>
-            </RouterLink>
+            <MenuItem
+                component={RouterLink}
+                to={'/account'}
+                onClick={handleMenuClose}
+            >
+                Account
+            </MenuItem>
+            <MenuItem
+                onClick={handleMenuClose}
+                component={RouterLink}
+                to={'/profile'}
+            >
+                Profile
+            </MenuItem>
+            <MenuItem
+                component={RouterLink}
+                to={'/'}
+                onClick={handleSignOutClick}
+            >
+                Sign out
+            </MenuItem>
         </Menu>
     )
 
@@ -190,7 +211,7 @@ function Navbar() {
                 elevation={3}
                 position="fixed"
                 sx={{
-                    // backgroundImage: "linear-gradient(15deg, #13547a 0%, #80d0c7 100%);",
+                    height:64,
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                     backgroundColor: '#24344c',
                     color: 'white',
