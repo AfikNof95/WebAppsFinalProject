@@ -9,6 +9,14 @@
     "start": "nodemon ./app.js",
     "start-scraper": "node ./scraper/starter.js && node ./scraper/imageDownloader.js "
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": []
+  },
   "license": "ISC",
   "dependencies": {
     "axios": "^1.2.6",
@@ -22,14 +30,17 @@
     "firebase": "^9.15.0",
     "firebase-admin": "^11.5.0",
     "http-errors": "~1.6.3",
+    "lint-staged": "^13.1.0",
     "mongoose": "^6.8.2",
     "morgan": "~1.9.1",
+    "multer": "^1.4.5-lts.1",
     "nodemon": "^2.0.20",
     "uuid": "^9.0.0",
     "ws": "^8.12.0"
   },
   "devDependencies": {
+    "husky": "^8.0.3",
     "nodemon": "^2.0.20",
-    "prettier": "2.8.3"
+    "prettier": "^2.8.3"
   }
 }

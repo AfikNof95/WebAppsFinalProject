@@ -81,7 +81,7 @@ const SideNavigation = ({
       }}
       sx={{
         width: drawerWidth,
-        backgroundColor: '#24344c',
+        backgroundColor: 'var(--main-app-blue)',
         [`& .MuiDrawer-paper`]: {
           width: drawerWidth,
           boxSizing: 'border-box'

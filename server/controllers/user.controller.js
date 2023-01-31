@@ -4,6 +4,7 @@ const {
   setUserAdmin,
   getIsAdmin,
 } = require("../models/users.model");
+const FileService = require("../services/file.service");
 
 const UserController = {
   async getIsAdmin(req, res, next) {
@@ -54,6 +55,18 @@ const UserController = {
         usersState: [activeUsers, notActiveUsers],
       });
     } catch (ex) {
+      next(ex);
+    }
+  },
+  async uploadPhoto(req, res, next) {
+    try {
+      console.log(req)
+      const { file } = req.body;
+      const fileURL = await FileService.uploadImage(file);
+      console.log(fileURL);
+      res.status(400).json({});
+    } catch (ex) {
+      res.status(400);
       next(ex);
     }
   },

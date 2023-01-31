@@ -13,5 +13,6 @@ export const ERROR_MESSAGES = {
   DISPLAY_NAME_EMPTY: 'Display name cannot be empty!',
   EMAIL_EMPTY: 'Email cannot be empty!',
   EMAIL_NOT_FOUND: 'Email or password are incorrect!',
+  IMAGE_UPLOAD_FAILED:"Failed to upload profile picture!",
   GENERIC: 'Something went wrong, please try again later!'
 };

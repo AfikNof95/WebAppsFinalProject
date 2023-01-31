@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const AdminRoutes = require("./admin.routes");
+const UserRoutes = require("./user.routes");
 const CategoryRoutes = require("./category.routes");
 const AddressRoutes = require("./address.routes");
 const CartRoutes = require("./cart.routes");
@@ -9,6 +10,7 @@ const { isAdmin } = require("../middlewares/auth");
 // const { isAuthorized } = require("../middlewares/auth");
 
 router.use("/Admin", isAdmin, AdminRoutes);
+router.use("/User", UserRoutes);
 router.use("/Address", AddressRoutes);
 router.use("/Category", CategoryRoutes);
 router.use("/Cart" /*, isAuthorized*/, CartRoutes);

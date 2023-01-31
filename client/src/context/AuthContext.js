@@ -30,11 +30,19 @@ export const AuthContextProvider = ({ children }) => {
     }
   });
 
-  async function signUp({ email, password, imageURL, displayName }) {
+  async function signUp({ email, password, photoFile, displayName }) {
+    let photoUrl;
+    debugger;
+    if (photoFile) {
+      const photoUploadResponse = await backendAPI.user.uploadPhoto(photoFile);
+      photoUrl = photoUploadResponse.data;
+    }
+
     const response = await backendAPI.auth.signUpWithEmailAndPassword(email, password);
     const userDetails = await backendAPI.user.update({
       ...response.data,
-      displayName
+      displayName,
+      ...(photoUrl && { photoUrl })
     });
     const { data } = userDetails;
     const user = { ...response.data, ...data };
@@ -48,7 +56,7 @@ export const AuthContextProvider = ({ children }) => {
   async function signIn({ email, password }) {
     const response = await backendAPI.auth.signInWithEmailAndPassword(email, password);
     const { data: authData } = response;
-    const userDataResponse = await backendAPI.auth.getUserData(authData.idToken);
+    const userDataResponse = await backendAPI.user.getUserData(authData.idToken);
     const { data: userData } = userDataResponse;
     const userSession = { ...authData, ...userData };
     //Set the expiry date of the token, so we can use the refresh token to revoke our token.
@@ -64,12 +72,18 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   async function updateUser(newUserDetails) {
-    const response = await backendAPI.user.update({
-      ...currentUser,
-      ...newUserDetails
-    });
+    if (newUserDetails.photoFile) {
+      const photoUploadResponse = await backendAPI.user.uploadPhoto(newUserDetails.photoFile);
+      newUserDetails.photoUrl = photoUploadResponse.data;
+    }
+    const updateRequestData = { ...currentUser, ...newUserDetails };
+    const updateResponse = await backendAPI.user.update(updateRequestData);
+    const userDataResponse = await backendAPI.user.getUserData(updateResponse.data.idToken);
+
+    const updatedUserDetails = { ...updateResponse.data, ...userDataResponse.data };
+
     setCurrentUser((currentUserState) => {
-      return { ...currentUserState, ...response.data };
+      return { ...currentUserState, ...updatedUserDetails };
     });
   }
 

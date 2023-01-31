@@ -15,11 +15,12 @@ const REST_API = {
     signInWithEmailAndPassword:
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=',
     signUpWithEmailAndPassword: 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=',
-    refreshToken: 'https://identitytoolkit.googleapis.com/v1/token?key=',
-    getUserData: 'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key='
+    refreshToken: 'https://identitytoolkit.googleapis.com/v1/token?key='
   },
   user: {
-    updateUser: 'https://identitytoolkit.googleapis.com/v1/accounts:update?key='
+    updateUser: 'https://identitytoolkit.googleapis.com/v1/accounts:update?key=',
+    getUserData: 'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=',
+    uploadPhoto: 'http://localhost:2308/User/Photo'
   },
   product: {
     get: 'http://localhost:2308/Product/id',
@@ -75,9 +76,6 @@ const backendAPI = {
         returnSecureToken: true
       });
     },
-    async getUserData(idToken) {
-      return await axios.post(getAPIURL(REST_API.auth.getUserData), { idToken });
-    },
 
     async refreshToken(refreshToken) {
       return await axios.post(getAPIURL(REST_API.auth.refreshToken), {
@@ -91,6 +89,18 @@ const backendAPI = {
   user: {
     async update(user) {
       return await axios.post(getAPIURL(REST_API.user.updateUser), user);
+    },
+    async getUserData(idToken) {
+      return await axios.post(getAPIURL(REST_API.user.getUserData), { idToken });
+    },
+    async uploadPhoto(photoFile) {
+      const formData = new FormData();
+      formData.append('file', photoFile);
+      return await axios.post(REST_API.user.uploadPhoto, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
     }
   },
 

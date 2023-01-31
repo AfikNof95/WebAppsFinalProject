@@ -1,5 +1,6 @@
 const createError = require("http-errors");
 const express = require("express");
+const multer = require("multer");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
@@ -9,6 +10,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const Scraper = require("./scraper/main");
 const wsServer = require("./middlewares/webSocketServer");
 require("dotenv").config({ path: path.join(__dirname, "./.env") });
+process.env.rootDir = __dirname;
 
 const PORT = process.env.PORT || 2308;
 const app = express();
@@ -16,6 +18,7 @@ const errorHandler = require("./middlewares/errorHandler");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(multer().array());
 app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.resolve(__dirname, "./public")));

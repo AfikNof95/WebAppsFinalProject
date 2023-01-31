@@ -205,7 +205,7 @@ function Navbar() {
         sx={{
           height: 64,
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: '#24344c',
+          backgroundColor: 'var(--main-app-blue)',
           color: 'white'
         }}>
         <Toolbar>

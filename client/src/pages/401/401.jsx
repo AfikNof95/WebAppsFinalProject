@@ -8,7 +8,7 @@ const UnauthorizedPage = () => {
         <Box
             width={'100vw'}
             height={'100vh'}
-            sx={{ backgroundColor: '#24344c' }}
+            sx={{ backgroundColor: 'var(--main-app-blue)' }}
             display={'flex'}
             alignItems={'center'}
             justifyContent={'center'}

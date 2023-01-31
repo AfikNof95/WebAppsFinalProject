@@ -74,7 +74,7 @@ const DashboardNavigation = ({
       open={true}
       PaperProps={{
         width: `${drawerWidth}`,
-        style: { backgroundColor: "#24344c" },
+        style: { backgroundColor: "var(--main-app-blue)" },
       }}
       sx={{
         width: drawerWidth,
