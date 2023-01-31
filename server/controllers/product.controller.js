@@ -1,4 +1,4 @@
-const ProductService = require("../services/product.service");
+const ProductService = require('../services/product.service');
 
 const ProductController = {
   async getProduct(req, res, next) {
@@ -30,7 +30,7 @@ const ProductController = {
     try {
       const { productId } = req.params;
       const response = await ProductService.updateProduct(productId, req.body);
-      return res.json({ message: "Product updated successfully!" });
+      return res.json({ message: 'Product updated successfully!' });
     } catch (ex) {
       next(ex);
     }
@@ -39,7 +39,7 @@ const ProductController = {
     try {
       const { productId } = req.params;
       const response = await ProductService.deleteProduct(productId);
-      return res.json({ message: "Product deleted successfully!" });
+      return res.json({ message: 'Product deleted successfully!' });
     } catch (ex) {
       next(ex);
     }
@@ -54,8 +54,7 @@ const ProductController = {
   },
   async getProductsGroupByCategories(req, res, next) {
     try {
-      const productsGroupByCategories =
-        await ProductService.getProductsGroupByCategories();
+      const productsGroupByCategories = await ProductService.getProductsGroupByCategories();
       return res.json(productsGroupByCategories);
     } catch (ex) {
       next(ex);
@@ -68,7 +67,7 @@ const ProductController = {
     } catch (ex) {
       next(ex);
     }
-  },
+  }
 };
 
 module.exports = ProductController;

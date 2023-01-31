@@ -1,7 +1,7 @@
-const { WebSocketServer, WebSocket } = require("ws");
-const { v4: uuidv4 } = require("uuid");
-const http = require("http");
-const { getAuth } = require("firebase-admin/auth");
+const { WebSocketServer, WebSocket } = require('ws');
+const { v4: uuidv4 } = require('uuid');
+const http = require('http');
+const { getAuth } = require('firebase-admin/auth');
 
 const clients = {};
 let loggedInClients = 0;
@@ -10,26 +10,26 @@ const webSocketServer = () => {
   const server = http.createServer();
   const wsServer = new WebSocketServer({ server });
 
-  wsServer.on("connection", (connection) => {
-    console.log("New Client connected");
+  wsServer.on('connection', (connection) => {
+    console.log('New Client connected');
     const clientId = uuidv4();
     clients[clientId] = { connection };
 
-    connection.on("close", () => {
+    connection.on('close', () => {
       if (clients[clientId].isLoggedIn) {
         loggedInClients--;
       }
       delete clients[clientId];
     });
 
-    connection.on("message", async (data, isBinary) => {
+    connection.on('message', async (data, isBinary) => {
       const message = isBinary ? data : data.toString();
       try {
         const messageJSON = JSON.parse(message);
-        if (messageJSON.type === "LOGIN") {
+        if (messageJSON.type === 'LOGIN') {
           notifyLogin(clientId, messageJSON);
         }
-        if (messageJSON.type === "ADMIN_READY") {
+        if (messageJSON.type === 'ADMIN_READY') {
           connectToAdmin(clientId);
         }
       } catch (ex) {
@@ -39,14 +39,14 @@ const webSocketServer = () => {
   });
 
   server.listen(8000, () => {
-    console.log("WebSocket server is up!");
+    console.log('WebSocket server is up!');
   });
 };
 
 const notifyLogin = async (clientId, messageJSON) => {
   clients[clientId] = {
     ...clients[clientId],
-    ...{ isLoggedIn: true, user: messageJSON.user },
+    ...{ isLoggedIn: true, user: messageJSON.user }
   };
   loggedInClients++;
   for (let client of Object.values(clients)) {
@@ -57,9 +57,9 @@ const notifyLogin = async (clientId, messageJSON) => {
           client.connection.send(JSON.stringify({ loggedInClients }));
         }
       } catch (ex) {
-        if (ex.errorInfo && ex.errorInfo.code === "auth/id-token-expired") {
-          console.log("Sending refresh token request");
-          client.connection.send(JSON.stringify({ type: "REFRESH_TOKEN" }));
+        if (ex.errorInfo && ex.errorInfo.code === 'auth/id-token-expired') {
+          console.log('Sending refresh token request');
+          client.connection.send(JSON.stringify({ type: 'REFRESH_TOKEN' }));
         }
         console.error(ex);
       }

@@ -1,10 +1,5 @@
-const {
-  listAllUsers,
-  updateUser,
-  setUserAdmin,
-  getIsAdmin,
-} = require("../models/users.model");
-const FileService = require("../services/file.service");
+const { listAllUsers, updateUser, setUserAdmin, getIsAdmin } = require('../models/users.model');
+const FileService = require('../services/file.service');
 
 const UserController = {
   async getIsAdmin(req, res, next) {
@@ -42,8 +37,8 @@ const UserController = {
   async getUsersAnalytics(req, res, next) {
     try {
       const response = await listAllUsers();
-      const activeUsers = { name: "Active users", count: 0 };
-      const notActiveUsers = { name: "Disabled users", count: 0 };
+      const activeUsers = { name: 'Active users', count: 0 };
+      const notActiveUsers = { name: 'Disabled users', count: 0 };
       response.users.map((user) => {
         if (user.disabled) {
           return notActiveUsers.count++;
@@ -52,7 +47,7 @@ const UserController = {
       });
       res.json({
         count: response.users.length,
-        usersState: [activeUsers, notActiveUsers],
+        usersState: [activeUsers, notActiveUsers]
       });
     } catch (ex) {
       next(ex);
@@ -60,7 +55,7 @@ const UserController = {
   },
   async uploadPhoto(req, res, next) {
     try {
-      console.log(req)
+      console.log(req);
       const { file } = req.body;
       const fileURL = await FileService.uploadImage(file);
       console.log(fileURL);
@@ -69,7 +64,7 @@ const UserController = {
       res.status(400);
       next(ex);
     }
-  },
+  }
 };
 
 module.exports = UserController;
