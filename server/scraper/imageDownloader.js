@@ -39,7 +39,7 @@ const imageDownloader = async () => {
       console.log(imageName);
 
       try {
-        await downloadImage(imageURL, "../public/images/" + imageName[0]);
+        // await downloadImage(imageURL, "../public/images/" + imageName[0]);
         console.log("Image Downloaded!");
         images.push(`http://localhost:2308/images/${imageName[0]}`);
       } catch (ex) {

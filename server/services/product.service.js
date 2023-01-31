@@ -90,8 +90,18 @@ const ProductService = {
       (await ProductModel.count({ isActive: true, ...queryFilters })) / 24
     );
 
-    let minPrice = await ProductModel.findOne({}).sort({ price: 1 }).exec();
-    let maxPrice = await ProductModel.findOne({}).sort({ price: -1 }).exec();
+    let minPrice = await ProductModel.findOne({
+      isActive: true,
+      ...(queryFilters.category && { category: queryFilters.category }),
+    })
+      .sort({ price: 1 })
+      .exec();
+    let maxPrice = await ProductModel.findOne({
+      isActive: true,
+      ...(queryFilters.category && { category: queryFilters.category }),
+    })
+      .sort({ price: -1 })
+      .exec();
 
     minPrice = Math.floor(minPrice.price);
     maxPrice = Math.ceil(maxPrice.price);
@@ -101,6 +111,7 @@ const ProductService = {
       ...queryFilters,
     })
       .sort(sortBy)
+      .collation({ locale: "en" })
       .populate("category")
       .skip((filters.pageNumber ? filters.pageNumber - 1 : 0) * 24)
       .limit(24)

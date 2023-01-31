@@ -8,7 +8,7 @@ const CartProductList = () => {
     const products = getCartProducts()
 
     return products.map((productObject) => (
-        <>
+        <div key={productObject.product._id}>
             <CartProduct
                 key={productObject.product._id}
                 id={productObject.product._id}
@@ -19,7 +19,7 @@ const CartProductList = () => {
                 maxQuantity={productObject.product.quantity}
             ></CartProduct>
             <Divider></Divider>
-        </>
+        </div>
     ))
 }
 

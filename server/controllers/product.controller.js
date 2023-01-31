@@ -15,7 +15,6 @@ const ProductController = {
       const response = await ProductService.getAllProducts();
       return res.json(response);
     } catch (ex) {
-      console.log(ex);
       next(ex);
     }
   },

@@ -1,222 +1,248 @@
 import {
-    Box,
-    Button,
-    Divider,
-    FormControl,
-    FormHelperText,
-    InputLabel,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Menu,
-    MenuItem,
-    Select,
-    Slider,
-    Typography,
-} from '@mui/material'
-import Switch from '@mui/material/Switch'
-import StockIcon from '@mui/icons-material/Inventory'
-import FilterIcon from '@mui/icons-material/Tune'
-import PriceIcon from '@mui/icons-material/AttachMoney'
-import { formatPrice } from '../../utils/formatPrice'
-import { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
-const Filters = ({ categoryName, priceRange }) => {
-    const SORT_BY_ENUM = {
-        NAME_ASCENDING: { value: 'NAME_ASCENDING', sort: { name: 1 } },
-        NAME_DESCENDING: { value: 'NAME_DESCENDING', sort: { name: -1 } },
-        PRICE_ASCENDING: { value: 'PRICE_ASCENDING', sort: { price: 1 } },
-        PRICE_DESCENDING: { value: 'PRICE_DESCENDING', sort: { price: -1 } },
-    }
-    const [searchParams, setSearchParams] = useSearchParams()
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Select,
+  Slider,
+  TextField
+} from '@mui/material';
+import Switch from '@mui/material/Switch';
+import StockIcon from '@mui/icons-material/Inventory';
+import FilterIcon from '@mui/icons-material/Tune';
+import PriceIcon from '@mui/icons-material/AttachMoney';
+import { formatPrice } from '../../utils/formatPrice';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import FilterAltOff from '@mui/icons-material/FilterAltOff';
+const Filters = ({ selectedCategoryId, priceRange }) => {
+  const SORT_BY_ENUM = {
+    NAME_ASCENDING: { value: 'NAME_ASCENDING', sort: { name: 1 } },
+    NAME_DESCENDING: { value: 'NAME_DESCENDING', sort: { name: -1 } },
+    PRICE_ASCENDING: { value: 'PRICE_ASCENDING', sort: { price: 1 } },
+    PRICE_DESCENDING: { value: 'PRICE_DESCENDING', sort: { price: -1 } }
+  };
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [freeText, setFreeText] = useState('');
+  const [sortBy, setSortBy] = useState(SORT_BY_ENUM.NAME_ASCENDING);
+  const [filterOutOfStock, setFilterOutOfStock] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
 
-    const [isFiltersOpen, setIsFiltersOpen] = useState(false)
-    const [anchorEl, setAnchorEl] = useState(null)
+  const [currentPriceRange, setCurrentPriceRange] = useState(priceRange);
 
-    const [sortBy, setSortBy] = useState(() => {
-        if (searchParams.get('sort')) {
-            for (let [key, value] of Object.entries(SORT_BY_ENUM)) {
-                if (JSON.stringify(value.sort) === searchParams.get('sort')) {
-                    return value
-                }
-            }
-        } else {
-            return SORT_BY_ENUM.NAME_ASCENDING
+  useEffect(() => {
+    const priceRangeArray =
+      searchParams.get('minPrice') && searchParams.get('maxPrice')
+        ? [Number(searchParams.get('minPrice')), Number(searchParams.get('maxPrice'))]
+        : priceRange;
+
+    const outOfStockFilter = searchParams.get('filterOutOfStock') === 'true' ? true : false;
+
+    let sortByValue = Object.values(SORT_BY_ENUM).filter((value) => {
+      return JSON.stringify(value.sort) === searchParams.get('sort');
+    });
+    sortByValue = sortByValue[0] || SORT_BY_ENUM.NAME_ASCENDING;
+
+    const freeTextValue = searchParams.get('freeText') || '';
+    const searchTerm = searchParams.get('searchTerm') || null;
+
+    setCurrentPriceRange(priceRangeArray);
+    setFilterOutOfStock(outOfStockFilter);
+    setSortBy(sortByValue);
+    setFreeText(freeTextValue);
+    setIsSearch(searchTerm !== null);
+  }, [searchParams]);
+
+  useEffect(() => {
+    setSearchParams((currentState) => {
+      return selectedCategoryId !== currentState.get('categoryId')
+        ? {
+            ...(selectedCategoryId && {
+              categoryId: selectedCategoryId
+            })
+          }
+        : currentState;
+    });
+  }, [selectedCategoryId]);
+
+  const toggleOpenFilters = (event) => {
+    setIsFiltersOpen((currentState) => {
+      return !currentState;
+    });
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleSortBy = (event) => {
+    const value = event.target.value;
+    setSortBy(SORT_BY_ENUM[value]);
+    setSearchParams((currentState) => {
+      currentState.set('sort', JSON.stringify(SORT_BY_ENUM[value].sort));
+      return currentState;
+    });
+  };
+
+  const handleFilterOutOfStock = (value) => {
+    setFilterOutOfStock(value);
+    setSearchParams((currentState) => {
+      currentState.set('filterOutOfStock', value);
+      return currentState;
+    });
+  };
+
+  const handleChangePriceRange = (value) => {
+    setCurrentPriceRange(value);
+  };
+
+  const handleCommitPriceRange = (value) => {
+    setSearchParams((currentState) => {
+      currentState.set('minPrice', value[0]);
+      currentState.set('maxPrice', value[1]);
+      return currentState;
+    });
+  };
+
+  const handleFreeTextChange = (event) => {
+    const value = event.target.value;
+    setFreeText(value);
+  };
+
+  const handleFreeTextCommit = (event) => {
+    setSearchParams((currentState) => {
+      currentState.set('freeText', event.target.value);
+      return currentState;
+    });
+  };
+
+  const clearFilters = () => {
+    setCurrentPriceRange(priceRange);
+    setFilterOutOfStock(false);
+    setSortBy(SORT_BY_ENUM.NAME_ASCENDING);
+    setFreeText('');
+    setSearchParams((currentState) => {
+      return {
+        ...(currentState.get('searchTerm') && {
+          searchTerm: currentState.get('searchTerm')
+        }),
+        ...{
+          ...(selectedCategoryId && {
+            categoryId: selectedCategoryId
+          })
         }
-    })
-    const [filterOutOfStock, setFilterOutOfStock] = useState(() => {
-        if (searchParams.get('outOfStock')) {
-            searchParams.get('outOfStock')
-        } else {
-            return false
-        }
-    })
+      };
+    });
+  };
 
-    const [currentPriceRange, setCurrentPriceRange] = useState(() => {
-        if (searchParams.get('minPrice') && searchParams.get('maxPrice')) {
-            return [searchParams.get('minPrice'), searchParams.get('maxPrice')]
-        } else {
-            return priceRange
-        }
-    })
+  return (
+    <div>
+      <ListItemButton onClick={toggleOpenFilters}>
+        <ListItemIcon></ListItemIcon>
+        <ListItemText
+          primary="Filters"
+          primaryTypographyProps={{
+            fontSize: '0.9em',
+            fontWeight: 'bold',
+            color: '#1976d2'
+          }}></ListItemText>
+        <FilterIcon color="primary"></FilterIcon>
+      </ListItemButton>
 
-    const toggleOpenFilters = (event) => {
-        setIsFiltersOpen((currentState) => {
-            return !currentState
-        })
-        setAnchorEl(event.currentTarget)
-    }
-
-    const handleSortBy = (event) => {
-        const value = event.target.value
-        searchParams.set('sort', JSON.stringify(SORT_BY_ENUM[value].sort))
-        setSortBy(SORT_BY_ENUM[value])
-        setSearchParams(searchParams)
-    }
-
-    const handleFilterOutOfStock = (value) => {
-        value === true
-            ? searchParams.set('filterOutOfStock', value)
-            : searchParams.delete('filterOutOfStock')
-        setFilterOutOfStock(value)
-        setSearchParams(searchParams)
-    }
-
-    const handlePriceRange = (value) => {
-        searchParams.set('minPrice', value[0])
-        searchParams.set('maxPrice', value[1])
-        setSearchParams(searchParams)
-        setCurrentPriceRange(value)
-    }
-
-    return (
-        <div>
-            <ListItemButton onClick={toggleOpenFilters}>
-                <ListItemIcon></ListItemIcon>
-                <ListItemText
-                    primary="Filters"
-                    primaryTypographyProps={{
-                        fontSize: '0.9em',
-                        fontWeight: 'bold',
-                        color: '#1976d2',
-                    }}
-                ></ListItemText>
-                <FilterIcon color="primary"></FilterIcon>
-            </ListItemButton>
-
-            <Menu
-                open={isFiltersOpen}
-                onClose={toggleOpenFilters}
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: 'center',
-                    horizontal: 'right',
+      <Menu
+        open={isFiltersOpen}
+        onClose={toggleOpenFilters}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'right'
+        }}
+        transformOrigin={{
+          vertical: 'center',
+          horizontal: 'left'
+        }}>
+        <Box sx={{ color: 'black' }}>
+          <List>
+            <ListItem>
+              <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="sort-by-label">Sort</InputLabel>
+                <Select
+                  labelId="sort-by-label"
+                  id="sort-by-select"
+                  value={sortBy.value}
+                  label="Sort"
+                  onChange={handleSortBy}>
+                  <MenuItem value={SORT_BY_ENUM.NAME_ASCENDING.value}>Name Ascending</MenuItem>
+                  <MenuItem value={SORT_BY_ENUM.NAME_DESCENDING.value}>Name Descending</MenuItem>
+                  <MenuItem value={SORT_BY_ENUM.PRICE_ASCENDING.value}>Price Low To High</MenuItem>
+                  <MenuItem value={SORT_BY_ENUM.PRICE_DESCENDING.value}>Price High To Low</MenuItem>
+                </Select>
+              </FormControl>
+            </ListItem>
+            <ListItem>
+              <ListItemText primary={'Filters'} sx={{ fontWeight: 'bold' }}></ListItemText>
+            </ListItem>
+            <Divider></Divider>
+            <ListItem>
+              <ListItemIcon>
+                <StockIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText id="switch-list-label-wifi" secondary="Filter out of stock" />
+              <Switch
+                edge="end"
+                onChange={(event, value) => handleFilterOutOfStock(value)}
+                checked={filterOutOfStock}
+                inputProps={{
+                  'aria-labelledby': 'switch-list-label-wifi'
                 }}
-                transformOrigin={{
-                    vertical: 'center',
-                    horizontal: 'left',
-                }}
-            >
-                <Box sx={{ color: 'black' }}>
-                    <Typography variant="h5" padding={2}>
-                        {categoryName}
-                    </Typography>
-                    <Divider></Divider>
-                    <List>
-                        <ListItem>
-                            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                <InputLabel id="sort-by-label">Sort</InputLabel>
-                                <Select
-                                    labelId="sort-by-label"
-                                    id="sort-by-select"
-                                    value={sortBy.value}
-                                    label="Sort"
-                                    onChange={handleSortBy}
-                                >
-                                    <MenuItem
-                                        value={
-                                            SORT_BY_ENUM.NAME_ASCENDING.value
-                                        }
-                                    >
-                                        Name Ascending
-                                    </MenuItem>
-                                    <MenuItem
-                                        value={
-                                            SORT_BY_ENUM.NAME_DESCENDING.value
-                                        }
-                                    >
-                                        Name Descending
-                                    </MenuItem>
-                                    <MenuItem
-                                        value={
-                                            SORT_BY_ENUM.PRICE_ASCENDING.value
-                                        }
-                                    >
-                                        Price Low To High
-                                    </MenuItem>
-                                    <MenuItem
-                                        value={
-                                            SORT_BY_ENUM.PRICE_DESCENDING.value
-                                        }
-                                    >
-                                        Price High To Low
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemText
-                                primary={'Filters'}
-                                sx={{ fontWeight: 'bold' }}
-                            ></ListItemText>
-                        </ListItem>
-                        <Divider></Divider>
-                        <ListItem>
-                            <ListItemIcon>
-                                <StockIcon fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText
-                                id="switch-list-label-wifi"
-                                secondary="Filter out of stock"
-                            />
-                            <Switch
-                                edge="end"
-                                onChange={(event, value) =>
-                                    handleFilterOutOfStock(value)
-                                }
-                                checked={filterOutOfStock}
-                                inputProps={{
-                                    'aria-labelledby': 'switch-list-label-wifi',
-                                }}
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemIcon>
-                                <PriceIcon fontSize="small" />
-                            </ListItemIcon>
-                            <ListItemText secondary="Price" />
-                        </ListItem>
-                        <ListItem>
-                            <Slider
-                                getAriaLabel={() => 'Price range'}
-                                min={priceRange[0]}
-                                max={priceRange[1]}
-                                disableSwap
-                                defaultValue={currentPriceRange}
-                                onChangeCommitted={(event, value) =>
-                                    handlePriceRange(value)
-                                }
-                                valueLabelDisplay="auto"
-                                getAriaValueText={(value) => formatPrice(value)}
-                            />
-                        </ListItem>
-                    </List>
-                </Box>
-            </Menu>
-        </div>
-    )
-}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <PriceIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText secondary="Price" />
+            </ListItem>
+            <ListItem>
+              <Slider
+                getAriaLabel={() => 'Price range'}
+                min={priceRange[0]}
+                max={priceRange[1]}
+                disableSwap
+                value={currentPriceRange}
+                onChange={(evemt, value) => handleChangePriceRange(value)}
+                onChangeCommitted={(event, value) => handleCommitPriceRange(value)}
+                valueLabelDisplay="auto"
+                getAriaValueText={(value) => formatPrice(value)}
+              />
+            </ListItem>
+            {!isSearch && (
+              <ListItem>
+                <TextField
+                  onInput={handleFreeTextChange}
+                  onBlur={handleFreeTextCommit}
+                  variant="standard"
+                  label="Free Text"
+                  value={freeText}></TextField>
+              </ListItem>
+            )}
+          </List>
+        </Box>
+        <Box display={'flex'} justifyContent={'flex-end'}>
+          <Button endIcon={<FilterAltOff></FilterAltOff>} onClick={clearFilters}>
+            Clear
+          </Button>
+        </Box>
+      </Menu>
+    </div>
+  );
+};
 
-export default Filters
+export default Filters;
