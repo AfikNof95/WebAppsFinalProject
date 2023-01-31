@@ -10,19 +10,23 @@ export default function Review(props) {
     const {
         paymentInfo,
         userInfo,
-        getCartProducts,
         getCartTotalPrice,
         deleteCart,
         removePaymentInfo,
         removeUserInfo,
     } = useShoppingCart()
-    const products = getCartProducts()
     const sumOrder = getCartTotalPrice()
 
     const finishReservation = () => {
-        deleteCart()
-        removePaymentInfo()
-        removeUserInfo()
+        try {
+            // send put or post to server.
+        } catch (err) {
+            // clg error
+        } finally {
+            deleteCart()
+            removePaymentInfo()
+            removeUserInfo()
+        }
     }
 
     const handleFinish = () => {

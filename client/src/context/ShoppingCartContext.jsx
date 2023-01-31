@@ -3,25 +3,26 @@ import { SideCart } from "../components/Sidecart/Sidecart";
 import { formatPrice } from "../utils/formatPrice";
 
 const ShoppingCartContext = createContext({
-  openCart() {},
-  closeCart() {},
-  getCartQuantity() {},
-  getCartProducts() {},
-  getCartTotalPrice() {},
-  getProductQuantity(productId) {},
-  addToCart(productObject) {},
-  increaseProductQuantity(productId, count) {},
-  decreaseProductQuantity(productId, count) {},
-  updateProductQuantity(productId, count) {},
-  removeFromCart(productId) {},
-  userInfo: [],
-  paymentInfo: [],
-  handleFormChange: () => {},
-  handlePaymentChange: () => {},
-  deleteCart: () => {},
-  removePaymentInfo: () => {},
-  removeUserInfo: () => {},
-});
+    openCart() {},
+    closeCart() {},
+    getCartQuantity() {},
+    getCartProducts() {},
+    getCartTotalPrice() {},
+    getProductQuantity(productId) {},
+    addToCart(productObject) {},
+    increaseProductQuantity(productId, count) {},
+    decreaseProductQuantity(productId, count) {},
+    updateProductQuantity(productId, count) {},
+    removeFromCart(productId) {},
+    userInfo: [],
+    paymentInfo: [],
+    handleFormChange: () => {},
+    handlePaymentChange: () => {},
+    deleteCart: () => {},
+    removePaymentInfo: () => {},
+    removeUserInfo: () => {},
+    handleChosenAddress: () => {},
+})
 
 export function useShoppingCart() {
   return useContext(ShoppingCartContext);
@@ -235,31 +236,40 @@ export function ShoppingCartProvider({ children }) {
     });
   };
 
+  const handleChosenAddress = (address) => {
+    console.log(address)
+    setUserInfo({
+        ...userInfo,
+        ...address,
+    })
+  }
+
   return (
-    <ShoppingCartContext.Provider
-      value={{
-        openCart,
-        closeCart,
-        getCartQuantity,
-        getCartProducts,
-        getProductQuantity,
-        getCartTotalPrice,
-        addToCart,
-        removeFromCart,
-        deleteCart,
-        increaseProductQuantity,
-        decreaseProductQuantity,
-        updateProductQuantity,
-        userInfo: userInfo,
-        paymentInfo: paymentInfo,
-        handleFormChange: handleFormChange,
-        handlePaymentChange: handlePaymentChange,
-        removePaymentInfo,
-        removeUserInfo,
-      }}
-    >
-      {children}
-      <SideCart isCartOpen={isOpen}></SideCart>
-    </ShoppingCartContext.Provider>
-  );
+      <ShoppingCartContext.Provider
+          value={{
+              openCart,
+              closeCart,
+              getCartQuantity,
+              getCartProducts,
+              getProductQuantity,
+              getCartTotalPrice,
+              addToCart,
+              removeFromCart,
+              deleteCart,
+              increaseProductQuantity,
+              decreaseProductQuantity,
+              updateProductQuantity,
+              userInfo: userInfo,
+              paymentInfo: paymentInfo,
+              handleFormChange: handleFormChange,
+              handlePaymentChange: handlePaymentChange,
+              removePaymentInfo,
+              removeUserInfo,
+              handleChosenAddress,
+          }}
+      >
+          {children}
+          <SideCart isCartOpen={isOpen}></SideCart>
+      </ShoppingCartContext.Provider>
+  )
 }

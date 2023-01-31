@@ -11,11 +11,18 @@ const theme = createTheme()
 
 export default function NewCheckout() {
     const [activeStep, setActiveStep] = useState(0)
+    const [isNewAddress, setIsNewAddress] = useState(false)
 
     function getStepContent(step) {
         switch (step) {
             case 0:
-                return <AddressForm handleNext={handleNext} />
+                return (
+                    <AddressForm
+                        handleNext={handleNext}
+                        isNewAddress={isNewAddress}
+                        setIsNewAddress={setIsNewAddress}
+                    />
+                )
             case 1:
                 return (
                     <PaymentForm
