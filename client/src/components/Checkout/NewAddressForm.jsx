@@ -1,0 +1,154 @@
+import React, { useEffect } from 'react'
+import { Grid, TextField, Button, Divider } from '@mui/material'
+import { useShoppingCart } from '../../context/ShoppingCartContext'
+
+export default function NewAddressForm(props) {
+    const { setIsNextAvailable } = props
+    const { userInfo, handleFormChange } = useShoppingCart()
+
+    const checkFormValidation = () => {
+        for (let contactInfoField of Object.keys(userInfo)) {
+            if (
+                userInfo[contactInfoField].trim() === '' &&
+                !(contactInfoField == 'address2')
+            ) {
+                setIsNextAvailable(false)
+                return
+            }
+        }
+        setIsNextAvailable(true)
+        return
+    }
+
+    useEffect(() => {
+        checkFormValidation()
+    }, [])
+
+    useEffect(() => {
+        checkFormValidation()
+    }, [userInfo])
+
+    return (
+        <React.Fragment>
+            <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        required
+                        id="firstName"
+                        name="fName"
+                        label="First name"
+                        value={userInfo?.fName && userInfo.fName}
+                        placeholder={!userInfo?.fName && 'First Name...'}
+                        fullWidth
+                        autoComplete="given-name"
+                        variant="standard"
+                        inputProps={{ maxLength: 14, minLength: 2 }}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        required
+                        id="lastName"
+                        name="lName"
+                        label="Last name"
+                        value={userInfo?.lName && userInfo.lName}
+                        placeholder={!userInfo?.lName && 'Last Name...'}
+                        fullWidth
+                        autoComplete="family-name"
+                        variant="standard"
+                        inputProps={{ maxLength: 14, minLength: 2 }}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        required
+                        id="address1"
+                        name="address1"
+                        label="Address line 1"
+                        value={userInfo?.address1 && userInfo.address1}
+                        placeholder={!userInfo?.address1 && 'Address...'}
+                        fullWidth
+                        autoComplete="shipping address-line1"
+                        variant="standard"
+                        inputProps={{ maxLength: 22, minLength: 2 }}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        id="address2"
+                        name="address2"
+                        label="Address line 2"
+                        value={userInfo?.address2 && userInfo.address2}
+                        placeholder={!userInfo?.address2 && 'Address 2...'}
+                        fullWidth
+                        autoComplete="shipping address-line2"
+                        variant="standard"
+                        inputProps={{ maxLength: 22, minLength: 2 }}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        required
+                        id="city"
+                        name="city"
+                        label="City"
+                        value={userInfo.city && userInfo.city}
+                        placeholder={!userInfo.city && 'City...'}
+                        fullWidth
+                        autoComplete="shipping address-level2"
+                        variant="standard"
+                        inputProps={{ maxLength: 18, minLength: 2 }}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        id="state"
+                        name="state"
+                        label="State/Province/Region"
+                        value={userInfo?.state && userInfo.state}
+                        placeholder={!userInfo?.state && 'State...'}
+                        fullWidth
+                        variant="standard"
+                        inputProps={{ maxLength: 20, minLength: 2 }}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        required
+                        id="zip"
+                        name="zip"
+                        label="Zip / Postal code"
+                        value={userInfo?.zip && userInfo.zip}
+                        placeholder={!userInfo?.zip && 'Zip...'}
+                        fullWidth
+                        autoComplete="shipping postal-code"
+                        variant="standard"
+                        inputProps={{ maxLength: 8, minLength: 4 }}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        required
+                        id="country"
+                        name="country"
+                        label="Country"
+                        value={userInfo?.country && userInfo?.country}
+                        placeholder={!userInfo?.country && 'Country...'}
+                        fullWidth
+                        autoComplete="shipping country"
+                        variant="standard"
+                        inputProps={{ maxLength: 22, minLength: 2 }}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
+            </Grid>
+        </React.Fragment>
+    )
+}

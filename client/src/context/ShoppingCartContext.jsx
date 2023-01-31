@@ -23,6 +23,7 @@ const ShoppingCartContext = createContext({
     deleteCart: () => {},
     removePaymentInfo: () => {},
     removeUserInfo: () => {},
+    handleChosenAddress: () => {},
 })
 
 export function useShoppingCart() {
@@ -283,6 +284,14 @@ export function ShoppingCartProvider({ children }) {
         })
     }
 
+  const handleChosenAddress = (address) => {
+    console.log(address)
+    setUserInfo({
+        ...userInfo,
+        ...address,
+    })
+  }
+
     return (
         <ShoppingCartContext.Provider
             value={{
@@ -305,6 +314,7 @@ export function ShoppingCartProvider({ children }) {
                 removePaymentInfo,
                 removeUserInfo,
                 isShoppingCartLoading,
+                handleChosenAddress,
             }}
         >
             {children}
