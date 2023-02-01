@@ -2,7 +2,6 @@ import React, { Component, useState, useEffect, useRef  } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { CssBaseline, Container, Paper, Typography, Avatar, Button, Grid, Divider } from "@mui/material";
 import icons from "../Account/icons"
 import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded';
 import { Link as RouterLink } from "react-router-dom";
