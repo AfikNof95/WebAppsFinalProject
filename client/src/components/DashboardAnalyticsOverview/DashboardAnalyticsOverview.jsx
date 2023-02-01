@@ -7,33 +7,34 @@ import OrdersIcon from '@mui/icons-material/LocalShipping';
 
 import { formatPrice } from '../../utils/formatPrice';
 import { useEffect, useState } from 'react';
-import { useWebSocket } from 'react-use-websocket/dist/lib/use-websocket';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 const DashboardAnalyticsOverview = ({ users, orders, products }) => {
-  const [socketUrl, setSocketUrl] = useState('ws://localhost:8000');
-  const [isSocketOpen, setIsSocketOpen] = useState(true);
-  const [loggedInUsers, setLoggedInUsers] = useState(0);
+  const [socketUrl, setSocketUrl] = useState('ws://localhost:2309');
+
+  const [loggedInUsers, setLoggedInUsers] = useState([]);
   const [isUserAnalyticsLoading, setIsUserAnalyticsLoading] = useState(true);
   const [isOrdersAnalyticsLoading, setIsOrdersAnalyticsLoading] = useState(true);
   const [isProductsAnalyticsLoading, setIsProductsAnalyticsLoading] = useState(true);
 
   const [productsCategoryPieChart, setProductsCategoryPieChart] = useState([]);
   const [monthlyProfit, setMonthlyProfit] = useState(0);
-  const { lastJsonMessage, lastMessage, sendJsonMessage } = useWebSocket(socketUrl, {
+  const { lastJsonMessage, lastMessage, sendJsonMessage, readyState } = useWebSocket(socketUrl, {
     share: true
   });
 
   useEffect(() => {
-    if (isSocketOpen) {
+    if (readyState === ReadyState.OPEN) {
+      console.log('Connecting To WebSocket Server...');
       sendJsonMessage({ type: 'ADMIN_READY' });
     }
-  }, [isSocketOpen, sendJsonMessage]);
+  }, [readyState]);
 
   useEffect(() => {
-    if (lastMessage !== null) {
-      setLoggedInUsers(lastJsonMessage.loggedInClients);
+    if (lastJsonMessage !== null && lastJsonMessage.currentLoggedInUsers) {
+      setLoggedInUsers(lastJsonMessage.currentLoggedInUsers);
     }
-  }, [lastMessage, lastJsonMessage]);
+  }, [lastJsonMessage]);
 
   const COLORS = ['#cea9bc', '#8464a0', '#323232', '#0a417a', '#72b4eb', '#2085ec'];
 
@@ -123,7 +124,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                           {users.count}
                         </Typography>
                         <Typography variant="subtitle2" fontWeight={'bold'}>
-                          {loggedInUsers} Connected now!
+                          {loggedInUsers.length} Connected now!
                         </Typography>
                       </div>
 
@@ -182,7 +183,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
         <Grid item xs={12}>
           <Grid container gap={3}>
             <Grid item component={Card} sm={12} md={3}>
-              <CardContent>
+              <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Typography variant="body2" fontWeight={'bold'}>
                   Amount Of Products Per Category
                 </Typography>
@@ -206,35 +207,45 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
               </CardContent>
             </Grid>
             <Grid item component={Card} sm={12} md={3}>
-              <CardContent>
-                <Typography variant="body2" fontWeight={'bold'}>
-                  Orders By Status
-                </Typography>
-                <ResponsiveContainer width={200} aspect={1}>
-                  <PieChart>
-                    <Pie
-                      data={orders.byStatus}
-                      innerRadius={60}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      paddingAngle={5}
-                      dataKey="count"
-                      nameKey={'_id'}>
-                      {productsCategoryPieChart.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip></Tooltip>
-                  </PieChart>
-                </ResponsiveContainer>
+              <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
+                {isOrdersAnalyticsLoading ? (
+                  <>
+                    <div style={{ width: '100%' }}>
+                      <Skeleton width={'50%'}></Skeleton>
+                      <Skeleton width={'25%'}></Skeleton>
+                    </div>
+                    <Skeleton variant="circular" width={100} height={70}></Skeleton>
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="body2" fontWeight={'bold'}>
+                      Orders By Status
+                    </Typography>
+                    <ResponsiveContainer width={200} aspect={1}>
+                      <PieChart>
+                        <Pie
+                          data={orders.byStatus}
+                          innerRadius={60}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          paddingAngle={5}
+                          dataKey="count"
+                          nameKey={'_id'}>
+                          {productsCategoryPieChart.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip></Tooltip>
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </>
+                )}
               </CardContent>
             </Grid>
             <Grid item component={Card} sm={12} md={3}>
-              <CardContent>
+              <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
                 {isUserAnalyticsLoading ? (
-                  <>
-                  
-                  </>
+                  <></>
                 ) : (
                   <>
                     <Typography variant="body2" fontWeight={'bold'}>

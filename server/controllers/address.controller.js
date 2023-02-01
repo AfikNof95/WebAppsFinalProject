@@ -38,7 +38,7 @@ const AddressController = {
       next(ex);
     }
   },
-  async deleteAddress() {
+  async deleteAddress(req,res,next) {
     try {
       const { addressId } = req.params;
       const response = await AddressService.deleteAddress(addressId);

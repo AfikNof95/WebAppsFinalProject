@@ -64,13 +64,14 @@ const ProductService = {
           );
           break;
         case 'freeText':
+        case 'searchTerm':
           if (!queryFilters['$or']) {
             queryFilters['$or'] = [];
           }
           queryFilters['$or'].push(
-            { name: { $regex: '^.*' + filters.freeText, $options: 'i' } },
+            { name: { $regex: '^.*' + filters[filter], $options: 'i' } },
             {
-              description: { $regex: '^.*' + filters.freeText, $options: 'i' }
+              description: { $regex: '^.*' + filters[filter], $options: 'i' }
             }
           );
           break;

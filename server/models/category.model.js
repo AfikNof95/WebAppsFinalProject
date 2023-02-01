@@ -10,6 +10,10 @@ const CategoryModel = new Schema(
       required: [true, 'Category name should not be empty!'],
       min: [1, 'Category name should not be empty!']
     },
+    icon: {
+      type: String,
+      default: 'defaultCategoryIcon'
+    },
     isActive: { type: Boolean, default: true }
   },
   { timestamps: true }

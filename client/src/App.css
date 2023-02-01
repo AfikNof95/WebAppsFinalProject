@@ -3,6 +3,7 @@
 :root {
   --main-app-blue: #24344c;
   --main-app-background-color: #f1f1f5;
+  
 }
 html * {
   font-family: 'Roboto', sans-serif !important;

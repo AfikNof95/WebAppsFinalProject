@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './Navbar.css';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -72,6 +72,7 @@ function Navbar() {
   const navigate = useNavigate();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const searchInput = useRef();
 
   useEffect(() => {
     const searchTermParam = searchParams.get('searchTerm');
@@ -108,7 +109,7 @@ function Navbar() {
   };
 
   const handleSearchInput = (event) => {
-    setSearchInputValue(event.currentTarget.value);
+    setSearchInputValue(searchInput.current.value);
   };
 
   const menuId = 'primary-search-account-menu';
@@ -142,7 +143,11 @@ function Navbar() {
         </MenuItem>
       ]}
       {isAdmin() && (
-        <MenuItem key="Dashboard" component={RouterLink} to={'/dashboard'} onClick={handleMenuClose}>
+        <MenuItem
+          key="Dashboard"
+          component={RouterLink}
+          to={'/dashboard'}
+          onClick={handleMenuClose}>
           <IconButton size="large" color="inherit">
             <DashboardIcon></DashboardIcon>
           </IconButton>
@@ -235,6 +240,7 @@ function Navbar() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              inputRef={searchInput}
               placeholder="Search Products..."
               inputProps={{ 'aria-label': 'search' }}
               value={searchInputValue}

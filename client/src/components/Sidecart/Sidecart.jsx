@@ -40,8 +40,8 @@ export function SideCart({ isCartOpen }) {
         <Toolbar />
 
         <Box sx={{ padding: '15px' }}>
-          <Stack spacing={3} direction={'column'}>
-            <Stack spacing={2} maxHeight={450} overflow={'auto'} position={'relative'}>
+          <Stack spacing={3} direction={'column'} maxHeight={"calc(100vh - 90px)"}>
+            <Stack spacing={2}  overflow={'auto'} position={'relative'}>
               <Box
                 position={'absolute'}
                 top={0}

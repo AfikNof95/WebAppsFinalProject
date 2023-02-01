@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.resolve(__dirname, './public')));
 app.use(mongoSanitize());
-app.use(logger('combined'));
+// app.use(logger('combined'));
 app.use('/', require('./routes/index'));
 app.use(errorHandler);
 

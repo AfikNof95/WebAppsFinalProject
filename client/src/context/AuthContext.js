@@ -2,7 +2,7 @@ import React, { useState, useContext, createContext, useEffect } from 'react';
 import backendAPI from '../api';
 import { useCookies } from 'react-cookie';
 import { getTokenExpireDate } from '../utils/getTokenExpireDate';
-import useWebSocket from 'react-use-websocket';
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 const AuthContext = createContext({
   signUp: async ({ email, password, imageURL, displayName }) => {},
@@ -25,6 +25,7 @@ export const AuthContextProvider = ({ children }) => {
   const [cookies, setCookie, removeCookie] = useCookies(['user-session']);
   const [currentUser, setCurrentUser] = useState(cookies['user-session']);
   const [wsURL, setWsURL] = useState(null);
+  const [isSocketOpen, setIsSocketOpen] = useState(false);
   const [userProfilePicture, setUserProfilePicture] = useState(
     'http://localhost:2308/images/defaultAvatar.png'
   );
@@ -32,11 +33,28 @@ export const AuthContextProvider = ({ children }) => {
     share: true,
     onOpen: () => {
       console.log('WebSocket opened');
-      if (currentUser) {
-        sendJsonMessage({ type: 'SIGN_IN', user: currentUser });
-      }
     }
   });
+
+  useEffect(() => {
+    if (readyState === ReadyState.OPEN) {
+      setIsSocketOpen(true);
+    }
+    if (readyState === ReadyState.CLOSED) {
+      setIsSocketOpen(false);
+    }
+  }, [readyState]);
+
+  useEffect(() => {
+    if (!currentUser) {
+      return;
+    }
+    if (isSocketOpen) {
+      sendJsonMessage({ type: 'SIGN_IN', user: currentUser });
+    } else {
+      setWsURL('ws://localhost:2309');
+    }
+  }, [currentUser, isSocketOpen]);
 
   async function signUp({ email, password, photoFile, displayName }) {
     let photoUrl;
@@ -129,7 +147,7 @@ export const AuthContextProvider = ({ children }) => {
         setUserProfilePicture((currentPicture) =>
           currentUser.photoUrl ? currentUser.photoUrl : currentPicture
         );
-        setWsURL('ws://localhost:8000');
+        setWsURL('ws://localhost:2309');
       } catch (ex) {
         console.error(ex);
       }

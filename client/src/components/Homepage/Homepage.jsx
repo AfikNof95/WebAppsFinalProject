@@ -7,6 +7,7 @@ import SideNavigation from '../SideNavigation/SideNavigation';
 import { useParams, useSearchParams } from 'react-router-dom';
 import ProductCardList from '../ProductCardList/ProductCardList';
 import backendAPI from '../../api';
+import useScreenSize from '../../hooks/useScreenSize';
 
 const Homepage = () => {
   const [products, setProducts] = useState([]);
@@ -20,7 +21,16 @@ const Homepage = () => {
   const [productsGroupByCategories, setProductsGroupByCategories] = useState(null);
   const [priceRange, setPriceRange] = useState([1, 1000]);
   const { getToken } = useAuth();
-  const drawerWidth = 300;
+  const [screenSize] = useScreenSize();
+  const [drawerWidth, setDrawerWidth] = useState(() => {
+    return screenSize === 'sm' || screenSize === 'xs' ? 80 : 300;
+  });
+
+  useEffect(() => {
+    setDrawerWidth(() => {
+      return screenSize === 'sm' || screenSize === 'xs' ? 80 : 300;
+    });
+  }, [screenSize]);
 
   const handlePageChange = async (event, page) => {
     setCurrentPage(page);
@@ -64,11 +74,12 @@ const Homepage = () => {
       display={'flex'}
       flexDirection={'column'}
       sx={{ backgroundColor: 'white' }}
-      height={'100vh'}>
+      height={'calc(100vh - 64px)'}>
       <Toolbar></Toolbar>
       <Box display={'flex'}>
         <SideNavigation
           drawerWidth={drawerWidth}
+          screenSize={screenSize}
           categories={productCategories}
           productsGroupByCategories={productsGroupByCategories}
           priceRange={priceRange}></SideNavigation>

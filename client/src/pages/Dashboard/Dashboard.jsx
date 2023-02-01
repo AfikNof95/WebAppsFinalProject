@@ -23,15 +23,15 @@ const DashboardPage = (props) => {
   const [productAnalytics, setProductAnalytics] = useState(null);
   const [ordersAnalytics, setOrdersAnalytics] = useState(null);
 
-  const [currentPage, setCurrentPage] = useState(() => {
-    return location.state ? location.state.page : 'users';
-  });
+  const [currentPage, setCurrentPage] = useState(null);
 
   useEffect(() => {
     if (location.state) {
       setCurrentPage(location.state.page);
+    } else {
+      setCurrentPage('users');
     }
-  }, [navigate]);
+  }, [location]);
 
   useEffect(() => {
     if (!currentUser) {

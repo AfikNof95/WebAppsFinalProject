@@ -20,10 +20,10 @@ import StockIcon from '@mui/icons-material/Inventory';
 import FilterIcon from '@mui/icons-material/Tune';
 import PriceIcon from '@mui/icons-material/AttachMoney';
 import { formatPrice } from '../../utils/formatPrice';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import FilterAltOff from '@mui/icons-material/FilterAltOff';
-const Filters = ({ selectedCategoryId, priceRange }) => {
+const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
   const SORT_BY_ENUM = {
     NAME_ASCENDING: { value: 'NAME_ASCENDING', sort: { name: 1 } },
     NAME_DESCENDING: { value: 'NAME_DESCENDING', sort: { name: -1 } },
@@ -143,17 +143,38 @@ const Filters = ({ selectedCategoryId, priceRange }) => {
   };
 
   return (
-    <div>
-      <ListItemButton onClick={toggleOpenFilters}>
-        <ListItemIcon></ListItemIcon>
-        <ListItemText
-          primary="Filters"
-          primaryTypographyProps={{
-            fontSize: '0.9em',
-            fontWeight: 'bold',
-            color: '#1976d2'
-          }}></ListItemText>
-        <FilterIcon color="primary"></FilterIcon>
+    <ListItem disablePadding sx={() => deviceType === 'mobile' && { display: 'block' }}>
+      <ListItemButton
+        onClick={toggleOpenFilters}
+        sx={() =>
+          deviceType === 'mobile' && {
+            minHeight: 48,
+            justifyContent: 'center',
+            px: 2.5
+          }
+        }>
+        {deviceType !== 'mobile' && (
+          <>
+            <ListItemIcon></ListItemIcon>
+            <ListItemText
+              primary="Filters"
+              primaryTypographyProps={{
+                fontSize: '0.9em',
+                fontWeight: 'bold',
+                color: '#1976d2'
+              }}></ListItemText>
+          </>
+        )}
+
+        <FilterIcon
+          color="primary"
+          sx={() =>
+            deviceType === 'mobile' && {
+              mr: 'auto',
+              minWidth: 0,
+              justifyContent: 'center'
+            }
+          }></FilterIcon>
       </ListItemButton>
 
       <Menu
@@ -241,7 +262,7 @@ const Filters = ({ selectedCategoryId, priceRange }) => {
           </Button>
         </Box>
       </Menu>
-    </div>
+    </ListItem>
   );
 };
 

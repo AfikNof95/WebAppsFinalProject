@@ -4,6 +4,7 @@ import { formatPrice } from '../utils/formatPrice';
 import backendAPI from '../api';
 import { useAuth } from './AuthContext';
 import useLocalStorage from '../hooks/useLocalStorage';
+import useScreenSize from '../hooks/useScreenSize';
 
 const ShoppingCartContext = createContext({
   openCart() {},
@@ -32,6 +33,7 @@ export function useShoppingCart() {
 
 export function ShoppingCartProvider({ children }) {
   const { currentUser } = useAuth();
+  const [screenSize] = useScreenSize();
   const [cartProducts, setCartProducts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -58,6 +60,12 @@ export function ShoppingCartProvider({ children }) {
     (quantity, product) => Number(product.quantity) + quantity,
     0
   );
+
+  useEffect(() => {
+    if (isOpen && screenSize === 'sm') {
+      setIsOpen(false);
+    }
+  }, [screenSize]);
 
   useEffect(() => {
     if (!currentUser) {
@@ -116,14 +124,6 @@ export function ShoppingCartProvider({ children }) {
     } else {
       setIsInitialLoad(false);
     }
-
-    // if (currentUser && cartProducts.length) {
-    //     if (!isInitialLoad) {
-    //         updateUserCart()
-    //     } else {
-    //         setIsInitialLoad(false)
-    //     }
-    //}
   }, [cartProducts]);
 
   function getCartProducts() {
