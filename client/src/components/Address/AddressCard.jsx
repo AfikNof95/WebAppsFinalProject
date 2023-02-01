@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
 import {
     Box,
     Button,
@@ -17,34 +18,67 @@ import {
 
 export function AddressCard(props) {
     const {
-        address1,
-        address2,
+        addressId,
+        street,
+        houseNumber,
         city,
         state,
-        zip,
+        zipCode,
         country,
         setIsNextAvailable,
         setChosenAddress,
         chosenAddress,
     } = props
     const [open, setOpen] = React.useState(false)
+    const [updatedAddress, setUpdatedAddress] = useState({
+        street: '',
+        houseNumber: '',
+        city: '',
+        zipCode: '',
+        country: '',
+    })
 
     const handleClickOpen = () => {
         setOpen(true)
-    }
-
-    const handleSave = () => {
-        // Save new Data
-        setOpen(false)
     }
 
     const handleClose = () => {
         setOpen(false)
     }
 
+    const handleSave = async () => {
+        try {
+            const updateData = JSON.stringify(updatedAddress);
+            const response = await axios.put(
+                `http://localhost:2308/Address/id/${addressId}`,
+                updateData
+            )
+            console.log(response.data)
+            console.log(updatedAddress)
+        } catch (error) {
+            console.error(error)
+        }
+        setOpen(false)
+    }
+
+    const onRemove = () => {
+        try {
+            // axios
+            //     .delete('api/address/' + { addresId })
+            //     .then((response) => {
+            //         console.log(response.data)
+            //     })
+            //     .catch((error) => {
+            //         console.error(error)
+            //     })
+        } catch (err) {
+            console.log('Error! Could not delete the address')
+        }
+    }
+
     const onChoose = () => {
         try {
-            setChosenAddress({ address1, address2, city, state, zip, country })
+            setChosenAddress({ street, houseNumber, city, state, zipCode, country })
             setIsNextAvailable(true)
             // add style = box-shadow: 7px 7px 8px green;
         } catch (err) {
@@ -54,15 +88,11 @@ export function AddressCard(props) {
         }
     }
 
-    const onRemove = () => {
-        try {
-            // Send delete to the server
-            // get addresses again
-        } catch (err) {
-            console.log('Error! Could not delete the address')
-        } finally {
-            console.log('Deleted address?')
-        }
+    const handleChange = async (event) => {
+        setUpdatedAddress({
+            ...updatedAddress,
+            [event.target.name]: event.target.value,
+        })
     }
 
     return (
@@ -81,24 +111,26 @@ export function AddressCard(props) {
                         <Grid item xs={6}>
                             <TextField
                                 required
-                                id="address1"
-                                name="address1"
-                                value={address1}
-                                placeholder={address1 ? address1 : 'Address...'}
+                                id="street"
+                                name="street"
+                                placeholder={street ? street : 'Street...'}
                                 variant="standard"
                                 inputProps={{ maxLength: 22, minLength: 2 }}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
-                                id="address2"
-                                name="address2"
-                                value={address2}
+                                id="houseNumber"
+                                name="houseNumber"
                                 placeholder={
-                                    address2 ? address2 : 'Address 2...'
+                                    houseNumber
+                                        ? houseNumber
+                                        : 'House number...'
                                 }
                                 variant="standard"
                                 inputProps={{ maxLength: 22, minLength: 2 }}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={6}>
@@ -106,31 +138,21 @@ export function AddressCard(props) {
                                 required
                                 id="city"
                                 name="city"
-                                value={city}
                                 placeholder={city ? city : 'City...'}
                                 variant="standard"
                                 inputProps={{ maxLength: 18, minLength: 2 }}
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <TextField
-                                id="state"
-                                name="state"
-                                value={state}
-                                placeholder={state ? state : 'State...'}
-                                variant="standard"
-                                inputProps={{ maxLength: 20, minLength: 2 }}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={6}>
                             <TextField
                                 required
-                                id="zip"
-                                name="zip"
-                                value={zip}
-                                placeholder={zip ? zip : 'Zip...'}
+                                id="zipCode"
+                                name="zipCode"
+                                placeholder={zipCode ? zipCode : 'zipCode...'}
                                 variant="standard"
                                 inputProps={{ maxLength: 8, minLength: 4 }}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={6}>
@@ -138,10 +160,10 @@ export function AddressCard(props) {
                                 required
                                 id="country"
                                 name="country"
-                                value={country}
                                 placeholder={country ? country : 'Country...'}
                                 variant="standard"
                                 inputProps={{ maxLength: 22, minLength: 2 }}
+                                onChange={handleChange}
                             />
                         </Grid>
                     </Grid>
@@ -157,16 +179,10 @@ export function AddressCard(props) {
             >
                 <CardContent>
                     <Typography variant="body2" gutterBottom>
-                        {address1}, {city}, {state}
+                        {street} {houseNumber}, {city}
                     </Typography>
-                    {address2 && (
-                        <Typography variant="body2" gutterBottom>
-                            {address2}
-                        </Typography>
-                    )}
-
                     <Typography variant="body2">
-                        {zip}, {country}
+                        {zipCode}, {country}
                     </Typography>
                 </CardContent>
                 <Box

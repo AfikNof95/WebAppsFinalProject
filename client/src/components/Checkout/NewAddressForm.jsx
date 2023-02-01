@@ -8,10 +8,7 @@ export default function NewAddressForm(props) {
 
     const checkFormValidation = () => {
         for (let contactInfoField of Object.keys(userInfo)) {
-            if (
-                userInfo[contactInfoField].trim() === '' &&
-                !(contactInfoField == 'address2')
-            ) {
+            if (userInfo[contactInfoField].trim() === '') {
                 setIsNextAvailable(false)
                 return
             }
@@ -61,14 +58,14 @@ export default function NewAddressForm(props) {
                         onChange={handleFormChange}
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                     <TextField
                         required
-                        id="address1"
-                        name="address1"
-                        label="Address line 1"
-                        value={userInfo?.address1 && userInfo.address1}
-                        placeholder={!userInfo?.address1 && 'Address...'}
+                        id="street"
+                        name="street"
+                        label="Street"
+                        value={userInfo?.street && userInfo.street}
+                        placeholder={!userInfo?.street && 'Street...'}
                         fullWidth
                         autoComplete="shipping address-line1"
                         variant="standard"
@@ -76,13 +73,15 @@ export default function NewAddressForm(props) {
                         onChange={handleFormChange}
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                     <TextField
-                        id="address2"
-                        name="address2"
-                        label="Address line 2"
-                        value={userInfo?.address2 && userInfo.address2}
-                        placeholder={!userInfo?.address2 && 'Address 2...'}
+                        id="houseNumber"
+                        name="houseNumber"
+                        label="House number"
+                        value={userInfo?.houseNumber && userInfo.houseNumber}
+                        placeholder={
+                            !userInfo?.houseNumber && 'House Number...'
+                        }
                         fullWidth
                         autoComplete="shipping address-line2"
                         variant="standard"
@@ -101,35 +100,7 @@ export default function NewAddressForm(props) {
                         fullWidth
                         autoComplete="shipping address-level2"
                         variant="standard"
-                        inputProps={{ maxLength: 18, minLength: 2 }}
-                        onChange={handleFormChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        id="state"
-                        name="state"
-                        label="State/Province/Region"
-                        value={userInfo?.state && userInfo.state}
-                        placeholder={!userInfo?.state && 'State...'}
-                        fullWidth
-                        variant="standard"
-                        inputProps={{ maxLength: 20, minLength: 2 }}
-                        onChange={handleFormChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="zip"
-                        name="zip"
-                        label="Zip / Postal code"
-                        value={userInfo?.zip && userInfo.zip}
-                        placeholder={!userInfo?.zip && 'Zip...'}
-                        fullWidth
-                        autoComplete="shipping postal-code"
-                        variant="standard"
-                        inputProps={{ maxLength: 8, minLength: 4 }}
+                        inputProps={{ maxLength: 24, minLength: 2 }}
                         onChange={handleFormChange}
                     />
                 </Grid>
@@ -145,6 +116,21 @@ export default function NewAddressForm(props) {
                         autoComplete="shipping country"
                         variant="standard"
                         inputProps={{ maxLength: 22, minLength: 2 }}
+                        onChange={handleFormChange}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        required
+                        id="zipCode"
+                        name="zipCode"
+                        label="zipCode / Postal code"
+                        value={userInfo?.zipCode && userInfo.zipCode}
+                        placeholder={!userInfo?.zipCode && 'zipCode...'}
+                        fullWidth
+                        autoComplete="shipping postal-code"
+                        variant="standard"
+                        inputProps={{ maxLength: 8, minLength: 4 }}
                         onChange={handleFormChange}
                     />
                 </Grid>
