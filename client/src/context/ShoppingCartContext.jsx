@@ -39,12 +39,11 @@ export function ShoppingCartProvider({ children }) {
     const [userInfo, setUserInfo] = useState({
         fName: '',
         lName: '',
-        address1: '',
-        address2: '',
+        street: '',
+        houseNumber: '',
         city: '',
-        state: '',
-        zip: '',
         country: '',
+        zipCode: '',
     })
     const [paymentInfo, setPaymentInfo] = useState({
         cardName: '',
@@ -115,11 +114,10 @@ export function ShoppingCartProvider({ children }) {
         setUserInfo({
             fName: '',
             lName: '',
-            address1: '',
-            address2: '',
+            street: '',
+            houseNumber: '',
             city: '',
-            state: '',
-            zip: '',
+            zipCode: '',
             country: '',
         })
     }
@@ -285,7 +283,6 @@ export function ShoppingCartProvider({ children }) {
     }
 
   const handleChosenAddress = (address) => {
-    console.log(address)
     setUserInfo({
         ...userInfo,
         ...address,

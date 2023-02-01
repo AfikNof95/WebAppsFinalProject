@@ -2,9 +2,8 @@ import Checkout from '../Checkout/Checkout'
 import CartPage from '../../pages/Cart/Cart'
 import Homepage from '../Homepage/Homepage'
 import NotFound from '../NotFound/NotFound'
-
 import AuthForm from '../Auth/Login'
-import ProductPage from '../ProductPage/ProductPage'
+import ProductPage from '../Productpage/ProductPage'
 import AccountPage from '../Account/Account'
 import ProfilePage from '../Profile/Profile'
 import DashboardPage from '../../pages/Dashboard/Dashboard'
@@ -43,21 +42,21 @@ const appRoutes = [
     },
     {
         path: '/dashboard',
-        element: <DashboardPage></DashboardPage>,
+        element: <DashboardPage />,
     },
     {
         path: '/401',
-        element: <UnauthorizedPage></UnauthorizedPage>,
+        element: <UnauthorizedPage />,
     },
     {
         path: '/product/:productId',
-        element: <ProductPage></ProductPage>,
+        element: <ProductPage />,
     },
     {
         path: '*',
         element: (
             <>
-                <NotFoundPage></NotFoundPage>
+                <NotFoundPage />
             </>
         ),
     },

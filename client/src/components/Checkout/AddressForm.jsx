@@ -11,11 +11,10 @@ export default function AddressForm(props) {
     const { handleChosenAddress } = useShoppingCart()
     const [isNextAvailable, setIsNextAvailable] = useState(false)
     const [chosenAddress, setChosenAddress] = useState({
-        address1: '',
-        address2: '',
+        street: '',
+        houseNumber: '',
         city: '',
-        state: '',
-        zip: '',
+        zipCode: '',
         country: '',
     })
 

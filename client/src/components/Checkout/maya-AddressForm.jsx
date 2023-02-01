@@ -12,7 +12,7 @@ export default function AddressForm(props) {
   const [isNextAvailable, setIsNextAvailable] = useState(false);
   const firstName = useRef();
   const lastName = useRef();
-  const zipCode = useRef();
+  const zipCodeCode = useRef();
   const city = useRef();
   const country = useRef();
   const houseNumber = useRef();
@@ -25,7 +25,7 @@ export default function AddressForm(props) {
     for (let contactInfoField of Object.keys(userInfo)) {
       if (
         userInfo[contactInfoField].trim() === "" &&
-        !(contactInfoField == "address2")
+        !(contactInfoField == "houseNumber")
       ) {
         setIsNextAvailable(false);
         return;
@@ -50,7 +50,7 @@ export default function AddressForm(props) {
         city: city.current.value,
         street: street.current.value, 
         houseNumber: houseNumber.current.value,
-        zipCode: zipCode.current.value,
+        zipCodeCode: zipCodeCode.current.value,
         user: user.localId
       });
       handleNext()
@@ -98,11 +98,11 @@ export default function AddressForm(props) {
         <Grid item xs={12}>
           <TextField
             required
-            id="address1"
-            name="address1"
+            id="street"
+            name="street"
             label="Street Address"
-            value={userInfo?.address1 && userInfo.address1}
-            placeholder={!userInfo?.address1 && "Address..."}
+            value={userInfo?.street && userInfo.street}
+            placeholder={!userInfo?.street && "Address..."}
             fullWidth
             autoComplete="shipping address-line1"
             variant="standard"
@@ -114,11 +114,11 @@ export default function AddressForm(props) {
         <Grid item xs={12}>
           <TextField
             required
-            id="address2"
-            name="address2"
+            id="houseNumber"
+            name="houseNumber"
             label="House Number"
-            value={userInfo?.address2 && userInfo.address2}
-            placeholder={!userInfo?.address2 && "Address 2..."}
+            value={userInfo?.houseNumber && userInfo.houseNumber}
+            placeholder={!userInfo?.houseNumber && "Address 2..."}
             fullWidth
             autoComplete="shipping address-line2"
             variant="standard"
@@ -159,17 +159,17 @@ export default function AddressForm(props) {
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="zip"
-            name="zip"
-            label="Zip / Postal code"
-            value={userInfo?.zip && userInfo.zip}
-            placeholder={!userInfo?.zip && "Zip..."}
+            id="zipCode"
+            name="zipCode"
+            label="zipCode / Postal code"
+            value={userInfo?.zipCode && userInfo.zipCode}
+            placeholder={!userInfo?.zipCode && "zipCode..."}
             fullWidth
             autoComplete="shipping postal-code"
             variant="standard"
             inputProps={{ maxLength: 8, minLength: 4 }}
             onChange={handleFormChange}
-            inputRef={zipCode}
+            inputRef={zipCodeCode}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
