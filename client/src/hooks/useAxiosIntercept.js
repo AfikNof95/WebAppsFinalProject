@@ -13,7 +13,7 @@ export const useAxiosIntercept = () => {
                 if (config.url.indexOf('/token') === -1 && currentUser) {
                     config.headers['Authorization'] =
                         'Bearer ' + currentUser.idToken
-                    if (config.data && config.url.indexOf('signIn') === -1) {
+                    if (config.data && config.url.indexOf('identitytoolkit') === -1) {
                         config.data.token = currentUser.idToken
                     }
                 }
@@ -35,7 +35,7 @@ export const useAxiosIntercept = () => {
                             error.config.headers.Authorization =
                                 'Bearer ' + user.idToken
 
-                            if (error.config.data) {
+                            if (error.config.data  && config.url.indexOf('identitytoolkit') === -1) {
                                 const data = JSON.parse(error.config.data)
                                 data.token = user.idToken
                                 error.config.data = JSON.stringify(data)
