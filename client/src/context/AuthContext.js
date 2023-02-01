@@ -12,6 +12,8 @@ const AuthContext = createContext({
   isUserSignedIn: () => {},
   getUser: () => {},
   refreshToken: async () => {},
+  isAdmin: () => {},
+  getUserProfilePicture: () => {},
   currentUser: null
 });
 
@@ -22,20 +24,25 @@ export function useAuth() {
 export const AuthContextProvider = ({ children }) => {
   const [cookies, setCookie, removeCookie] = useCookies(['user-session']);
   const [currentUser, setCurrentUser] = useState(cookies['user-session']);
-  const [userIcon, setIcon] = useState(0);
-  const { lastJsonMessage, sendJsonMessage } = useWebSocket('ws://localhost:8000', {
+  const [wsURL, setWsURL] = useState(null);
+  const [userProfilePicture, setUserProfilePicture] = useState(
+    'http://localhost:2308/images/defaultAvatar.png'
+  );
+  const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(wsURL, {
     share: true,
     onOpen: () => {
       console.log('WebSocket opened');
+      if (currentUser) {
+        sendJsonMessage({ type: 'SIGN_IN', user: currentUser });
+      }
     }
   });
 
   async function signUp({ email, password, photoFile, displayName }) {
     let photoUrl;
-    debugger;
     if (photoFile) {
       const photoUploadResponse = await backendAPI.user.uploadPhoto(photoFile);
-      photoUrl = photoUploadResponse.data;
+      photoUrl = photoUploadResponse.data.photoUrl;
     }
 
     const response = await backendAPI.auth.signUpWithEmailAndPassword(email, password);
@@ -57,8 +64,8 @@ export const AuthContextProvider = ({ children }) => {
     const response = await backendAPI.auth.signInWithEmailAndPassword(email, password);
     const { data: authData } = response;
     const userDataResponse = await backendAPI.user.getUserData(authData.idToken);
-    const { data: userData } = userDataResponse;
-    const userSession = { ...authData, ...userData };
+    const { users: userData } = userDataResponse.data;
+    const userSession = { ...authData, ...userData[0] };
     //Set the expiry date of the token, so we can use the refresh token to revoke our token.
     userSession.expireDate = getTokenExpireDate(authData.expiresIn);
     setCurrentUser(userSession);
@@ -69,6 +76,7 @@ export const AuthContextProvider = ({ children }) => {
   function signOut() {
     setCurrentUser(null);
     removeCookie('user-session');
+    sendJsonMessage({ type: 'SIGN_OUT' });
   }
 
   async function updateUser(newUserDetails) {
@@ -109,6 +117,7 @@ export const AuthContextProvider = ({ children }) => {
     if (lastJsonMessage !== null) {
       if (lastJsonMessage.type === 'REFRESH_TOKEN') {
         refreshToken();
+        sendJsonMessage({ type: 'SIGN_IN', user: currentUser });
       }
     }
   }, [lastJsonMessage]);
@@ -117,10 +126,15 @@ export const AuthContextProvider = ({ children }) => {
     if (currentUser) {
       try {
         setCookie('user-session', currentUser);
-        sendJsonMessage({ type: 'LOGIN', user: currentUser });
+        setUserProfilePicture((currentPicture) =>
+          currentUser.photoUrl ? currentUser.photoUrl : currentPicture
+        );
+        setWsURL('ws://localhost:8000');
       } catch (ex) {
         console.error(ex);
       }
+    } else {
+      setWsURL(null);
     }
   }, [currentUser, setCookie, sendJsonMessage]);
 
@@ -136,6 +150,16 @@ export const AuthContextProvider = ({ children }) => {
     return currentUser;
   }
 
+  function isAdmin() {
+    return currentUser && currentUser.customAttributes
+      ? JSON.parse(currentUser.customAttributes).isAdmin
+      : false;
+  }
+
+  function getUserProfilePicture() {
+    return userProfilePicture;
+  }
+
   const value = {
     currentUser,
     isUserSignedIn,
@@ -146,8 +170,8 @@ export const AuthContextProvider = ({ children }) => {
     getUserToken,
     getUser,
     refreshToken,
-    setIcon,
-    userIcon
+    getUserProfilePicture,
+    isAdmin
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

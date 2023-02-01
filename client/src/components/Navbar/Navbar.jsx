@@ -12,6 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import MoreIcon from '@mui/icons-material/MoreVert';
@@ -62,7 +63,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navbar() {
-  const { isUserSignedIn, signOut } = useAuth();
+  const { isUserSignedIn, signOut, isAdmin } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -126,7 +127,7 @@ function Navbar() {
         vertical: 'top',
         horizontal: 'center'
       }}>
-      {isUserSignedIn && [
+      {isUserSignedIn() && [
         <MenuItem key="Account" component={RouterLink} to={'/account'} onClick={handleMenuClose}>
           <IconButton size="large" color="inherit">
             <AccountCircle></AccountCircle>
@@ -140,6 +141,14 @@ function Navbar() {
           Profile
         </MenuItem>
       ]}
+      {isAdmin() && (
+        <MenuItem key="Dashboard" component={RouterLink} to={'/dashboard'} onClick={handleMenuClose}>
+          <IconButton size="large" color="inherit">
+            <DashboardIcon></DashboardIcon>
+          </IconButton>
+          Dashboard
+        </MenuItem>
+      )}
 
       <MenuItem component={RouterLink} to={'/'} onClick={handleSignOutClick}>
         <IconButton size="large" color="inherit">

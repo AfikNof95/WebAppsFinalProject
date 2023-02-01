@@ -2,9 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ERROR_MESSAGES } from './enums';
-import styles from './Login.module.css';
 import validator from 'validator';
-import { blueGrey } from '@mui/material/colors';
 import {
   Button,
   TextField,
@@ -21,22 +19,14 @@ import {
   CardContent,
   Grid,
   Avatar,
-  InputAdornment,
   Divider,
   Container
 } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import SendIcon from '@mui/icons-material/Send';
-import LockOpenIcon from '@mui/icons-material/LockOpenRounded';
 import { auth, provider } from './firebaseConfig';
 import { signInWithPopup, sendPasswordResetEmail } from 'firebase/auth';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
-} from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 
 const AuthForm = () => {
@@ -403,8 +393,12 @@ const AuthForm = () => {
                         </Box>
                       </DialogContent>
                       <DialogActions>
-                        <Button onClick={closeModal} color="mainButton">Cancel</Button>
-                        <Button onClick={passwordReset} color="mainButton">Send</Button>
+                        <Button onClick={closeModal} color="mainButton">
+                          Cancel
+                        </Button>
+                        <Button onClick={passwordReset} color="mainButton">
+                          Send
+                        </Button>
                       </DialogActions>
                     </Dialog>
 

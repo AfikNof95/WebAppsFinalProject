@@ -13,21 +13,27 @@ const webSocketServer = () => {
   wsServer.on('connection', (connection) => {
     console.log('New Client connected');
     const clientId = uuidv4();
-    clients[clientId] = { connection };
+    clients[clientId] = { connection, clientId };
 
     connection.on('close', () => {
-      if (clients[clientId].isLoggedIn) {
-        loggedInClients--;
+      if (clients[clientId]) {
+        if (clients[clientId].isLoggedIn) {
+          loggedInClients--;
+          broadcastUserCount();
+        }
+        delete clients[clientId];
       }
-      delete clients[clientId];
     });
 
     connection.on('message', async (data, isBinary) => {
       const message = isBinary ? data : data.toString();
       try {
         const messageJSON = JSON.parse(message);
-        if (messageJSON.type === 'LOGIN') {
-          notifyLogin(clientId, messageJSON);
+        if (messageJSON.type === 'SIGN_IN') {
+          notifySignIn(clientId, messageJSON);
+        }
+        if (messageJSON.type === 'SIGN_OUT') {
+          notifySignOut(clientId);
         }
         if (messageJSON.type === 'ADMIN_READY') {
           connectToAdmin(clientId);
@@ -43,12 +49,7 @@ const webSocketServer = () => {
   });
 };
 
-const notifyLogin = async (clientId, messageJSON) => {
-  clients[clientId] = {
-    ...clients[clientId],
-    ...{ isLoggedIn: true, user: messageJSON.user }
-  };
-  loggedInClients++;
+const broadcastUserCount = async () => {
   for (let client of Object.values(clients)) {
     if (client.user) {
       try {
@@ -60,11 +61,26 @@ const notifyLogin = async (clientId, messageJSON) => {
         if (ex.errorInfo && ex.errorInfo.code === 'auth/id-token-expired') {
           console.log('Sending refresh token request');
           client.connection.send(JSON.stringify({ type: 'REFRESH_TOKEN' }));
+          client.connection.terminate();
+          delete clients[client.clientId];
         }
         console.error(ex);
       }
     }
   }
+};
+
+const notifySignOut = (clientId) => {
+  clients[clientId].connection.terminate();
+};
+
+const notifySignIn = (clientId, messageJSON) => {
+  clients[clientId] = {
+    ...clients[clientId],
+    ...{ isLoggedIn: true, user: messageJSON.user }
+  };
+  loggedInClients++;
+  broadcastUserCount();
 };
 
 const connectToAdmin = async (clientId) => {

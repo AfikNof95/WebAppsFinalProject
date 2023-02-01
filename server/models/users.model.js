@@ -24,6 +24,10 @@ const listAllUsers = async () => {
 };
 
 const updateUser = (user) => {
+  if (user.customClaims && user.customClaims.isAdmin) {
+    setUserAdmin(user);
+  }
+
   return getAuth(app).updateUser(user.uid, {
     ...user
   });

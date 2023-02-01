@@ -1,5 +1,6 @@
 const { listAllUsers, updateUser, setUserAdmin, getIsAdmin } = require('../models/users.model');
 const FileService = require('../services/file.service');
+const formidable = require('formidable');
 
 const UserController = {
   async getIsAdmin(req, res, next) {
@@ -54,16 +55,22 @@ const UserController = {
     }
   },
   async uploadPhoto(req, res, next) {
-    try {
-      console.log(req);
-      const { file } = req.body;
-      const fileURL = await FileService.uploadImage(file);
-      console.log(fileURL);
-      res.status(400).json({});
-    } catch (ex) {
-      res.status(400);
-      next(ex);
-    }
+    const form = formidable({ multiples: true });
+    form.parse(req, async (err, fields, file) => {
+      try {
+        if (err) {
+          next(err);
+          return;
+        }
+        const photoUrl = await FileService.uploadImage(file.file);
+        res.json({ photoUrl });
+      } catch (ex) {
+        res.status(400);
+        console.error(ex.stack);
+        ex.message = 'IMAGE_UPLOAD_FAILED';
+        return next(ex);
+      }
+    });
   }
 };
 

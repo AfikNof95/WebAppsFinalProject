@@ -6,10 +6,10 @@ const UserController = require('../controllers/user.controller');
 
 const router = require('express').Router();
 
-router.post('/', UserController.getIsAdmin);
+
 
 /**User Routes */
-
+router.post('/', UserController.getIsAdmin);
 router.get('/User/All', UserController.getAllUsers);
 router.get('/User/Analytics', UserController.getUsersAnalytics);
 router.post('/User/SetAdmin', UserController.setAdmin);

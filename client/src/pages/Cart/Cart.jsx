@@ -23,25 +23,18 @@ const CartPage = () => {
   const { getCartTotalPrice, getCartQuantity, getCartProducts } = useShoppingCart();
 
   const getCartTitle = () => {
-    if (getCartQuantity() > 0) {
-      return (
-        <Box display={'flex'} flexDirection={'row'} justifyContent={'center'} marginBottom={3}>
-          <ShoppingBag fontSize="large"></ShoppingBag>
-          <Typography variant="h4" fontWeight={'bold'}>
-            My Cart
-          </Typography>
-        </Box>
-      );
-    }
+    const title = getCartQuantity() > 0 ? 'My Cart' : 'Your Cart Is Empty!';
     return (
-      <Typography variant="h4" marginBottom={5} textAlign={'center'} fontWeight={'bold'}>
-        Your cart is empty!
-      </Typography>
+      <Box display={'flex'} flexDirection={'row'} justifyContent={'center'} marginBottom={3}>
+        <ShoppingBag fontSize="large"></ShoppingBag>
+        <Typography variant="h4" fontWeight={'bold'}>
+          {title}
+        </Typography>
+      </Box>
     );
   };
   return (
     <>
-      {/* height={'calc(100vh - 64px)'} */}
       <Grid container height={'calc(100vh - 64px)'} overflow={'auto'} marginTop={'64px'}>
         <Grid item xs={12} sm={12} md={8} padding={1}>
           <Paper>
@@ -54,7 +47,7 @@ const CartPage = () => {
             )}
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={12} md={4}>
+        <Grid item xs={12} sm={12} md={4} padding={1}>
           <Box display={'flex'} flexDirection="column" component={Paper} minHeight={600}>
             <Box padding={2}>
               <Typography variant="h4" fontWeight={'bold'} marginBottom={3}>
@@ -104,7 +97,7 @@ const CartPage = () => {
               </Box>
             </Box>
 
-            <Box display={'flex'} justifyContent="center">
+            <Box display={'flex'} justifyContent="center" marginTop="auto">
               <Button
                 fullWidth
                 disabled={getCartQuantity() === 0}

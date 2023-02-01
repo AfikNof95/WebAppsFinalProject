@@ -8,8 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon ./app.js",
     "start-scraper": "node ./scraper/starter.js && node ./scraper/imageDownloader.js ",
-    "pretty": "prettier --write \"*/**/*.js\"",
-    "prepare": "cd .. && husky install server/.husky"
+    "pretty": "prettier --write \"*/**/*.js\""
   },
   "license": "ISC",
   "dependencies": {
@@ -23,10 +22,11 @@
     "express-mongo-sanitize": "^2.2.0",
     "firebase": "^9.15.0",
     "firebase-admin": "^11.5.0",
+    "formidable": "^2.1.1",
     "http-errors": "~1.6.3",
+    "mime-types": "^2.1.35",
     "mongoose": "^6.8.2",
     "morgan": "~1.9.1",
-    "multer": "^1.4.5-lts.1",
     "nodemon": "^2.0.20",
     "uuid": "^9.0.0",
     "ws": "^8.12.0"

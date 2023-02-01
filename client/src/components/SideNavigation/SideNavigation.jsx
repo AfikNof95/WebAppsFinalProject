@@ -38,7 +38,7 @@ const SideNavigation = ({
     return searchParams.get('categoryId');
   });
 
-  const { currentUser, userIcon } = useAuth();
+  const { currentUser, getUserProfilePicture } = useAuth();
 
   const toggleCategoriesCollapse = () => {
     setIsCategoriesOpen(!isCategoriesOpen);
@@ -92,7 +92,11 @@ const SideNavigation = ({
         {currentUser && (
           <>
             <Box display={'flex'} flexDirection={'column'} alignItems={'center'} paddingBottom={3}>
-              <Avatar>{icons[userIcon]}</Avatar>
+              <Avatar
+                src={getUserProfilePicture()}
+                sx={{ width: 70, height: 70 }}
+                component={Link}
+                to="/profile"></Avatar>
               <Typography variant="body1" fontWeight={'bold'}>
                 {currentUser.displayName}
               </Typography>
