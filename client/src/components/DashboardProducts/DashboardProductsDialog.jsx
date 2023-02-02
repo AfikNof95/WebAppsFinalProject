@@ -165,7 +165,7 @@ const DashboardProductsDialog = ({
             TransitionComponent={Transition}
         >
             <AppBar sx={{ position: 'relative' }}>
-                <Toolbar sx={{ backgroundColor: '#24344c' }}>
+                <Toolbar sx={{ backgroundColor: 'var(--main-app-blue)' }}>
                     <Typography variant="caption">
                         {productDetails.name}
                     </Typography>
@@ -417,7 +417,7 @@ const DashboardProductsDialog = ({
             </DialogActions>
             <Dialog open={isShowAddImage} fullWidth maxWidth="md">
                 <AppBar sx={{ position: 'relative' }}>
-                    <Toolbar sx={{ backgroundColor: '#24344c' }}>
+                    <Toolbar sx={{ backgroundColor: 'var(--main-app-blue)' }}>
                         <Typography variant="body2">Add New Image</Typography>
                         <IconButton
                             edge="end"

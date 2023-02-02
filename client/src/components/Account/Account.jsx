@@ -44,7 +44,7 @@ import {
 
 const AccountPage = () => {
 
-    const { userIcon, setIcon, getUser, updateUser, signOut, isUserSignedIn } = useAuth();
+    const { userProfilePicture, getUser, updateUser, signOut, isUserSignedIn } = useAuth();
     const newName = useRef();
     const newEmail = useRef();
     const newPass = useRef();
@@ -85,7 +85,7 @@ const AccountPage = () => {
     };
 
     const changeIcon = (newIcon) => {
-        setIcon(newIcon)
+      
     }
 
     const matchFunction = () => {
@@ -157,7 +157,7 @@ const AccountPage = () => {
                 marginLeft:"800px",
                 marginTop: "5px"
             }}>
-                <Avatar sx={{width: 80, height: 80}}> { userIcon? icons[userIcon] : <StarOutlineRoundedIcon/>} </Avatar>
+                <Avatar sx={{width: 80, height: 80}}> { userProfilePicture? icons[userProfilePicture] : <StarOutlineRoundedIcon/>} </Avatar>
             </div>
             <div >
                 <Button 

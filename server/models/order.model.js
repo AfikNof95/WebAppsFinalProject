@@ -1,34 +1,34 @@
-const { default: mongoose } = require("mongoose");
+const { default: mongoose } = require('mongoose');
 
-const Schema = require("mongoose").Schema;
+const Schema = require('mongoose').Schema;
 
 const OrderModel = new Schema(
   {
     user: String, //We get it from the firebase UID
-    address: { type: Schema.Types.ObjectId, ref: "Address" },
+    address: { type: Schema.Types.ObjectId, ref: 'Address' },
     products: [
       {
         quantity: { type: Number, default: 1 },
         product: {
           type: Schema.Types.ObjectId,
-          ref: "Product",
-          required: true,
-        },
-      },
+          ref: 'Product',
+          required: true
+        }
+      }
     ],
     totalPrice: {
-      type: "Number",
+      type: 'Number',
       required: true,
-      min: [0, "Price should be higher than 0!"],
+      min: [0, 'Price should be higher than 0!']
     },
     status: {
       type: String,
-      enum: ["Created", "Packed", "Delivered"],
-      default: "Created",
+      enum: ['Created', 'Packed', 'Delivered'],
+      default: 'Created'
     },
-    isActive: { type: Boolean, default: true },
+    isActive: { type: Boolean, default: true }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Order", OrderModel);
+module.exports = mongoose.model('Order', OrderModel);

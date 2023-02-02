@@ -1,6 +1,6 @@
-const categoryModel = require("../models/category.model");
-const ProductModel = require("../models/product.model");
-const ObjectId = require("mongoose").Types.ObjectId;
+const categoryModel = require('../models/category.model');
+const ProductModel = require('../models/product.model');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const ProductService = {
   // async getAllProducts(page) {
@@ -14,7 +14,7 @@ const ProductService = {
   //   };
   // },
   async getAllProducts() {
-    return { products: await ProductModel.find().populate("category").exec() };
+    return { products: await ProductModel.find().populate('category').exec() };
   },
   async getProduct(productId) {
     return await ProductModel.findOne({ _id: new ObjectId(productId) });
@@ -28,7 +28,7 @@ const ProductService = {
       product
     );
     if (!updatedProduct) {
-      throw new Error("Product not found!");
+      throw new Error('Product not found!');
     }
 
     return updatedProduct;
@@ -40,7 +40,7 @@ const ProductService = {
       { isActive: false }
     );
     if (!deletedProduct) {
-      throw new Error("Product not found!");
+      throw new Error('Product not found!');
     }
 
     return deletedProduct;
@@ -51,57 +51,67 @@ const ProductService = {
 
     for (let filter of Object.keys(filters)) {
       switch (filter) {
-        case "categoryId":
+        case 'categoryId':
           queryFilters.category = filters.categoryId;
           break;
-        case "minPrice":
-          if (!queryFilters["$and"]) {
-            queryFilters["$and"] = [];
+        case 'minPrice':
+          if (!queryFilters['$and']) {
+            queryFilters['$and'] = [];
           }
-          queryFilters["$and"].push(
+          queryFilters['$and'].push(
             { price: { $lte: filters.maxPrice } },
             { price: { $gte: filters.minPrice } }
           );
           break;
-        case "freeText":
-          if (!queryFilters["$or"]) {
-            queryFilters["$or"] = [];
+        case 'freeText':
+        case 'searchTerm':
+          if (!queryFilters['$or']) {
+            queryFilters['$or'] = [];
           }
-          queryFilters["$or"].push(
-            { name: { $regex: "^.*" + filters.freeText, $options: "i" } },
+          queryFilters['$or'].push(
+            { name: { $regex: '^.*' + filters[filter], $options: 'i' } },
             {
-              description: { $regex: "^.*" + filters.freeText, $options: "i" },
+              description: { $regex: '^.*' + filters[filter], $options: 'i' }
             }
           );
           break;
-        case "sort":
+        case 'sort':
           sortBy = JSON.parse(filters.sort);
           break;
-        case "filterOutOfStock":
-          if (!queryFilters["$and"]) {
-            queryFilters["$and"] = [];
+        case 'filterOutOfStock':
+          if (!queryFilters['$and']) {
+            queryFilters['$and'] = [];
           }
-          queryFilters["$and"].push({ quantity: { $gte: 1 } });
+          queryFilters['$and'].push({ quantity: { $gte: 1 } });
           break;
       }
     }
 
-    const pages = Math.ceil(
-      (await ProductModel.count({ isActive: true, ...queryFilters })) / 24
-    );
+    const pages = Math.ceil((await ProductModel.count({ isActive: true, ...queryFilters })) / 24);
 
-    let minPrice = await ProductModel.findOne({}).sort({ price: 1 }).exec();
-    let maxPrice = await ProductModel.findOne({}).sort({ price: -1 }).exec();
+    let minPrice = await ProductModel.findOne({
+      isActive: true,
+      ...(queryFilters.category && { category: queryFilters.category })
+    })
+      .sort({ price: 1 })
+      .exec();
+    let maxPrice = await ProductModel.findOne({
+      isActive: true,
+      ...(queryFilters.category && { category: queryFilters.category })
+    })
+      .sort({ price: -1 })
+      .exec();
 
     minPrice = Math.floor(minPrice.price);
     maxPrice = Math.ceil(maxPrice.price);
 
     const products = await ProductModel.find({
       isActive: true,
-      ...queryFilters,
+      ...queryFilters
     })
       .sort(sortBy)
-      .populate("category")
+      .collation({ locale: 'en' })
+      .populate('category')
       .skip((filters.pageNumber ? filters.pageNumber - 1 : 0) * 24)
       .limit(24)
       .lean()
@@ -110,7 +120,7 @@ const ProductService = {
     return {
       products,
       pages,
-      priceRange: [minPrice, maxPrice],
+      priceRange: [minPrice, maxPrice]
     };
   },
 
@@ -119,10 +129,10 @@ const ProductService = {
       { $match: { isActive: true } },
       {
         $group: {
-          _id: "$category",
-          count: { $sum: 1 },
-        },
-      },
+          _id: '$category',
+          count: { $sum: 1 }
+        }
+      }
     ]);
     return byCategories;
   },
@@ -135,7 +145,7 @@ const ProductService = {
     }
 
     return { byCategories };
-  },
+  }
 };
 
 module.exports = ProductService;

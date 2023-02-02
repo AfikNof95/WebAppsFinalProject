@@ -122,7 +122,7 @@ const DashboardOrdersEditDialog = ({
       TransitionComponent={Transition}
     >
       <AppBar sx={{ position: "relative" }}>
-        <Toolbar sx={{ backgroundColor: "#24344c" }}>
+        <Toolbar sx={{ backgroundColor: "var(--main-app-blue)" }}>
           <Typography variant="caption">{orderDetails._id}</Typography>
           <IconButton
             edge="end"

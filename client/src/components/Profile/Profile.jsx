@@ -11,7 +11,7 @@ import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import AddressForm from "../Checkout/AddressForm";
 
 const ProfilePage = () => {
-  const { userIcon, getUser } = useAuth();
+  const { userProfilePicture, getUser } = useAuth();
   const theme = createTheme();
   let user = getUser()
   const inputAddress = useRef()
@@ -55,7 +55,7 @@ const ProfilePage = () => {
           sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
         >
           
-            <Avatar sx={{width: 80, height: 80}}> { userIcon? icons[userIcon] : <StarOutlineRoundedIcon/>} </Avatar>
+            <Avatar sx={{width: 80, height: 80}}> { userProfilePicture? icons[userProfilePicture] : <StarOutlineRoundedIcon/>} </Avatar>
             Hello {user.displayName}! 
             {
                 insertAddress? 

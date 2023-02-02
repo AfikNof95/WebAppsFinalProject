@@ -1,25 +1,25 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
-const ProductModel = require("../models/product.model");
-const categoryModel = require("../models/category.model");
+const axios = require('axios');
+const cheerio = require('cheerio');
+const ProductModel = require('../models/product.model');
+const categoryModel = require('../models/category.model');
 const productLinks = {
-  "Computers & Tablets":
-    "https://www.amazon.com/s?i=specialty-aps&bbn=16225007011&rh=n%3A16225007011%2Cn%3A13896617011&ref=nav_em__nav_desktop_sa_intl_computers_tablets_0_2_6_4",
+  'Computers & Tablets':
+    'https://www.amazon.com/s?i=specialty-aps&bbn=16225007011&rh=n%3A16225007011%2Cn%3A13896617011&ref=nav_em__nav_desktop_sa_intl_computers_tablets_0_2_6_4',
   Kitchen:
-    "https://www.amazon.com/s?i=specialty-aps&bbn=16225011011&rh=n%3A%2116225011011%2Cn%3A284507&ref=nav_em__nav_desktop_sa_intl_kitchen_and_dining_0_2_17_3",
+    'https://www.amazon.com/s?i=specialty-aps&bbn=16225011011&rh=n%3A%2116225011011%2Cn%3A284507&ref=nav_em__nav_desktop_sa_intl_kitchen_and_dining_0_2_17_3',
   Shoes:
-    "https://www.amazon.com/s?i=specialty-aps&bbn=16225019011&rh=n%3A7141123011%2Cn%3A16225019011%2Cn%3A679255011&ref=nav_em__nav_desktop_sa_intl_shoes_0_2_13_3",
+    'https://www.amazon.com/s?i=specialty-aps&bbn=16225019011&rh=n%3A7141123011%2Cn%3A16225019011%2Cn%3A679255011&ref=nav_em__nav_desktop_sa_intl_shoes_0_2_13_3',
   Headphones:
-    "https://www.amazon.com/s?i=specialty-aps&bbn=16225009011&rh=n%3A%2116225009011%2Cn%3A172541&ref=nav_em__nav_desktop_sa_intl_headphones_0_2_5_8",
-  "Video Games":
-    "https://www.amazon.com/gp/browse.html?node=16225016011&ref_=nav_em__nav_desktop_sa_intl_video_games_0_2_26_2",
+    'https://www.amazon.com/s?i=specialty-aps&bbn=16225009011&rh=n%3A%2116225009011%2Cn%3A172541&ref=nav_em__nav_desktop_sa_intl_headphones_0_2_5_8',
+  'Video Games':
+    'https://www.amazon.com/gp/browse.html?node=16225016011&ref_=nav_em__nav_desktop_sa_intl_video_games_0_2_26_2',
   Watches:
-    "https://www.amazon.com/s?i=specialty-aps&bbn=16225018011&rh=n%3A7141123011%2Cn%3A16225018011%2Cn%3A6358543011&ref=nav_em__nav_desktop_sa_intl_watches_0_2_12_5",
+    'https://www.amazon.com/s?i=specialty-aps&bbn=16225018011&rh=n%3A7141123011%2Cn%3A16225018011%2Cn%3A6358543011&ref=nav_em__nav_desktop_sa_intl_watches_0_2_12_5'
 };
 
 const fetchProducts = async () => {
   try {
-    console.log("Scraper Running\n")
+    console.log('Scraper Running\n');
     const products = [];
 
     for (let [category, link] of Object.entries(productLinks)) {
@@ -32,32 +32,30 @@ const fetchProducts = async () => {
       let $ = cheerio.load(html);
 
       const productElements = $(
-        "div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20"
+        'div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20'
       );
 
       for (let el of productElements) {
         await new Promise((res) => setTimeout(res, timeOut));
         const product = $(el);
-        const name = product
-          .find("span.a-size-base-plus.a-color-base.a-text-normal")
-          .text();
+        const name = product.find('span.a-size-base-plus.a-color-base.a-text-normal').text();
 
         const price = product
-          .find("span.a-price > span.a-offscreen")
+          .find('span.a-price > span.a-offscreen')
           .first()
           .text()
-          .replace("$", "");
+          .replace('$', '');
 
         const link = `https://amazon.com${product
-          .find("a.a-link-normal.a-text-normal")
-          .attr("href")}`;
+          .find('a.a-link-normal.a-text-normal')
+          .attr('href')}`;
 
         const productDetails = await axios.get(link);
         const html = productDetails.data;
         $ = cheerio.load(html);
 
-        const description = $("div#feature-bullets span.a-list-item").text();
-        const scripts = $("script");
+        const description = $('div#feature-bullets span.a-list-item').text();
+        const scripts = $('script');
         let productImages;
         for (let amazonScript of scripts) {
           productImages = $(amazonScript)
@@ -70,7 +68,7 @@ const fetchProducts = async () => {
         const images = [];
         if (productImages) {
           for (let imageUrl of productImages) {
-            imageUrl += "}";
+            imageUrl += '}';
             const url = JSON.parse(imageUrl).hiRes;
             images.push(url);
           }
@@ -83,17 +81,17 @@ const fetchProducts = async () => {
             price,
             description,
             category,
-            quantity,
+            quantity
           };
 
-          console.log("Adding "+ name);
+          console.log('Adding ' + name);
 
           if (!description) {
-            element.description = "Amazing Product!";
+            element.description = 'Amazing Product!';
           }
           if (price) {
             let categoryObject = await categoryModel.findOne({
-              name: category,
+              name: category
             });
             if (!categoryObject) {
               categoryObject = await categoryModel.create({ name: category });
@@ -103,7 +101,7 @@ const fetchProducts = async () => {
               await ProductModel.create({
                 ...element,
                 price: parseFloat(price),
-                category: categoryObject._id,
+                category: categoryObject._id
               });
             }
 
