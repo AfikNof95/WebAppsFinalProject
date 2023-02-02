@@ -16,22 +16,21 @@ export default function Review(props) {
         userInfo,
         getCartProducts,
         getCartTotalPrice,
+        getCartTotalPriceNumber,
         deleteCart,
         removePaymentInfo,
         removeUserInfo,
     } = useShoppingCart()
 
     const cartProducts = getCartProducts()
-    const sumOrder = getCartTotalPrice()
-    let convertedId;
-    //const convertedId = mongoose.Types.ObjectId(addressId)
-    // console.log(convertedId)
+    const ordersPrice = getCartTotalPrice()
+    const sumOrder = getCartTotalPriceNumber()
 
     const orderToSend = {
-        user: currentUser.localId,
-        address: convertedId ? convertedId : addressId,
-        products: cartProducts,
-        totalPrice: sumOrder,
+        user: currentUser.localId, //String
+        address: addressId, // String?
+        products: cartProducts, // Array
+        totalPrice: sumOrder, // Numbers
     }
 
     const finishReservation = async () => {
@@ -55,7 +54,6 @@ export default function Review(props) {
         console.log(orderToSend)
         finishReservation()
         // handleNext()
-        // console.log(orderToSend)
     }
 
     const last4digits = paymentInfo?.cardNumber.substr(-4)
@@ -90,7 +88,7 @@ export default function Review(props) {
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="Total" />
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                        {sumOrder}
+                        {ordersPrice}
                     </Typography>
                 </ListItem>
             </List>

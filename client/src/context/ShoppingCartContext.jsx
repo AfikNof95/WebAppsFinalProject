@@ -10,6 +10,7 @@ const ShoppingCartContext = createContext({
     getCartQuantity() {},
     getCartProducts() {},
     getCartTotalPrice() {},
+    getCartTotalPriceNumber() {},
     getProductQuantity(productId) {},
     addToCart(productObject) {},
     increaseProductQuantity(productId, count) {},
@@ -265,7 +266,14 @@ export function ShoppingCartProvider({ children }) {
             sum += product.quantity * product.product.price
         }
         return formatPrice(sum)
-        // return cartProducts.reduce((all, current) => all + current.quantity * current.price, 0);
+    }
+
+    function getCartTotalPriceNumber() {
+        return cartProducts.reduce(
+            (all, current) =>
+                all + (current.quantity || 0) * (current.product.price || 0),
+            0
+        )
     }
 
     const handleFormChange = async (event) => {
@@ -298,6 +306,7 @@ export function ShoppingCartProvider({ children }) {
                 getCartProducts,
                 getProductQuantity,
                 getCartTotalPrice,
+                getCartTotalPriceNumber,
                 addToCart,
                 removeFromCart,
                 deleteCart,
