@@ -20,7 +20,7 @@ const OrderService = {
     order.products = order.products.map((product) => {
       return {
         quantity: product.quantity,
-        product: new ObjectId(product.product),
+        product: new ObjectId(product.product._id),
       };
     });
     order.address = new ObjectId(order.address);

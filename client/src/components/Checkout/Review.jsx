@@ -5,9 +5,6 @@ import { useShoppingCart } from '../../context/ShoppingCartContext'
 import omit from 'lodash/omit'
 import ReviewProdList from './ReviewProdList'
 import axios from 'axios'
-// import mongoose from 'mongoose'
-
-// const mongoose = require(mongoose)
 
 export default function Review(props) {
     const { handleNext, handleBack, currentUser, addressId } = props
@@ -27,10 +24,10 @@ export default function Review(props) {
     const sumOrder = getCartTotalPriceNumber()
 
     const orderToSend = {
-        user: currentUser.localId, //String
-        address: addressId, // String?
-        products: cartProducts, // Array
-        totalPrice: sumOrder, // Numbers
+        user: currentUser.localId,
+        address: addressId,
+        products: cartProducts,
+        totalPrice: sumOrder,
     }
 
     const finishReservation = async () => {
@@ -40,20 +37,18 @@ export default function Review(props) {
                 orderToSend,
                 { headers: { 'Content-Type': 'application/json' } }
             )
-            alert(response)
         } catch (error) {
             console.error(error)
         } finally {
-            // deleteCart()
-            // removePaymentInfo()
-            // removeUserInfo()
+            deleteCart()
+            removePaymentInfo()
+            removeUserInfo()
         }
     }
 
     const handleFinish = () => {
-        console.log(orderToSend)
         finishReservation()
-        // handleNext()
+        handleNext()
     }
 
     const last4digits = paymentInfo?.cardNumber.substr(-4)
