@@ -3,7 +3,6 @@ import { Box } from '@mui/system'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { AddressCard } from './AddressCard'
-import { useAuth } from '../../context/AuthContext'
 import axios from 'axios'
 
 const tmpAddress = [
@@ -31,10 +30,16 @@ const tmpAddress = [
 ]
 
 export const AddressCardList = (props) => {
-    const { setIsNextAvailable, setChosenAddress, chosenAddress } = props
+    const {
+        setIsNextAvailable,
+        setChosenAddress,
+        chosenAddress,
+        currentUser,
+        setAddressId,
+    } = props
     const [isData, setIsData] = useState(false)
     const [addressList, setAddressList] = useState([])
-    const { currentUser } = useAuth()
+    const [shouldRefetch, setShouldRefetch] = useState(false)
 
     async function fetchData() {
         try {
@@ -46,7 +51,7 @@ export const AddressCardList = (props) => {
         } catch (err) {
             console.log(err)
             setAddressList([...tmpAddress])
-            //Consider set isData good and showing mock
+            setIsData(true)
         }
     }
 
@@ -55,10 +60,9 @@ export const AddressCardList = (props) => {
     }, [])
 
     useEffect(() => {
-        fetchData()
-    }, [addressList])
-
-    //  Also use effect wehn the array changes due deleting or editing
+        shouldRefetch && fetchData()
+        setShouldRefetch(false)
+    }, [shouldRefetch])
 
     return isData ? (
         addressList.map((address) => (
@@ -70,9 +74,12 @@ export const AddressCardList = (props) => {
                 city={address?.city}
                 zipCode={address?.zipCode}
                 country={address?.country}
+                currentUser={currentUser}
+                setAddressId={setAddressId}
                 setIsNextAvailable={setIsNextAvailable}
                 setChosenAddress={setChosenAddress}
                 chosenAddress={chosenAddress}
+                setShouldRefetch={setShouldRefetch}
             ></AddressCard>
         ))
     ) : (

@@ -28,6 +28,9 @@ export const useAxiosIntercept = () => {
         const resIntercept = axios.interceptors.response.use(
             (response) => response,
             async (error) => {
+                if (!error.response) {
+                    return Promise.reject(error)
+                }
                 if (error.response.status === 401) {
                     if (new Date(currentUser.expireDate) < new Date()) {
                         try {

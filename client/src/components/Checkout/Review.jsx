@@ -4,34 +4,58 @@ import { Grid, Box, Button, Stack } from '@mui/material'
 import { useShoppingCart } from '../../context/ShoppingCartContext'
 import omit from 'lodash/omit'
 import ReviewProdList from './ReviewProdList'
+import axios from 'axios'
+// import mongoose from 'mongoose'
+
+// const mongoose = require(mongoose)
 
 export default function Review(props) {
-    const { handleNext, handleBack } = props
+    const { handleNext, handleBack, currentUser, addressId } = props
     const {
         paymentInfo,
         userInfo,
+        getCartProducts,
         getCartTotalPrice,
         deleteCart,
         removePaymentInfo,
         removeUserInfo,
     } = useShoppingCart()
-    const sumOrder = getCartTotalPrice()
 
-    const finishReservation = () => {
+    const cartProducts = getCartProducts()
+    const sumOrder = getCartTotalPrice()
+    let convertedId;
+    //const convertedId = mongoose.Types.ObjectId(addressId)
+    // console.log(convertedId)
+
+    const orderToSend = {
+        user: currentUser.localId,
+        address: convertedId ? convertedId : addressId,
+        products: cartProducts,
+        totalPrice: sumOrder,
+    }
+
+    const finishReservation = async () => {
         try {
-            // send put or post to server.
-        } catch (err) {
-            // clg error
+            const response = await axios.post(
+                `http://localhost:2308/Order/`,
+                orderToSend,
+                { headers: { 'Content-Type': 'application/json' } }
+            )
+            alert(response)
+        } catch (error) {
+            console.error(error)
         } finally {
-            deleteCart()
-            removePaymentInfo()
-            removeUserInfo()
+            // deleteCart()
+            // removePaymentInfo()
+            // removeUserInfo()
         }
     }
 
     const handleFinish = () => {
+        console.log(orderToSend)
         finishReservation()
-        handleNext()
+        // handleNext()
+        // console.log(orderToSend)
     }
 
     const last4digits = paymentInfo?.cardNumber.substr(-4)
@@ -39,6 +63,18 @@ export default function Review(props) {
         { name: 'Card holder', detail: paymentInfo.cardName },
         { name: 'Card number', detail: `xxxx-xxxx-xxxx-${last4digits}` },
     ]
+    const shippingUser =
+        Object.values(
+            omit(userInfo, [
+                'street',
+                'houseNumber',
+                'city',
+                'zipCode',
+                'country',
+            ])
+        )
+            .filter(Boolean)
+            .join(' ') || currentUser.displayName
 
     return (
         <React.Fragment>
@@ -70,17 +106,7 @@ export default function Review(props) {
                         Shipping
                     </Typography>
                     <Typography align="center" gutterBottom>
-                        {Object.values(
-                            omit(userInfo, [
-                                'street',
-                                'houseNumber',
-                                'city',
-                                'zipCode',
-                                'country',
-                            ])
-                        )
-                            .filter(Boolean)
-                            .join(' ')}
+                        {shippingUser}
                     </Typography>
                     <Typography align="center" gutterBottom>
                         {Object.values(omit(userInfo, ['fName', 'lName']))

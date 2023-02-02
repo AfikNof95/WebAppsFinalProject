@@ -22,7 +22,7 @@ const AddressController = {
       next(ex);
     }
   },
-  
+
   async createAddress(req, res, next) {
     try {
       const response = await AddressService.createAddress(req.body);
@@ -41,7 +41,7 @@ const AddressController = {
       next(ex);
     }
   },
-  async deleteAddress() {
+  async deleteAddress(req, res, next) {
     try {
       const { addressId } = req.params;
       const response = await AddressService.deleteAddress(addressId);

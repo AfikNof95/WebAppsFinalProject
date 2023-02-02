@@ -7,14 +7,20 @@ import AddIcon from '@mui/icons-material/Add'
 import NewAddressForm from './NewAddressForm'
 
 export default function AddressForm(props) {
-    const { handleNext, isNewAddress, setIsNewAddress } = props
+    const {
+        handleNext,
+        isNewAddress,
+        setIsNewAddress,
+        currentUser,
+        setAddressId,
+    } = props
     const { handleChosenAddress } = useShoppingCart()
     const [isNextAvailable, setIsNextAvailable] = useState(false)
     const [chosenAddress, setChosenAddress] = useState({
         street: '',
-        houseNumber: '',
+        houseNumber: null,
         city: '',
-        zipCode: '',
+        zipCode: null,
         country: '',
     })
 
@@ -71,6 +77,8 @@ export default function AddressForm(props) {
                                 setIsNextAvailable={setIsNextAvailable}
                                 setChosenAddress={setChosenAddress}
                                 chosenAddress={chosenAddress}
+                                currentUser={currentUser}
+                                setAddressId={setAddressId}
                             />
                         </Box>
                     </Container>

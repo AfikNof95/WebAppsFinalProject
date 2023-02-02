@@ -23,12 +23,13 @@ const OrderService = {
         product: new ObjectId(product.product),
       };
     });
+    order.address = new ObjectId(order.address);
     return (await OrderModel.create(order)).populate("products.product");
   },
 
   async updateOrder(orderId, order) {
-    console.log("orderId: " + orderId)
-    console.log("order : " + order)
+    console.log("orderId: " + orderId);
+    console.log("order : " + order);
     const updatedOrder = await OrderModel.findOneAndUpdate(
       { _id: new ObjectId(orderId) },
       order

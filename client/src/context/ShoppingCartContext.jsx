@@ -40,16 +40,16 @@ export function ShoppingCartProvider({ children }) {
         fName: '',
         lName: '',
         street: '',
-        houseNumber: '',
+        houseNumber: null,
         city: '',
         country: '',
-        zipCode: '',
+        zipCode: null,
     })
     const [paymentInfo, setPaymentInfo] = useState({
         cardName: '',
-        cardNumber: '',
+        cardNumber: null,
         expDate: '',
-        cvv: '',
+        cvv: null,
     })
 
     const cartQuantity = cartProducts.reduce(
@@ -104,9 +104,9 @@ export function ShoppingCartProvider({ children }) {
     function removePaymentInfo() {
         setPaymentInfo({
             cardName: '',
-            cardNumber: '',
+            cardNumber: null,
             expDate: '',
-            cvv: '',
+            cvv: null,
         })
     }
 
@@ -115,9 +115,9 @@ export function ShoppingCartProvider({ children }) {
             fName: '',
             lName: '',
             street: '',
-            houseNumber: '',
+            houseNumber: null,
             city: '',
-            zipCode: '',
+            zipCode: null,
             country: '',
         })
     }
@@ -282,12 +282,12 @@ export function ShoppingCartProvider({ children }) {
         })
     }
 
-  const handleChosenAddress = (address) => {
-    setUserInfo({
-        ...userInfo,
-        ...address,
-    })
-  }
+    const handleChosenAddress = (address) => {
+        setUserInfo({
+            ...userInfo,
+            ...address,
+        })
+    }
 
     return (
         <ShoppingCartContext.Provider
