@@ -24,7 +24,8 @@ const ShoppingCartContext = createContext({
   handlePaymentChange: () => {},
   deleteCart: () => {},
   removePaymentInfo: () => {},
-  removeUserInfo: () => {}
+  removeUserInfo: () => {},
+  handleChosenAddress: () => {},
 });
 
 export function useShoppingCart() {
@@ -42,12 +43,12 @@ export function ShoppingCartProvider({ children }) {
   const [userInfo, setUserInfo] = useState({
     fName: '',
     lName: '',
-    address1: '',
-    address2: '',
+    street:'',
+    houseNumber:'',
     city: '',
-    state: '',
     zip: '',
-    country: ''
+    country: '',
+    zipCode:''
   });
   const [paymentInfo, setPaymentInfo] = useState({
     cardName: '',
@@ -143,18 +144,18 @@ export function ShoppingCartProvider({ children }) {
     });
   }
 
-  function removeUserInfo() {
-    setUserInfo({
-      fName: '',
-      lName: '',
-      address1: '',
-      address2: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: ''
-    });
-  }
+ 
+    function removeUserInfo() {
+        setUserInfo({
+            fName: '',
+            lName: '',
+            street: '',
+            houseNumber: '',
+            city: '',
+            zipCode: '',
+            country: '',
+        })
+    }
 
   function getProductQuantity(productId) {
     return cartProducts.find((product) => (product._id === productId ? product.quantity : 0));
@@ -269,12 +270,20 @@ export function ShoppingCartProvider({ children }) {
     });
   };
 
-  const handlePaymentChange = async (event) => {
-    setPaymentInfo({
-      ...paymentInfo,
-      [event.target.name]: event.target.value
-    });
-  };
+
+    const handlePaymentChange = async (event) => {
+        setPaymentInfo({
+            ...paymentInfo,
+            [event.target.name]: event.target.value,
+        })
+    }
+
+    const handleChosenAddress = (address) => {
+      setUserInfo({
+          ...userInfo,
+          ...address,
+      })
+    }
 
   return (
     <ShoppingCartContext.Provider
@@ -297,7 +306,8 @@ export function ShoppingCartProvider({ children }) {
         handlePaymentChange: handlePaymentChange,
         removePaymentInfo,
         removeUserInfo,
-        isShoppingCartLoading
+        isShoppingCartLoading,
+        handleChosenAddress
       }}>
       {children}
       <SideCart isCartOpen={isOpen}></SideCart>

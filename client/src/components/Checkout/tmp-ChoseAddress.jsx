@@ -21,11 +21,11 @@ export default function ChoseAddress(props) {
                 <Grid item xs={12}>
                     <TextField
                         required
-                        id="address1"
-                        name="address1"
+                        id="street"
+                        name="street"
                         label="Address line 1"
-                        value={userInfo?.address1 && userInfo.address1}
-                        placeholder={!userInfo?.address1 && 'Address...'}
+                        value={userInfo?.street && userInfo.street}
+                        placeholder={!userInfo?.street && 'Address...'}
                         fullWidth
                         autoComplete="shipping address-line1"
                         variant="standard"
@@ -35,11 +35,11 @@ export default function ChoseAddress(props) {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
-                        id="address2"
-                        name="address2"
+                        id="houseNumber"
+                        name="houseNumber"
                         label="Address line 2"
-                        value={userInfo?.address2 && userInfo.address2}
-                        placeholder={!userInfo?.address2 && 'Address 2...'}
+                        value={userInfo?.houseNumber && userInfo.houseNumber}
+                        placeholder={!userInfo?.houseNumber && 'Address 2...'}
                         fullWidth
                         autoComplete="shipping address-line2"
                         variant="standard"

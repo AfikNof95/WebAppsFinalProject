@@ -1,44 +1,211 @@
-import React from 'react'
-import { Box, Button, CardActions, Typography } from '@mui/material'
-import { Card, CardContent, Grid } from '@mui/material'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import axios from 'axios'
+import {
+    Box,
+    Button,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    TextField,
+    Typography,
+    Card,
+    CardContent,
+    CardActions,
+    Dialog,
+    DialogActions,
+    Grid,
+} from '@mui/material'
 
-export function AddressCard({ address1, address2, city, state, zip, country }) {
+export function AddressCard(props) {
+    const {
+        addressId,
+        street,
+        houseNumber,
+        city,
+        state,
+        zipCode,
+        country,
+        setIsNextAvailable,
+        setChosenAddress,
+        chosenAddress,
+    } = props
+    const [open, setOpen] = React.useState(false)
+    const [updatedAddress, setUpdatedAddress] = useState({
+        street: '',
+        houseNumber: '',
+        city: '',
+        zipCode: '',
+        country: '',
+    })
+
+    const handleClickOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handleSave = async () => {
+        try {
+            const updateData = JSON.stringify(updatedAddress);
+            const response = await axios.put(
+                `http://localhost:2308/Address/id/${addressId}`,
+                updateData
+            )
+            console.log(response.data)
+            console.log(updatedAddress)
+        } catch (error) {
+            console.error(error)
+        }
+        setOpen(false)
+    }
+
+    const onRemove = () => {
+        try {
+            // axios
+            //     .delete('api/address/' + { addresId })
+            //     .then((response) => {
+            //         console.log(response.data)
+            //     })
+            //     .catch((error) => {
+            //         console.error(error)
+            //     })
+        } catch (err) {
+            console.log('Error! Could not delete the address')
+        }
+    }
+
+    const onChoose = () => {
+        try {
+            setChosenAddress({ street, houseNumber, city, state, zipCode, country })
+            setIsNextAvailable(true)
+            // add style = box-shadow: 7px 7px 8px green;
+        } catch (err) {
+            console.log('Error! Could not set the ChosenAddress state')
+        } finally {
+            console.log('successfully chose address')
+        }
+    }
+
+    const handleChange = async (event) => {
+        setUpdatedAddress({
+            ...updatedAddress,
+            [event.target.name]: event.target.value,
+        })
+    }
+
     return (
-        <Card sx={{ display: 'flex', padding: 2 }} elevation={1}>
-            <CardContent>
-                <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                >
-                    {address1}
-                </Typography>
-                {address2 && (
-                    <Typography
-                        sx={{ fontSize: 14 }}
-                        color="text.secondary"
-                        gutterBottom
+        <>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Edit Address</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please edit your address
+                    </DialogContentText>
+                    <Grid
+                        container
+                        rowSpacing={1}
+                        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                     >
-                        {address2}
+                        <Grid item xs={6}>
+                            <TextField
+                                required
+                                id="street"
+                                name="street"
+                                placeholder={street ? street : 'Street...'}
+                                variant="standard"
+                                inputProps={{ maxLength: 22, minLength: 2 }}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                id="houseNumber"
+                                name="houseNumber"
+                                placeholder={
+                                    houseNumber
+                                        ? houseNumber
+                                        : 'House number...'
+                                }
+                                variant="standard"
+                                inputProps={{ maxLength: 22, minLength: 2 }}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                required
+                                id="city"
+                                name="city"
+                                placeholder={city ? city : 'City...'}
+                                variant="standard"
+                                inputProps={{ maxLength: 18, minLength: 2 }}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                required
+                                id="zipCode"
+                                name="zipCode"
+                                placeholder={zipCode ? zipCode : 'zipCode...'}
+                                variant="standard"
+                                inputProps={{ maxLength: 8, minLength: 4 }}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                required
+                                id="country"
+                                name="country"
+                                placeholder={country ? country : 'Country...'}
+                                variant="standard"
+                                inputProps={{ maxLength: 22, minLength: 2 }}
+                                onChange={handleChange}
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleSave}>Save</Button>
+                </DialogActions>
+            </Dialog>
+            <Card
+                sx={{ display: 'flex', padding: 2, marginTop: 2 }}
+                elevation={1}
+            >
+                <CardContent>
+                    <Typography variant="body2" gutterBottom>
+                        {street} {houseNumber}, {city}
                     </Typography>
-                )}
-                <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
+                    <Typography variant="body2">
+                        {zipCode}, {country}
+                    </Typography>
+                </CardContent>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'flex-end',
+                        width: '60%',
+                    }}
                 >
-                    {city}
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {state}
-                </Typography>
-                <Typography variant="body2">{zip}</Typography>
-                <Typography variant="body2">{country}</Typography>
-            </CardContent>
-            <CardActions>
-                <Button size="small">Chose</Button>
-            </CardActions>
-        </Card>
+                    <CardActions>
+                        <Button size="small" onClick={onChoose}>
+                            Choose
+                        </Button>
+                        <Button size="small" onClick={handleClickOpen}>
+                            Edit
+                        </Button>
+                        <Button size="small" onClick={onRemove}>
+                            Remove
+                        </Button>
+                    </CardActions>
+                </Box>
+            </Card>
+        </>
     )
 }

@@ -7,15 +7,16 @@ export const useAxiosIntercept = () => {
   const [isInterceptReady, setIsInterceptReady] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const reqIntercept = axios.interceptors.request.use(
-      async (config) => {
-        if (config.url.indexOf('/token') === -1 && currentUser) {
-          config.headers['Authorization'] = 'Bearer ' + currentUser.idToken;
-          if (config.data && config.url.indexOf('signIn') === -1) {
-            config.data.token = currentUser.idToken;
-          }
-        }
+    useEffect(() => {
+        const reqIntercept = axios.interceptors.request.use(
+            async (config) => {
+                if (config.url.indexOf('/token') === -1 && currentUser) {
+                    config.headers['Authorization'] =
+                        'Bearer ' + currentUser.idToken
+                    if (config.data && config.url.indexOf('identitytoolkit') === -1) {
+                        config.data.token = currentUser.idToken
+                    }
+                }
 
         return config;
       },
@@ -36,11 +37,11 @@ export const useAxiosIntercept = () => {
               const user = await refreshToken();
               error.config.headers.Authorization = 'Bearer ' + user.idToken;
 
-              if (error.config.data) {
-                const data = JSON.parse(error.config.data);
-                data.token = user.idToken;
-                error.config.data = JSON.stringify(data);
-              }
+                            if (error.config.data  && error.config.url.indexOf('identitytoolkit') === -1) {
+                                const data = JSON.parse(error.config.data)
+                                data.token = user.idToken
+                                error.config.data = JSON.stringify(data)
+                            }
 
               return axios(error.config);
             } catch (ex) {

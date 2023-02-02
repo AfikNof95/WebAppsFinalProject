@@ -35,7 +35,7 @@ const ProfilePage = () => {
       const newAddress = response.data[response.data.length - 1]
       console.log(newAddress)
       updateAddres(`${newAddress.street} ${newAddress.houseNumber},
-      ${newAddress.city}, ${newAddress.zipCode},
+      ${newAddress.city}, ${newAddress.zipCodeCode},
       ${newAddress.country}.`)
     };
   }, []);

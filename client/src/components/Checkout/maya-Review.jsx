@@ -64,11 +64,11 @@ export default function Review(props) {
           <Typography gutterBottom align="center">
             {Object.values(
               omit(userInfo, [
-                "address1",
-                "address2",
+                "street",
+                "houseNumber",
                 "city",
                 "state",
-                "zip",
+                "zipCode",
                 "country",
               ])
             )

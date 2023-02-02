@@ -10,19 +10,23 @@ export default function Review(props) {
     const {
         paymentInfo,
         userInfo,
-        getCartProducts,
         getCartTotalPrice,
         deleteCart,
         removePaymentInfo,
         removeUserInfo,
     } = useShoppingCart()
-    const products = getCartProducts()
     const sumOrder = getCartTotalPrice()
 
     const finishReservation = () => {
-        deleteCart()
-        removePaymentInfo()
-        removeUserInfo()
+        try {
+            // send put or post to server.
+        } catch (err) {
+            // clg error
+        } finally {
+            deleteCart()
+            removePaymentInfo()
+            removeUserInfo()
+        }
     }
 
     const handleFinish = () => {
@@ -68,11 +72,10 @@ export default function Review(props) {
                     <Typography align="center" gutterBottom>
                         {Object.values(
                             omit(userInfo, [
-                                'address1',
-                                'address2',
+                                'street',
+                                'houseNumber',
                                 'city',
-                                'state',
-                                'zip',
+                                'zipCode',
                                 'country',
                             ])
                         )
