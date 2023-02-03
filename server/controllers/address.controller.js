@@ -1,4 +1,4 @@
-const AddressService = require("../services/address.service");
+const AddressService = require('../services/address.service');
 
 const AddressController = {
   async getAddress(req, res, next) {
@@ -13,15 +13,13 @@ const AddressController = {
   async getAddressByUserId(req, res, next) {
     try {
       const { userId, addressId } = req.params;
-      const response = await AddressService.getAddressByUserId(
-        userId,
-        addressId
-      );
+      const response = await AddressService.getAddressByUserId(userId, addressId);
       res.json(response);
     } catch (ex) {
       next(ex);
     }
   },
+
 
   async createAddress(req, res, next) {
     try {
@@ -36,7 +34,7 @@ const AddressController = {
     try {
       const { addressId } = req.params;
       const response = await AddressService.updateAddress(addressId, req.body);
-      return res.json({ message: "Address updated successfully!" });
+      return res.json({ message: 'Address updated successfully!' });
     } catch (ex) {
       next(ex);
     }
@@ -45,11 +43,11 @@ const AddressController = {
     try {
       const { addressId } = req.params;
       const response = await AddressService.deleteAddress(addressId);
-      return res.json({ message: "Address deleted successfully!" });
+      return res.json({ message: 'Address deleted successfully!' });
     } catch (ex) {
       next(ex);
     }
-  },
+  }
 };
 
 module.exports = AddressController;

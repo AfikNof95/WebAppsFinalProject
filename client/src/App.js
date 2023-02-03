@@ -1,12 +1,34 @@
-import './App.css'
-import React from 'react'
+import './App.css';
+import React from 'react';
 
-import MainRouter from './components/routing/MainRouter'
-import { useAxiosIntercept } from './hooks/useAxiosIntercept'
+import MainRouter from './components/routing/MainRouter';
+import { useAxiosIntercept } from './hooks/useAxiosIntercept';
+import { ThemeProvider, createTheme } from '@mui/material';
 
 const App = () => {
-    const [isInterceptReady] = useAxiosIntercept()
-    return <div className="App">{isInterceptReady && <MainRouter />}</div>
-}
+  const [isInterceptReady] = useAxiosIntercept();
 
-export default App
+  const theme = createTheme({
+    palette: {
+      mode: 'light',
+      mainColor: {
+        main: '#24344C',
+        text: '#fff'
+      },
+      mainButton: {
+        main: '#24344C',
+        light: 'rgb(79, 92, 111)',
+        dark: 'rgb(25, 36, 53)',
+        contrastText: '#fff'
+      }
+    }
+  });
+
+  return (
+    <ThemeProvider theme={theme}>
+      <div className="App">{isInterceptReady && <MainRouter />}</div>
+    </ThemeProvider>
+  );
+};
+
+export default App;

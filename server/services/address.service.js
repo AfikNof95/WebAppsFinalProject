@@ -1,5 +1,5 @@
-const AddressModel = require("../models/address.model");
-const ObjectId = require("mongoose").Types.ObjectId;
+const AddressModel = require('../models/address.model');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const AddressService = {
   async getAddress(addressId) {
@@ -20,7 +20,7 @@ const AddressService = {
     );
 
     if (!updatedAddress) {
-      throw new Error("Address not found!");
+      throw new Error('Address not found!');
     }
 
     return updatedAddress;
@@ -29,17 +29,17 @@ const AddressService = {
     const deletedAddress = await AddressModel.findOneAndUpdate(
       {
         _id: new ObjectId(addressId),
-        isActive: true,
+        isActive: true
       },
       { isActive: false }
     );
 
     if (!deletedAddress) {
-      throw new Error("Address not found!");
+      throw new Error('Address not found!');
     }
 
     return deletedAddress;
-  },
+  }
 };
 
 module.exports = AddressService;
