@@ -4,20 +4,16 @@ import {
   Box,
   Button,
   Divider,
-  Drawer,
   FormLabel,
   Grid,
   Paper,
   Stack,
-  Toolbar,
   Typography
 } from '@mui/material';
-import { Container } from '@mui/system';
 import CartProductList from '../../components/CartProductList/CartProductList';
 import { useShoppingCart } from '../../context/ShoppingCartContext';
 import { formatPrice } from '../../utils/formatPrice';
 import ShoppingBag from '@mui/icons-material/ShoppingBagOutlined';
-import { useState } from 'react';
 
 const CartPage = () => {
   const { getCartTotalPrice, getCartQuantity, getCartProducts } = useShoppingCart();

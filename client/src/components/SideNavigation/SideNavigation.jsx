@@ -1,29 +1,6 @@
 import './SideNavigation.css';
-import {
-  Drawer,
-  Toolbar,
-  Box,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-  List,
-  CircularProgress,
-  Collapse,
-  Avatar,
-  Typography
-} from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import InfoIcon from '@mui/icons-material/Info';
-
-import CategoryIcon from '@mui/icons-material/Category';
-
 import { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import Filters from './Filters';
-import { useAuth } from '../../context/AuthContext';
-import icons from '../Account/icons';
+import { useSearchParams } from 'react-router-dom';
 import MobileSideNavigation from './Mobile';
 import DesktopSideNavigation from './Desktop';
 import SideNavigationIcons from './SideNavigationIcons';

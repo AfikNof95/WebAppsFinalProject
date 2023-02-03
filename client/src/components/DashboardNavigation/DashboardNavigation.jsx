@@ -1,5 +1,4 @@
 import './DashboardNavigation.css';
-
 import {
   Drawer,
   Box,
@@ -9,7 +8,6 @@ import {
   ListItemText,
   Divider,
   List,
-  CircularProgress,
   Avatar,
   Typography,
   IconButton
@@ -19,10 +17,8 @@ import OrdersIcon from '@mui/icons-material/LocalShipping';
 import ArrowBackIOS from '@mui/icons-material/ArrowBackIos';
 import ProductsIcon from '@mui/icons-material/Store';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { borderRadius, height } from '@mui/system';
 
 const DashboardNavigation = ({ drawerWidth = 300, handlePageClick, selectedPage }) => {
   const { currentUser, getUserProfilePicture } = useAuth();

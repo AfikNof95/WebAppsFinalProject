@@ -1,18 +1,10 @@
 import './CartProduct.css';
 import './CartProduct.css';
 import {
-  Avatar,
-  Card,
-  CardContent,
-  CardMedia,
-  Grid,
   IconButton,
-  Stack,
   TextField,
-  Tooltip,
   Typography
 } from '@mui/material';
-
 import ClearIcon from '@mui/icons-material/Clear';
 import PlusIcon from '@mui/icons-material/Add';
 import MinusIcon from '@mui/icons-material/Remove';

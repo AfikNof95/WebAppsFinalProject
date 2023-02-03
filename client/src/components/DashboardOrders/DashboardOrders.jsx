@@ -1,27 +1,14 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridToolbarContainer,
-} from "@mui/x-data-grid";
-import axios from "axios";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import backendAPI from "../../api";
-import {
-  Alert,
-  Button,
-  CircularProgress,
-  IconButton,
-  Snackbar,
-  Tooltip,
-} from "@mui/material";
-import { Box } from "@mui/system";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import RestoreIcon from "@mui/icons-material/Undo";
-import DashboardOrdersEditDialog from "./DashboardOrdersEditDialog";
-import DashboardOrdersRemoveDialog from "./DashboardOrdersRemoveDialog";
-import DashboardOrdersRestoreDialog from "./DashboardOrdersRestoreDialog";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import backendAPI from '../../api';
+import { Alert, CircularProgress, Snackbar, Tooltip } from '@mui/material';
+import { Box } from '@mui/system';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import RestoreIcon from '@mui/icons-material/Undo';
+import DashboardOrdersEditDialog from './DashboardOrdersEditDialog';
+import DashboardOrdersRemoveDialog from './DashboardOrdersRemoveDialog';
+import DashboardOrdersRestoreDialog from './DashboardOrdersRestoreDialog';
 
 const DashboardOrders = ({ token, ordersArray, users }) => {
   const [orders, setOrders] = useState([]);
@@ -32,8 +19,8 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
   const [currentOrder, setCurrentOrder] = useState({});
   const [snackBarState, setSnackBarState] = useState({
     show: false,
-    message: "",
-    severity: "error",
+    message: '',
+    severity: 'error'
   });
 
   useEffect(() => {
@@ -74,15 +61,15 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
   const cols = useMemo(
     () => [
       {
-        field: "_id",
-        headerName: "ID",
+        field: '_id',
+        headerName: 'ID',
         flex: 1,
         editable: false,
-        hideable: false,
+        hideable: false
       },
       {
-        field: "user",
-        headerName: "User",
+        field: 'user',
+        headerName: 'User',
         flex: 1,
         editable: false,
         hideable: false,
@@ -94,12 +81,12 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
             }
           }
           return params.value;
-        },
+        }
       },
       {
-        field: "address",
-        headerName: "Address",
-        type: "string",
+        field: 'address',
+        headerName: 'Address',
+        type: 'string',
         flex: 1,
         editable: false,
         hideable: false,
@@ -108,40 +95,39 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
             return `${params.row.address.city}, ${params.row.address.street} ${params.row.address.houseNumber}`;
           }
           return params.value;
-        },
+        }
       },
       {
-        field: "totalPrice",
-        headerName: "Total Price($)",
-        type: "number",
+        field: 'totalPrice',
+        headerName: 'Total Price($)',
+        type: 'number',
         flex: 1,
         editable: true,
-        hideable: false,
+        hideable: false
       },
       {
-        field: "status",
-        headerName: "Status",
+        field: 'status',
+        headerName: 'Status',
         flex: 1,
-        type: "singleSelect",
-        valueOptions: ["Created", "Packed", "Delivered"],
+        type: 'singleSelect',
+        valueOptions: ['Created', 'Packed', 'Delivered'],
         editable: true,
-        hideable: false,
+        hideable: false
       },
 
       {
-        field: "isActive",
-        headerName: "Is active?",
-        description:
-          "This column indicates whether the user is disabled or not.",
-        type: "boolean",
+        field: 'isActive',
+        headerName: 'Is active?',
+        description: 'This column indicates whether the user is disabled or not.',
+        type: 'boolean',
         editable: true,
         hideable: false,
-        flex: 1,
+        flex: 1
       },
       {
-        field: "actions",
-        type: "actions",
-        headerName: "Actions",
+        field: 'actions',
+        type: 'actions',
+        headerName: 'Actions',
         width: 100,
         getActions: ({ id, row }) => {
           const deleteAction = row.isActive ? (
@@ -185,10 +171,10 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
               }}
               color="inherit"
             />,
-            deleteAction,
+            deleteAction
           ];
-        },
-      },
+        }
+      }
     ],
     [handleEditClick, handleDeleteClick, handleRestoreClick, users]
   );
@@ -235,7 +221,7 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
 
   const updateOrderDetails = async (params, event, details) => {
     try {
-      if (params.field === "id") {
+      if (params.field === 'id') {
         return;
       }
       const updatedOrder = orders.filter((order) => order._id === params.id)[0];
@@ -283,15 +269,15 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
     updateSnackBarState({
       show: true,
       message: "Couldn't update order details!",
-      severity: "error",
+      severity: 'error'
     });
   };
 
   const showSuccessSnackbar = () => {
     updateSnackBarState({
       show: true,
-      message: "Order updated successfully!",
-      severity: "success",
+      message: 'Order updated successfully!',
+      severity: 'success'
     });
   };
 
@@ -305,12 +291,11 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
     <>
       {isLoading ? (
         <Box
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          sx={{ width: "100%", height: "100vh" }}
-        >
-          <CircularProgress style={{ width: "50vh", height: "50vh" }} />
+          display={'flex'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          sx={{ width: '100%', height: '100vh' }}>
+          <CircularProgress style={{ width: '50vh', height: '50vh' }} />
         </Box>
       ) : (
         <>
@@ -320,45 +305,39 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
             columns={cols}
             pageSize={20}
             rowsPerPageOptions={[20]}
-            sx={{ height: "100vh" }}
-            onCellEditCommit={updateOrderDetails}
-          ></DataGrid>
+            sx={{ height: '100vh' }}
+            onCellEditCommit={updateOrderDetails}></DataGrid>
 
           {isEditDialogOpen && (
             <DashboardOrdersEditDialog
               handleDialogClose={handleDialogClose}
               handleDialogSave={handleDialogSave}
               open={isEditDialogOpen}
-              order={currentOrder}
-            ></DashboardOrdersEditDialog>
+              order={currentOrder}></DashboardOrdersEditDialog>
           )}
           {isRemoveDialogOpen && (
             <DashboardOrdersRemoveDialog
               handleDialogClose={handleRemoveDialogClose}
               handleDialogConfirm={handleRemoveDialogConfirm}
               open={isRemoveDialogOpen}
-              product={currentOrder}
-            ></DashboardOrdersRemoveDialog>
+              product={currentOrder}></DashboardOrdersRemoveDialog>
           )}
           {isRestoreDialogOpen && (
             <DashboardOrdersRestoreDialog
               handleDialogClose={handleRestoreDialogClose}
               handleDialogConfirm={handleRestoreDialogConfirm}
               open={isRestoreDialogOpen}
-              product={currentOrder}
-            ></DashboardOrdersRestoreDialog>
+              product={currentOrder}></DashboardOrdersRestoreDialog>
           )}
           <Snackbar
             open={snackBarState.show}
             onClose={() => updateSnackBarState({ show: false })}
             autoHideDuration={3000}
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-          >
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
             <Alert
               severity={snackBarState.severity}
               variant="filled"
-              sx={{ width: "100%", marginTop: 3 }}
-            >
+              sx={{ width: '100%', marginTop: 3 }}>
               {snackBarState.message}
             </Alert>
           </Snackbar>
