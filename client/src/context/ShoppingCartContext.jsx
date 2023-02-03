@@ -33,10 +33,12 @@ export function useShoppingCart() {
 
 export function ShoppingCartProvider({ children }) {
     const { currentUser } = useAuth()
-    const [cartProducts, setCartProducts] = useState([])
+    const [screenSize] = useScreenSize()
     const [isOpen, setIsOpen] = useState(false)
+    const [cartProducts, setCartProducts] = useState([])
     const [isInitialLoad, setIsInitialLoad] = useState(true)
     const [isShoppingCartLoading, setIsShoppingCartLoading] = useState(true)
+    const [localCart, setLocalCart, clearLocalCart] = useLocalStorage('user-local-cart', []);
     const [userInfo, setUserInfo] = useState({
         fName: '',
         lName: '',
