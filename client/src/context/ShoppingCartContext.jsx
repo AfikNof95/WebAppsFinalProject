@@ -7,55 +7,55 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import useScreenSize from '../hooks/useScreenSize';
 
 const ShoppingCartContext = createContext({
-  openCart() {},
-  closeCart() {},
-  getCartQuantity() {},
-  getCartProducts() {},
-  getCartTotalPrice() {},
-  getProductQuantity(productId) {},
-  addToCart(productObject) {},
-  increaseProductQuantity(productId, count) {},
-  decreaseProductQuantity(productId, count) {},
-  updateProductQuantity(productId, count) {},
-  removeFromCart(productId) {},
-  userInfo: [],
-  paymentInfo: [],
-  handleFormChange: () => {},
-  handlePaymentChange: () => {},
-  deleteCart: () => {},
-  removePaymentInfo: () => {},
-  removeUserInfo: () => {},
-  handleChosenAddress: () => {},
-});
+    openCart() {},
+    closeCart() {},
+    getCartQuantity() {},
+    getCartProducts() {},
+    getCartTotalPrice() {},
+    getCartTotalPriceNumber() {},
+    getProductQuantity(productId) {},
+    addToCart(productObject) {},
+    increaseProductQuantity(productId, count) {},
+    decreaseProductQuantity(productId, count) {},
+    updateProductQuantity(productId, count) {},
+    removeFromCart(productId) {},
+    userInfo: [],
+    paymentInfo: [],
+    handleFormChange: () => {},
+    handlePaymentChange: () => {},
+    deleteCart: () => {},
+    removePaymentInfo: () => {},
+    removeUserInfo: () => {},
+    handleChosenAddress: () => {},
+})
 
 export function useShoppingCart() {
   return useContext(ShoppingCartContext);
 }
 
 export function ShoppingCartProvider({ children }) {
-  const { currentUser } = useAuth();
-  const [screenSize] = useScreenSize();
-  const [cartProducts, setCartProducts] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [isShoppingCartLoading, setIsShoppingCartLoading] = useState(true);
-  const [localCart, setLocalCart, clearLocalCart] = useLocalStorage('user-local-cart', []);
-  const [userInfo, setUserInfo] = useState({
-    fName: '',
-    lName: '',
-    street:'',
-    houseNumber:'',
-    city: '',
-    zip: '',
-    country: '',
-    zipCode:''
-  });
-  const [paymentInfo, setPaymentInfo] = useState({
-    cardName: '',
-    cardNumber: '',
-    expDate: '',
-    cvv: ''
-  });
+    const { currentUser } = useAuth()
+    const [screenSize] = useScreenSize()
+    const [isOpen, setIsOpen] = useState(false)
+    const [cartProducts, setCartProducts] = useState([])
+    const [isInitialLoad, setIsInitialLoad] = useState(true)
+    const [isShoppingCartLoading, setIsShoppingCartLoading] = useState(true)
+    const [localCart, setLocalCart, clearLocalCart] = useLocalStorage('user-local-cart', []);
+    const [userInfo, setUserInfo] = useState({
+        fName: '',
+        lName: '',
+        street: '',
+        houseNumber: null,
+        city: '',
+        country: '',
+        zipCode: null,
+    })
+    const [paymentInfo, setPaymentInfo] = useState({
+        cardName: '',
+        cardNumber: null,
+        expDate: '',
+        cvv: null,
+    })
 
   const cartQuantity = cartProducts.reduce(
     (quantity, product) => Number(product.quantity) + quantity,
@@ -135,24 +135,23 @@ export function ShoppingCartProvider({ children }) {
     setCartProducts([]);
   }
 
-  function removePaymentInfo() {
-    setPaymentInfo({
-      cardName: '',
-      cardNumber: '',
-      expDate: '',
-      cvv: ''
-    });
-  }
+    function removePaymentInfo() {
+        setPaymentInfo({
+            cardName: '',
+            cardNumber: null,
+            expDate: '',
+            cvv: null,
+        })
+    }
 
- 
     function removeUserInfo() {
         setUserInfo({
             fName: '',
             lName: '',
             street: '',
-            houseNumber: '',
+            houseNumber: null,
             city: '',
-            zipCode: '',
+            zipCode: null,
             country: '',
         })
     }
@@ -255,13 +254,21 @@ export function ShoppingCartProvider({ children }) {
     return cartQuantity;
   }
 
-  function getCartTotalPrice() {
-    let sum = 0;
-    for (let product of cartProducts) {
-      sum += product.quantity * product.product.price;
+    function getCartTotalPrice() {
+        let sum = 0
+        for (let product of cartProducts) {
+            sum += product.quantity * product.product.price
+        }
+        return formatPrice(sum)
     }
-    return formatPrice(sum);
-  }
+
+    function getCartTotalPriceNumber() {
+        return cartProducts.reduce(
+            (all, current) =>
+                all + (current.quantity || 0) * (current.product.price || 0),
+            0
+        )
+    }
 
   const handleFormChange = async (event) => {
     setUserInfo({
@@ -279,38 +286,40 @@ export function ShoppingCartProvider({ children }) {
     }
 
     const handleChosenAddress = (address) => {
-      setUserInfo({
-          ...userInfo,
-          ...address,
-      })
+        setUserInfo({
+            ...userInfo,
+            ...address,
+        })
     }
 
-  return (
-    <ShoppingCartContext.Provider
-      value={{
-        openCart,
-        closeCart,
-        getCartQuantity,
-        getCartProducts,
-        getProductQuantity,
-        getCartTotalPrice,
-        addToCart,
-        removeFromCart,
-        deleteCart,
-        increaseProductQuantity,
-        decreaseProductQuantity,
-        updateProductQuantity,
-        userInfo: userInfo,
-        paymentInfo: paymentInfo,
-        handleFormChange: handleFormChange,
-        handlePaymentChange: handlePaymentChange,
-        removePaymentInfo,
-        removeUserInfo,
-        isShoppingCartLoading,
-        handleChosenAddress
-      }}>
-      {children}
-      <SideCart isCartOpen={isOpen}></SideCart>
-    </ShoppingCartContext.Provider>
-  );
+    return (
+        <ShoppingCartContext.Provider
+            value={{
+                openCart,
+                closeCart,
+                getCartQuantity,
+                getCartProducts,
+                getProductQuantity,
+                getCartTotalPrice,
+                getCartTotalPriceNumber,
+                addToCart,
+                removeFromCart,
+                deleteCart,
+                increaseProductQuantity,
+                decreaseProductQuantity,
+                updateProductQuantity,
+                userInfo: userInfo,
+                paymentInfo: paymentInfo,
+                handleFormChange: handleFormChange,
+                handlePaymentChange: handlePaymentChange,
+                removePaymentInfo,
+                removeUserInfo,
+                isShoppingCartLoading,
+                handleChosenAddress,
+            }}
+        >
+            {children}
+            <SideCart isCartOpen={isOpen}></SideCart>
+        </ShoppingCartContext.Provider>
+    )
 }

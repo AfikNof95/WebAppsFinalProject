@@ -25,17 +25,18 @@ export const useAxiosIntercept = () => {
       }
     );
 
-    const resIntercept = axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (!error.response) {
-          return Promise.reject(error);
-        }
-        if (error.response.status === 401) {
-          if (new Date(currentUser.expireDate) < new Date()) {
-            try {
-              const user = await refreshToken();
-              error.config.headers.Authorization = 'Bearer ' + user.idToken;
+        const resIntercept = axios.interceptors.response.use(
+            (response) => response,
+            async (error) => {
+                if (!error.response) {
+                    return Promise.reject(error)
+                }
+                if (error.response.status === 401) {
+                    if (new Date(currentUser.expireDate) < new Date()) {
+                        try {
+                            const user = await refreshToken()
+                            error.config.headers.Authorization =
+                                'Bearer ' + user.idToken
 
                             if (error.config.data  && error.config.url.indexOf('identitytoolkit') === -1) {
                                 const data = JSON.parse(error.config.data)

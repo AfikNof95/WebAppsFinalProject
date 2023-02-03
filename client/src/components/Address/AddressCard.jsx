@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import {
     Box,
@@ -25,17 +25,22 @@ export function AddressCard(props) {
         state,
         zipCode,
         country,
+        currentUser,
+        setAddressId,
         setIsNextAvailable,
         setChosenAddress,
+        setShouldRefetch,
         chosenAddress,
     } = props
     const [open, setOpen] = React.useState(false)
     const [updatedAddress, setUpdatedAddress] = useState({
-        street: '',
-        houseNumber: '',
-        city: '',
-        zipCode: '',
-        country: '',
+        street: street,
+        houseNumber: houseNumber,
+        city: city,
+        zipCode: zipCode,
+        country: country,
+        isActive: true,
+        user: currentUser.localId,
     })
 
     const handleClickOpen = () => {
@@ -48,39 +53,43 @@ export function AddressCard(props) {
 
     const handleSave = async () => {
         try {
-            const updateData = JSON.stringify(updatedAddress);
             const response = await axios.put(
                 `http://localhost:2308/Address/id/${addressId}`,
-                updateData
+                updatedAddress,
+                { headers: { 'Content-Type': 'application/json' } }
             )
-            console.log(response.data)
-            console.log(updatedAddress)
+            setShouldRefetch(true)
         } catch (error) {
             console.error(error)
         }
         setOpen(false)
     }
 
-    const onRemove = () => {
+    const onRemove = async () => {
         try {
-            // axios
-            //     .delete('api/address/' + { addresId })
-            //     .then((response) => {
-            //         console.log(response.data)
-            //     })
-            //     .catch((error) => {
-            //         console.error(error)
-            //     })
+            const response = await axios.delete(
+                `http://localhost:2308/Address/id/${addressId}`
+            )
+            setShouldRefetch(true)
+            console.log(response.data)
         } catch (err) {
             console.log('Error! Could not delete the address')
+            console.log(err)
         }
     }
 
     const onChoose = () => {
         try {
-            setChosenAddress({ street, houseNumber, city, state, zipCode, country })
+            setChosenAddress({
+                street,
+                houseNumber,
+                city,
+                state,
+                zipCode,
+                country,
+            })
+            setAddressId(addressId)
             setIsNextAvailable(true)
-            // add style = box-shadow: 7px 7px 8px green;
         } catch (err) {
             console.log('Error! Could not set the ChosenAddress state')
         } finally {
@@ -111,6 +120,7 @@ export function AddressCard(props) {
                         <Grid item xs={6}>
                             <TextField
                                 required
+                                label="Street"
                                 id="street"
                                 name="street"
                                 placeholder={street ? street : 'Street...'}
@@ -123,13 +133,14 @@ export function AddressCard(props) {
                             <TextField
                                 id="houseNumber"
                                 name="houseNumber"
+                                label="House Number"
                                 placeholder={
                                     houseNumber
                                         ? houseNumber
                                         : 'House number...'
                                 }
                                 variant="standard"
-                                inputProps={{ maxLength: 22, minLength: 2 }}
+                                inputProps={{ maxLength: 10, minLength: 1 }}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -138,9 +149,10 @@ export function AddressCard(props) {
                                 required
                                 id="city"
                                 name="city"
+                                label="City"
                                 placeholder={city ? city : 'City...'}
                                 variant="standard"
-                                inputProps={{ maxLength: 18, minLength: 2 }}
+                                inputProps={{ maxLength: 24, minLength: 2 }}
                                 onChange={handleChange}
                             />
                         </Grid>
@@ -149,6 +161,7 @@ export function AddressCard(props) {
                                 required
                                 id="zipCode"
                                 name="zipCode"
+                                label="Zip"
                                 placeholder={zipCode ? zipCode : 'zipCode...'}
                                 variant="standard"
                                 inputProps={{ maxLength: 8, minLength: 4 }}
@@ -160,6 +173,7 @@ export function AddressCard(props) {
                                 required
                                 id="country"
                                 name="country"
+                                label="Country"
                                 placeholder={country ? country : 'Country...'}
                                 variant="standard"
                                 inputProps={{ maxLength: 22, minLength: 2 }}
@@ -174,7 +188,21 @@ export function AddressCard(props) {
                 </DialogActions>
             </Dialog>
             <Card
-                sx={{ display: 'flex', padding: 2, marginTop: 2 }}
+                sx={
+                    chosenAddress._id == addressId
+                        ? {
+                              display: 'flex',
+                              padding: 2,
+                              marginTop: 2,
+                              boxShadow: `0 0 10px blue`,
+                          }
+                        : {
+                              display: 'flex',
+                              padding: 2,
+                              marginTop: 2,
+                              boxShadow: `0 0 10px black`,
+                          }
+                }
                 elevation={1}
             >
                 <CardContent>
