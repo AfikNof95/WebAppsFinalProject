@@ -7,7 +7,7 @@ import { AiFillLinkedin } from 'react-icons/ai';
 
 const useStyles = makeStyles({
   root: {
-    // maxWidth: 700,
+    maxWidth: 700,
     minHeight: 140,
     padding: 3,
     display: 'flex',
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
     border: '1px solid #d3d0d0',
-    marginBottom: '10px'
+    margin: '20px auto'
   },
   media: {
     height: 120,
@@ -24,7 +24,14 @@ const useStyles = makeStyles({
     marginRight: 20
   },
   content: {
+    maxWidth: 550,
     flex: '1 0 auto'
+  },
+  iconWrapper: { display: 'flex', justifyContent: 'flex-end' },
+  icon: {
+    display: 'block',
+    width: 25,
+    height: 25
   }
 });
 
@@ -45,7 +52,7 @@ const data = [
     title: 'Fullstack development team lead',
     linkedin: 'https://www.linkedin.com/in/omer-kaplan-3809841b6/',
     description:
-      'Experienced Team Lead. Skilled in Devops, Fullstack, Product Management and Team Leadership.'
+      'Experienced Team Lead. Skilled in Devops, Fullstack, Product Management and Team Leadership. Experience with Nodejs, React, C#, PostgresSQL, Ci/Cd, Ansible, Jenkins, Management soft skills and more.'
   },
   {
     name: 'Maya Bezalel',
@@ -64,10 +71,8 @@ export default function ProgrammerCards() {
       {data.map((item) => (
         <Card className={classes.root} key={item.name} elevation={1}>
           <Grid container alignItems="center">
-            <Grid item>
+            <div id="photo-name-title-wrapper">
               <CardMedia component="img" className={classes.media} image={item.image} />
-            </Grid>
-            <Grid item>
               <CardContent className={classes.content}>
                 <Typography variant="h5" fontWeight="bold">
                   {item.name},
@@ -76,11 +81,11 @@ export default function ProgrammerCards() {
                   </Typography>
                 </Typography>
                 <Typography variant="body2">{item.description}</Typography>
-                <Link href={item.linkedin}>
-                  <AiFillLinkedin />
+                <Link href={item.linkedin} className={classes.iconWrapper}>
+                  <AiFillLinkedin className={classes.icon} />
                 </Link>
               </CardContent>
-            </Grid>
+            </div>
           </Grid>
         </Card>
       ))}
