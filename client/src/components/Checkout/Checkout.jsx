@@ -13,7 +13,8 @@ const theme = createTheme()
 export default function NewCheckout() {
     const [activeStep, setActiveStep] = useState(0)
     const [isNewAddress, setIsNewAddress] = useState(false)
-    const [addressId, setAddressId] = useState('');
+    const [addressId, setAddressId] = useState('')
+    const [boxShadowColor, setBoxShadowColor] = useState('')
     const { currentUser } = useAuth()
 
     function getStepContent(step) {
@@ -26,6 +27,8 @@ export default function NewCheckout() {
                         setIsNewAddress={setIsNewAddress}
                         currentUser={currentUser}
                         setAddressId={setAddressId}
+                        boxShadowColor={boxShadowColor}
+                        setBoxShadowColor={setBoxShadowColor}
                     />
                 )
             case 1:

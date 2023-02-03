@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import {
     Box,
@@ -90,7 +90,6 @@ export function AddressCard(props) {
             })
             setAddressId(addressId)
             setIsNextAvailable(true)
-            // add style = box-shadow: 7px 7px 8px green;
         } catch (err) {
             console.log('Error! Could not set the ChosenAddress state')
         } finally {
@@ -189,7 +188,21 @@ export function AddressCard(props) {
                 </DialogActions>
             </Dialog>
             <Card
-                sx={{ display: 'flex', padding: 2, marginTop: 2 }}
+                sx={
+                    chosenAddress._id == addressId
+                        ? {
+                              display: 'flex',
+                              padding: 2,
+                              marginTop: 2,
+                              boxShadow: `0 0 10px blue`,
+                          }
+                        : {
+                              display: 'flex',
+                              padding: 2,
+                              marginTop: 2,
+                              boxShadow: `0 0 10px black`,
+                          }
+                }
                 elevation={1}
             >
                 <CardContent>

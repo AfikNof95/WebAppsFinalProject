@@ -5,6 +5,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import { AddressCardList } from '../Address/AddressCardList'
 import AddIcon from '@mui/icons-material/Add'
 import NewAddressForm from './NewAddressForm'
+import axios from 'axios'
 
 export default function AddressForm(props) {
     const {
@@ -23,9 +24,34 @@ export default function AddressForm(props) {
         zipCode: null,
         country: '',
     })
+    const [newAddressToSave, setNewAddressToSave] = useState({
+        street: '',
+        houseNumber: null,
+        city: '',
+        zipCode: null,
+        country: '',
+        isActive: true,
+        user: currentUser.localId,
+    })
 
     const toggleChoose = () => {
         setIsNewAddress((prevIsNewAddress) => !prevIsNewAddress)
+    }
+
+    const handleNew = async () => {
+        try {
+            const response = await axios.post(
+                `http://localhost:2308/Address/`,
+                newAddressToSave,
+                { headers: { 'Content-Type': 'application/json' } }
+            )
+            setAddressId(response.data._id)
+        } catch (err) {
+            console.log(err)
+            alert(`oh no, ${err}`)
+        } finally {
+            handleNext()
+        }
     }
 
     useEffect(() => {
@@ -57,7 +83,12 @@ export default function AddressForm(props) {
                         <hr />
                         <div></div>
                     </div>
-                    <NewAddressForm setIsNextAvailable={setIsNextAvailable} />
+                    <NewAddressForm
+                        setIsNextAvailable={setIsNextAvailable}
+                        currentUser={currentUser}
+                        newAddressToSave={newAddressToSave}
+                        setNewAddressToSave={setNewAddressToSave}
+                    />
                 </>
             ) : (
                 <>
@@ -70,7 +101,7 @@ export default function AddressForm(props) {
                                     onClick={toggleChoose}
                                 >
                                     <AddIcon />
-                                    Add temp one
+                                    Add new one
                                 </Button>
                             </div>
                             <AddressCardList
@@ -90,7 +121,7 @@ export default function AddressForm(props) {
                 </Button>
                 <Button
                     variant="contained"
-                    onClick={handleNext}
+                    onClick={isNewAddress ? handleNew : handleNext}
                     sx={{ mt: 3, ml: 1 }}
                     disabled={!isNextAvailable}
                 >
