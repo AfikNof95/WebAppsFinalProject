@@ -1,7 +1,6 @@
-const OrderService = require("../services/order.service");
+const OrderService = require('../services/order.service');
 
 const OrderController = {
-
   async getOrderById(req, res, next) {
     try {
       const { orderId } = req.params;
@@ -44,7 +43,7 @@ const OrderController = {
     try {
       const { orderId } = req.params;
       const response = await OrderService.updateOrder(orderId, req.body);
-      return res.json({ message: "Order updated successfully!" });
+      return res.json({ message: 'Order updated successfully!' });
     } catch (ex) {
       next(ex);
     }
@@ -54,7 +53,7 @@ const OrderController = {
     try {
       const { orderId } = req.params;
       const response = await OrderService.deleteOrder(orderId);
-      return res.json({ message: "Order deleted successfully!" });
+      return res.json({ message: 'Order deleted successfully!' });
     } catch (ex) {
       next(ex);
     }
@@ -66,7 +65,7 @@ const OrderController = {
     } catch (ex) {
       next(ex);
     }
-  },
+  }
 };
 
 module.exports = OrderController;

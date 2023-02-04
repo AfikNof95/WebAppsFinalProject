@@ -1,4 +1,4 @@
-const CategoryService = require("../services/category.service");
+const CategoryService = require('../services/category.service');
 
 const CategoryController = {
   async getAllCategories(req, res, next) {
@@ -29,11 +29,8 @@ const CategoryController = {
   async updateCategory(req, res, next) {
     try {
       const { categoryId } = req.params;
-      const response = await CategoryService.updateCategory(
-        categoryId,
-        req.body
-      );
-      return res.json({ message: "Category updated successfully!" });
+      const response = await CategoryService.updateCategory(categoryId, req.body);
+      return res.json({ message: 'Category updated successfully!' });
     } catch (ex) {
       next(ex);
     }
@@ -42,11 +39,11 @@ const CategoryController = {
     try {
       const { categoryId } = req.params;
       const response = await CategoryService.deleteCategory(categoryId);
-      res.json({ message: "Category deleted successfully!" });
+      res.json({ message: 'Category deleted successfully!' });
     } catch (ex) {
       next(ex);
     }
-  },
+  }
 };
 
 module.exports = CategoryController;

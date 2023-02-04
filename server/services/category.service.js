@@ -1,6 +1,6 @@
-const { response } = require("express");
-const CategoryModel = require("../models/category.model");
-const ObjectId = require("mongoose").Types.ObjectId;
+const { response } = require('express');
+const CategoryModel = require('../models/category.model');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const CategoryService = {
   async getAllCategories() {
@@ -12,7 +12,7 @@ const CategoryService = {
   async createCategory(category) {
     const isExist = CategoryModel.findOne({ name: category.name });
     if (isExist) {
-      throw new Error("Category already exists!");
+      throw new Error('Category already exists!');
     }
     return await CategoryModel.create(category);
   },
@@ -23,7 +23,7 @@ const CategoryService = {
     );
 
     if (!updatedCategory) {
-      throw new Error("Category not found!");
+      throw new Error('Category not found!');
     }
 
     return updatedCategory;
@@ -31,17 +31,17 @@ const CategoryService = {
   async deleteCategory(categoryId) {
     const deletedCategory = await CategoryModel.findOneAndUpdate(
       {
-        _id: new ObjectId(categoryId),
+        _id: new ObjectId(categoryId)
       },
       { isActive: false }
     );
 
     if (!deletedCategory) {
-      throw new Error("Category not found!");
+      throw new Error('Category not found!');
     }
 
     return deletedCategory;
-  },
+  }
 };
 
 module.exports = CategoryService;

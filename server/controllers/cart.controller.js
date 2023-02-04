@@ -1,4 +1,4 @@
-const CartService = require("../services/cart.service");
+const CartService = require('../services/cart.service');
 
 const CartController = {
   async getCart(req, res, next) {
@@ -23,7 +23,7 @@ const CartController = {
     try {
       const { userId } = req.params;
       const response = await CartService.updateCart(userId, req.body);
-      return res.json({ message: "Cart updated successfully!" });
+      return res.json({ message: 'Cart updated successfully!' });
     } catch (ex) {
       next(ex);
     }
@@ -32,11 +32,11 @@ const CartController = {
     try {
       const { userId } = req.params;
       const response = await CartService.deleteCart(userId);
-      return res.json({ message: "Cart deleted successfully!" });
+      return res.json({ message: 'Cart deleted successfully!' });
     } catch (ex) {
       next(ex);
     }
-  },
+  }
 };
 
 module.exports = CartController;

@@ -16,7 +16,7 @@ from 'recharts'
 
 
 const ProfilePage = () => {
-  const { userIcon, getUser } = useAuth();
+  const { userProfilePicture, getUser } = useAuth();
   const theme = createTheme();
   let user = getUser()
   const inputAddress = useRef()
@@ -91,7 +91,7 @@ const ProfilePage = () => {
       const newAddress = response.data[response.data.length - 1]
       console.log(newAddress)
       updateAddres(`${newAddress.street} ${newAddress.houseNumber},
-      ${newAddress.city}, ${newAddress.zipCode},
+      ${newAddress.city}, ${newAddress.zipCodeCode},
       ${newAddress.country}.`)
     };
   }, []);
@@ -112,7 +112,7 @@ const ProfilePage = () => {
         >
           <Grid>
           
-            <Avatar sx={{width: 80, height: 80}}> { userIcon? icons[userIcon] : <StarOutlineRoundedIcon/>} </Avatar>
+            <Avatar sx={{width: 80, height: 80}}> { userProfilePicture? icons[userProfilePicture] : <StarOutlineRoundedIcon/>} </Avatar>
             Hello {user.displayName}! 
             <Grid item  textAlign={'center'}>
               <Button sx= {{marginLeft:"1225px"}} variant="contained" color="inherit" size="large" width="7cm"

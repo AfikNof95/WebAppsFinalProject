@@ -1,7 +1,7 @@
-const { WebSocketServer, WebSocket } = require("ws");
-const { v4: uuidv4 } = require("uuid");
-const http = require("http");
-const { getAuth } = require("firebase-admin/auth");
+const { WebSocketServer, WebSocket } = require('ws');
+const { v4: uuidv4 } = require('uuid');
+const http = require('http');
+const { getAuth } = require('firebase-admin/auth');
 
 const clients = {};
 let loggedInClients = 0;
@@ -10,26 +10,32 @@ const webSocketServer = () => {
   const server = http.createServer();
   const wsServer = new WebSocketServer({ server });
 
-  wsServer.on("connection", (connection) => {
-    console.log("New Client connected");
+  wsServer.on('connection', (connection) => {
+    console.log('New Client connected');
     const clientId = uuidv4();
-    clients[clientId] = { connection };
+    clients[clientId] = { connection, clientId };
 
-    connection.on("close", () => {
-      if (clients[clientId].isLoggedIn) {
+    connection.on('close', () => {
+      if (clients[clientId]) {
         loggedInClients--;
+        delete clients[clientId];
+        console.log('Client Disconnected!');
+        broadcastUserCount();
       }
-      delete clients[clientId];
     });
 
-    connection.on("message", async (data, isBinary) => {
+    connection.on('message', async (data, isBinary) => {
+      console.log('Message Incoming');
       const message = isBinary ? data : data.toString();
       try {
         const messageJSON = JSON.parse(message);
-        if (messageJSON.type === "LOGIN") {
-          notifyLogin(clientId, messageJSON);
+        if (messageJSON.type === 'SIGN_IN') {
+          notifySignIn(clientId, messageJSON);
         }
-        if (messageJSON.type === "ADMIN_READY") {
+        if (messageJSON.type === 'SIGN_OUT') {
+          notifySignOut(clientId);
+        }
+        if (messageJSON.type === 'ADMIN_READY') {
           connectToAdmin(clientId);
         }
       } catch (ex) {
@@ -38,28 +44,43 @@ const webSocketServer = () => {
     });
   });
 
-  server.listen(8000, () => {
-    console.log("WebSocket server is up!");
+  server.listen(2309, () => {
+    console.log('WebSocket server is up!');
   });
 };
 
-const notifyLogin = async (clientId, messageJSON) => {
-  clients[clientId] = {
-    ...clients[clientId],
-    ...{ isLoggedIn: true, user: messageJSON.user },
-  };
-  loggedInClients++;
+const broadcastUserCount = async () => {
+  const currentLoggedInUsers = Object.values(clients).map((client) => {
+    const { user } = client;
+    if (!user) {
+      return;
+    }
+    const { email, photoUrl, displayName } = user;
+    return {
+      email,
+      displayName,
+      photoUrl
+    };
+  });
+
   for (let client of Object.values(clients)) {
     if (client.user) {
       try {
         const user = await getAuth().verifyIdToken(client.user.idToken);
         if (user.isAdmin && client.connection.readyState === WebSocket.OPEN) {
-          client.connection.send(JSON.stringify({ loggedInClients }));
+          console.log(`Notifying ${user.email} About Current User Count`);
+          client.connection.send(
+            JSON.stringify({
+              currentLoggedInUsers
+            })
+          );
         }
       } catch (ex) {
-        if (ex.errorInfo && ex.errorInfo.code === "auth/id-token-expired") {
-          console.log("Sending refresh token request");
-          client.connection.send(JSON.stringify({ type: "REFRESH_TOKEN" }));
+        if (ex.errorInfo && ex.errorInfo.code === 'auth/id-token-expired') {
+          console.log('Sending refresh token request');
+          client.connection.send(JSON.stringify({ type: 'REFRESH_TOKEN' }));
+          client.connection.terminate();
+          delete clients[client.clientId];
         }
         console.error(ex);
       }
@@ -67,14 +88,29 @@ const notifyLogin = async (clientId, messageJSON) => {
   }
 };
 
+const notifySignOut = (clientId) => {
+  clients[clientId].connection.terminate();
+};
+
+const notifySignIn = (clientId, messageJSON) => {
+  clients[clientId] = {
+    ...clients[clientId],
+    ...{ isLoggedIn: true, user: messageJSON.user }
+  };
+  loggedInClients++;
+  broadcastUserCount();
+};
+
 const connectToAdmin = async (clientId) => {
-  const user = clients[clientId].user;
-  if (user) {
-    const { isAdmin } = await getAuth().verifyIdToken(user.idToken);
-    if (isAdmin) {
-      clients[clientId].connection.send(JSON.stringify({ loggedInClients }));
-    }
-  }
+  // const user = clients[clientId].user;
+  // if (user) {
+  //   const { isAdmin } = await getAuth().verifyIdToken(user.idToken);
+  //   if (isAdmin) {
+  //     clients[clientId].connection.send(JSON.stringify({ loggedInClients }));
+  //   }
+  // }
+
+  broadcastUserCount();
 };
 
 module.exports = webSocketServer;

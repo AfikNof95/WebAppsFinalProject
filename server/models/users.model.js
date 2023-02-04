@@ -1,10 +1,10 @@
-const admin = require("firebase-admin");
-const { initializeApp } = require("firebase-admin/app");
-const { getAuth } = require("firebase-admin/auth");
-const firebaseConfig = require("./firebaseAdminConfig.json");
+const admin = require('firebase-admin');
+const { initializeApp } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
+const firebaseConfig = require('./firebaseAdminConfig.json');
 
 const app = initializeApp({
-  credential: admin.credential.cert(firebaseConfig),
+  credential: admin.credential.cert(firebaseConfig)
 });
 
 const getIsAdmin = async (userToken) => {
@@ -13,7 +13,7 @@ const getIsAdmin = async (userToken) => {
 };
 const setUserAdmin = async (user) => {
   const claims = await getAuth(app).setCustomUserClaims(user.uid, {
-    isAdmin: true,
+    isAdmin: true
   });
   return claims;
 };
@@ -24,8 +24,12 @@ const listAllUsers = async () => {
 };
 
 const updateUser = (user) => {
+  if (user.customClaims && user.customClaims.isAdmin) {
+    setUserAdmin(user);
+  }
+
   return getAuth(app).updateUser(user.uid, {
-    ...user,
+    ...user
   });
 };
 
