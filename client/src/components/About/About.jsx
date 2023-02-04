@@ -56,10 +56,11 @@ const data = [
   },
   {
     name: 'Maya Bezalel',
-    image: 'https://via.placeholder.com/150x150',
-    title: '9900',
+    image: 'http://localhost:3000/client/src/images/maya.jpeg', // 'WebAppsFinalProject/client/src/images/maya.jpeg'
+    title: 'Software development of satellite r&d center',
     linkedin: 'https://www.linkedin.com/in/omer-kaplan-3809841b6/',
-    description: 'cool'
+    description:
+      'Full stack developer. Experience with nodeJS, mongoDB and coffeescript, for the satellite r&d center in the IDF.'
   }
 ];
 
@@ -72,7 +73,11 @@ export default function ProgrammerCards() {
         <Card className={classes.root} key={item.name} elevation={1}>
           <Grid container alignItems="center">
             <div id="photo-name-title-wrapper">
-              <CardMedia component="img" className={classes.media} image={item.image} />
+              <CardMedia
+                component="img"
+                className={classes.media}
+                image={item.name == 'Maya Bezalel' ? require('../../images/maya.jpeg') : item.image}
+              />
               <CardContent className={classes.content}>
                 <Typography variant="h5" fontWeight="bold">
                   {item.name},
