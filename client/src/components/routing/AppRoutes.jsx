@@ -4,7 +4,7 @@ import Homepage from '../Homepage/Homepage';
 import NotFound from '../NotFound/NotFound';
 
 import AuthForm from '../Auth/Login';
-import ProductPage from '../ProductPage/ProductPage';
+import ProductPage from '../Productpage/ProductPage';
 import AccountPage from '../Account/Account';
 import ProfilePage from '../Profile/Profile';
 import DashboardPage from '../../pages/Dashboard/Dashboard';

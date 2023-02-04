@@ -20,7 +20,7 @@ const ProfilePage = () => {
   const theme = createTheme();
   let user = getUser()
   const inputAddress = useRef()
-  const [orders, setOrders] = useState(null);
+  const [orders, setOrders] = useState(tempOrders);
   const [adress, updateAddres] = useState("Israel")
   const [allAdresses, setAllAdresses] = useState([])
   const [insertAddress, setInsertAdress] = useState(false)
@@ -36,11 +36,25 @@ const ProfilePage = () => {
     fetchAddresses()
   })
 
+  useEffect(() => {
+    const fetchOrdersByUserId = async () => {
+      const response = await axios.get(`http://localhost:2308/Order`);
+      console.log("----------------")
+      console.log(response.data.orders)
+      setOrders(response.data.orders);
+
+    };
+    fetchOrdersByUserId();
+  }, []);
+
   const buildPieData = () => {
     let createdCounter = 0
     let deliveredCounter = 0
     let packedCounter = 0
-    for( const order of tempOrders) {
+    let i = 0
+    for( const order of orders) {
+      order.serial = i
+      i++
       if(order.status == "Packed")
         packedCounter++
       else if(order.status == "Created")
@@ -59,30 +73,24 @@ const ProfilePage = () => {
 
   const buildLineData = () => {
 
-    dataLineChart = [
-      {address: "bla", orders: 1},
-      {address: "Tel aviv", orders: 4},
-      {address: "pp", orders: 0}
-    ]
     // When real data
-    // for(const add of allAdresses) {
-    //   let counterAdd = 0
-    //   for(const order of tempOrders) {
-    //     if(order.address == add)
-    //       counterAdd++
-    //   }
-    //   dataLineChart.push({name: add, value: counterAdd})
-    // }
+    for(const add of allAdresses) {
+      let counterAdd = 0
+      for(const order of orders) {
+        console.log(order)
+        if(order.address._id == add._id) {
+          console.log(add)
+          counterAdd++
+        }
+      }
+      dataLineChart.push({ city: add.city, orders: counterAdd })
+    }
+    if(dataLineChart.length < orders.length) {
+      const sizeToAdd = orders.length - dataLineChart.length
+      dataLineChart.push({ city: "Tel Aviv", orders: sizeToAdd })
+    }
   }
   buildLineData()
-
-  useEffect(() => {
-    const fetchOrdersByUserId = async () => {
-      const response = await axios.get(`http://localhost:2308/Order`);
-      setOrders(response.data);
-    };
-    fetchOrdersByUserId();
-  }, []);
 
 
   useEffect(() => {
@@ -105,7 +113,7 @@ const ProfilePage = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container component="main" maxWidth="big" sx={{ mb: 4, mt: 12 }}>
+      <Container component="main" maxWidth="big" sx={{ mb: 4, mt: 10 }}>
       <Paper
           variant="outlined"
           sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
@@ -135,15 +143,16 @@ const ProfilePage = () => {
                   </Typography>
                   <Divider></Divider>
                   <Grid container gap={3} style={{marginTop:"40px"}}>
-                  <LineChart width={500} height={300} data={tempOrders}>
+                  <h4>Price</h4>
+                  <LineChart width={500} height={300} data={orders}>
                     <XAxis dataKey="serial"/>
                     <YAxis />
                     <CartesianGrid stroke="#eee" strokeDasharray="5 5"/>
                     <Line type="monotone" dataKey="totalPrice" stroke="#8884d8" />
                     <Line type="monotone" dataKey="serial" stroke="#82ca9d" />
                   </LineChart>
-            
-                    <PieChart width={400} height={400}>
+                  <h4>Status Order</h4>
+                    <PieChart width={200} height={400}>
                       <Pie
                         isAnimationActive={false}
                         data={dataPieChart}
@@ -155,7 +164,8 @@ const ProfilePage = () => {
                       />
                       <Tooltip />
                     </PieChart>
-
+                    <Divider></Divider>
+                    <h4>Address</h4>
                     <BarChart
                       width={500}
                       height={300}
@@ -168,7 +178,7 @@ const ProfilePage = () => {
                       }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="address" />
+                      <XAxis dataKey="city" />
                       <YAxis />
                       <Tooltip />
                       <Legend />
@@ -177,6 +187,7 @@ const ProfilePage = () => {
                     </Grid>
                   </div>
             }
+            <Divider></Divider>
           </Grid>
       </Paper>
     </Container>
