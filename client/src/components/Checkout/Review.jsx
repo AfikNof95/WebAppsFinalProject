@@ -8,18 +8,29 @@ import backendAPI from '../../api'
 import { useAuth } from '../../context/AuthContext'
 
 export default function Review(props) {
-    const { handleNext, handleBack } = props
+    const { handleNext, handleBack,addressId } = props
     const {currentUser} =  useAuth();
     const {
         paymentInfo,
         userInfo,
         getCartProducts,
         getCartTotalPrice,
+        getCartTotalPriceNumber,
         deleteCart,
         removePaymentInfo,
         removeUserInfo,
     } = useShoppingCart()
-    const sumOrder = getCartTotalPrice()
+
+    const cartProducts = getCartProducts()
+    const ordersPrice = getCartTotalPrice()
+    const sumOrder = getCartTotalPriceNumber()
+
+    const orderToSend = {
+        user: currentUser.localId,
+        address: addressId,
+        products: cartProducts,
+        totalPrice: sumOrder,
+    }
 
     const finishReservation = async () => {
         try {
@@ -48,6 +59,18 @@ export default function Review(props) {
         { name: 'Card holder', detail: paymentInfo.cardName },
         { name: 'Card number', detail: `xxxx-xxxx-xxxx-${last4digits}` },
     ]
+    const shippingUser =
+        Object.values(
+            omit(userInfo, [
+                'street',
+                'houseNumber',
+                'city',
+                'zipCode',
+                'country',
+            ])
+        )
+            .filter(Boolean)
+            .join(' ') || currentUser.displayName
 
     return (
         <React.Fragment>
@@ -63,7 +86,7 @@ export default function Review(props) {
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="Total" />
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                        {sumOrder}
+                        {ordersPrice}
                     </Typography>
                 </ListItem>
             </List>
@@ -79,17 +102,7 @@ export default function Review(props) {
                         Shipping
                     </Typography>
                     <Typography align="center" gutterBottom>
-                        {Object.values(
-                            omit(userInfo, [
-                                'street',
-                                'houseNumber',
-                                'city',
-                                'zipCode',
-                                'country',
-                            ])
-                        )
-                            .filter(Boolean)
-                            .join(' ')}
+                        {shippingUser}
                     </Typography>
                     <Typography align="center" gutterBottom>
                         {Object.values(omit(userInfo, ['fName', 'lName']))
@@ -139,3 +152,4 @@ export default function Review(props) {
         </React.Fragment>
     )
 }
+

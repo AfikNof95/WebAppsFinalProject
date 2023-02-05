@@ -32,7 +32,8 @@ export function AddressCard(props) {
     setIsNextAvailable,
     setChosenAddress,
     chosenAddress,
-    emitAddressUpdate
+    emitAddressUpdate,
+    setAddressId
   } = props;
   const [open, setOpen] = React.useState(false);
   const [updatedAddress, setUpdatedAddress] = useState({
@@ -66,32 +67,32 @@ export function AddressCard(props) {
     }
   };
 
-  const onRemove = () => {
-    try {
-      // axios
-      //     .delete('api/address/' + { addresId })
-      //     .then((response) => {
-      //         console.log(response.data)
-      //     })
-      //     .catch((error) => {
-      //         console.error(error)
-      //     })
-    } catch (err) {
-      console.log('Error! Could not delete the address');
+    const onRemove = async () => {
+        try {
+            const response = await axios.delete(
+                `http://localhost:2308/Address/id/${addressId}`
+            )
+        } catch (err) {
+            console.log('Error! Could not delete the address')
+            console.log(err)
+        }
     }
-  };
 
-  const onChoose = () => {
-    try {
-      setChosenAddress({ street, houseNumber, city, zipCode, country });
-      setIsNextAvailable(true);
-      // add style = box-shadow: 7px 7px 8px green;
-    } catch (err) {
-      console.log('Error! Could not set the ChosenAddress state');
-    } finally {
-      console.log('successfully chose address');
+    const onChoose = () => {
+        try {
+            setChosenAddress({
+                street,
+                houseNumber,
+                city,
+                zipCode,
+                country,
+            })
+            setAddressId(addressId)
+            setIsNextAvailable(true)
+        } catch (err) {
+            console.log('Error! Could not set the ChosenAddress state')
+        } 
     }
-  };
 
   const handleChange = async (event) => {
     setUpdatedAddress({
@@ -222,3 +223,4 @@ export function AddressCard(props) {
     </>
   );
 }
+

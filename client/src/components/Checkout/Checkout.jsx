@@ -4,12 +4,16 @@ import { StepLabel, Typography, Step } from '@mui/material'
 import AddressForm from './AddressForm'
 import PaymentForm from './PaymentForm'
 import Review from './Review'
+import { useAuth } from '../../context/AuthContext'
 
 const steps = ['Shipping address', 'Payment details', 'Review your order']
 
 export default function NewCheckout() {
     const [activeStep, setActiveStep] = useState(0)
     const [isNewAddress, setIsNewAddress] = useState(false)
+    const [addressId, setAddressId] = useState('')
+    const [boxShadowColor, setBoxShadowColor] = useState('')
+    const { currentUser } = useAuth()
 
     function getStepContent(step) {
         switch (step) {
@@ -19,6 +23,10 @@ export default function NewCheckout() {
                         handleNext={handleNext}
                         isNewAddress={isNewAddress}
                         setIsNewAddress={setIsNewAddress}
+                        currentUser={currentUser}
+                        setAddressId={setAddressId}
+                        boxShadowColor={boxShadowColor}
+                        setBoxShadowColor={setBoxShadowColor}
                     />
                 )
             case 1:
@@ -30,7 +38,12 @@ export default function NewCheckout() {
                 )
             case 2:
                 return (
-                    <Review handleNext={handleNext} handleBack={handleBack} />
+                    <Review
+                        handleNext={handleNext}
+                        handleBack={handleBack}
+                        currentUser={currentUser}
+                        addressId={addressId}
+                    />
                 )
             default:
                 throw new Error('Unknown step')

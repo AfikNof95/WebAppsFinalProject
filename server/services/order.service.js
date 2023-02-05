@@ -28,9 +28,10 @@ const OrderService = {
   },
 
   async updateOrder(orderId, order) {
-    console.log('orderId: ' + orderId);
-    console.log('order : ' + order);
-    const updatedOrder = await OrderModel.findOneAndUpdate({ _id: new ObjectId(orderId) }, order);
+    const updatedOrder = await OrderModel.findOneAndUpdate(
+      { _id: new ObjectId(orderId) },
+      order
+    );
     if (!updatedOrder) {
       throw new Error('Order not found!');
     }

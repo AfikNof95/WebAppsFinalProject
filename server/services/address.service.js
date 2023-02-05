@@ -3,10 +3,12 @@ const ObjectId = require('mongoose').Types.ObjectId;
 
 const AddressService = {
   async getAddress(addressId) {
-    return await AddressModel.find({ _id: new ObjectId(addressId) });
+    return await AddressModel.find({
+      _id: new ObjectId(addressId),
+    });
   },
   async getAddressByUserId(userId) {
-    return await AddressModel.find({ user: userId });
+    return await AddressModel.find({ user: userId, isActive: true });
   },
   async createAddress(address) {
     return await AddressModel.create(address);

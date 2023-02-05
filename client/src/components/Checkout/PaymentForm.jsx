@@ -13,7 +13,13 @@ export default function PaymentForm(props) {
 
     const checkFormValidation = () => {
         for (let payInfo of Object.keys(paymentInfo)) {
-            if (paymentInfo[payInfo].trim() === '' && !(payInfo == 'expDate')) {
+            if (paymentInfo[payInfo] == null) {
+                setIsNextAvailable(false)
+                return
+            } else if (
+                paymentInfo[payInfo].trim() === '' &&
+                !(payInfo == 'expDate')
+            ) {
                 setIsNextAvailable(false)
                 return
             }
