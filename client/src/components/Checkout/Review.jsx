@@ -4,12 +4,16 @@ import { Grid, Box, Button, Stack } from '@mui/material'
 import { useShoppingCart } from '../../context/ShoppingCartContext'
 import omit from 'lodash/omit'
 import ReviewProdList from './ReviewProdList'
+import backendAPI from '../../api'
+import { useAuth } from '../../context/AuthContext'
 
 export default function Review(props) {
     const { handleNext, handleBack } = props
+    const {currentUser} =  useAuth();
     const {
         paymentInfo,
         userInfo,
+        getCartProducts,
         getCartTotalPrice,
         deleteCart,
         removePaymentInfo,
@@ -17,15 +21,20 @@ export default function Review(props) {
     } = useShoppingCart()
     const sumOrder = getCartTotalPrice()
 
-    const finishReservation = () => {
+    const finishReservation = async () => {
         try {
             // send put or post to server.
-        } catch (err) {
-            // clg error
-        } finally {
+            const order ={
+                products:getCartProducts(),
+                user:currentUser.localId
+            }
+            const resposne = await backendAPI.order.create(order)
             deleteCart()
             removePaymentInfo()
             removeUserInfo()
+        } catch (err) {
+            // clg error
+            console.error(err);
         }
     }
 
@@ -47,7 +56,7 @@ export default function Review(props) {
             </Typography>
             <hr />
             <List disablePadding>
-                <Stack direction={'column'} gap={3} minWidth={500}>
+                <Stack direction={'column'} gap={3} >
                     <ReviewProdList />
                 </Stack>
                 <hr />

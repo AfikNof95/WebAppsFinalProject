@@ -46,7 +46,6 @@ export function ShoppingCartProvider({ children }) {
     street:'',
     houseNumber:'',
     city: '',
-    zip: '',
     country: '',
     zipCode:''
   });

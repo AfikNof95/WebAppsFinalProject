@@ -54,9 +54,17 @@ export const AddressCardList = (props) => {
         fetchData()
     }, [])
 
-    useEffect(() => {
-        fetchData()
-    }, [addressList])
+    const handleAddressSave = (newAddressData)=>{
+        setAddressList((currentState)=>{
+            return currentState.map(address=>{
+                if(address._id === newAddressData.addressId){
+                    return {...address,...newAddressData};
+                }
+                return address;
+            })
+        })
+    }
+    
 
     //  Also use effect wehn the array changes due deleting or editing
 
@@ -65,6 +73,7 @@ export const AddressCardList = (props) => {
             <AddressCard
                 key={address?._id}
                 addressId={address?._id}
+                user={address.user}
                 street={address?.street}
                 houseNumber={address?.houseNumber}
                 city={address?.city}
@@ -73,6 +82,7 @@ export const AddressCardList = (props) => {
                 setIsNextAvailable={setIsNextAvailable}
                 setChosenAddress={setChosenAddress}
                 chosenAddress={chosenAddress}
+                emitAddressUpdate={handleAddressSave}
             ></AddressCard>
         ))
     ) : (

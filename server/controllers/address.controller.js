@@ -12,8 +12,8 @@ const AddressController = {
   },
   async getAddressByUserId(req, res, next) {
     try {
-      const { userId, addressId } = req.params;
-      const response = await AddressService.getAddressByUserId(userId, addressId);
+      const { userId } = req.params;
+      const response = await AddressService.getAddressByUserId(userId);
       res.json(response);
     } catch (ex) {
       next(ex);
@@ -38,7 +38,7 @@ const AddressController = {
       next(ex);
     }
   },
-  async deleteAddress(req,res,next) {
+  async deleteAddress(req, res, next) {
     try {
       const { addressId } = req.params;
       const response = await AddressService.deleteAddress(addressId);

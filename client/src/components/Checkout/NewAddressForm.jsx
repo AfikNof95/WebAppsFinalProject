@@ -35,7 +35,6 @@ export default function NewAddressForm(props) {
                         name="fName"
                         label="First name"
                         value={userInfo?.fName && userInfo.fName}
-                        placeholder={!userInfo?.fName && 'First Name...'}
                         fullWidth
                         autoComplete="given-name"
                         variant="standard"
@@ -50,7 +49,6 @@ export default function NewAddressForm(props) {
                         name="lName"
                         label="Last name"
                         value={userInfo?.lName && userInfo.lName}
-                        placeholder={!userInfo?.lName && 'Last Name...'}
                         fullWidth
                         autoComplete="family-name"
                         variant="standard"
@@ -65,7 +63,6 @@ export default function NewAddressForm(props) {
                         name="street"
                         label="Street"
                         value={userInfo?.street && userInfo.street}
-                        placeholder={!userInfo?.street && 'Street...'}
                         fullWidth
                         autoComplete="shipping address-line1"
                         variant="standard"
@@ -79,9 +76,6 @@ export default function NewAddressForm(props) {
                         name="houseNumber"
                         label="House number"
                         value={userInfo?.houseNumber && userInfo.houseNumber}
-                        placeholder={
-                            !userInfo?.houseNumber && 'House Number...'
-                        }
                         fullWidth
                         autoComplete="shipping address-line2"
                         variant="standard"
@@ -96,7 +90,6 @@ export default function NewAddressForm(props) {
                         name="city"
                         label="City"
                         value={userInfo.city && userInfo.city}
-                        placeholder={!userInfo.city && 'City...'}
                         fullWidth
                         autoComplete="shipping address-level2"
                         variant="standard"
@@ -111,7 +104,6 @@ export default function NewAddressForm(props) {
                         name="country"
                         label="Country"
                         value={userInfo?.country && userInfo?.country}
-                        placeholder={!userInfo?.country && 'Country...'}
                         fullWidth
                         autoComplete="shipping country"
                         variant="standard"
@@ -126,7 +118,6 @@ export default function NewAddressForm(props) {
                         name="zipCode"
                         label="zipCode / Postal code"
                         value={userInfo?.zipCode && userInfo.zipCode}
-                        placeholder={!userInfo?.zipCode && 'zipCode...'}
                         fullWidth
                         autoComplete="shipping postal-code"
                         variant="standard"

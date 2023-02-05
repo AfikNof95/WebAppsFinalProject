@@ -15,12 +15,15 @@ const OrderService = {
   },
 
   async createOrder(order) {
+    let totalPrice = 0;
     order.products = order.products.map((product) => {
+      totalPrice += product.quantity * product.product.price;
       return {
         quantity: product.quantity,
-        product: new ObjectId(product.product)
+        product: new ObjectId(product.product._id)
       };
     });
+    order.totalPrice = totalPrice;
     return (await OrderModel.create(order)).populate('products.product');
   },
 

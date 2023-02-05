@@ -1,5 +1,3 @@
-import './CartProduct.css';
-import './CartProduct.css';
 import {
   Avatar,
   Card,
@@ -16,14 +14,22 @@ import {
 import ClearIcon from '@mui/icons-material/Clear';
 import PlusIcon from '@mui/icons-material/Add';
 import MinusIcon from '@mui/icons-material/Remove';
-import { useShoppingCart } from '../../context/ShoppingCartContext';
 import { Box } from '@mui/system';
 import { formatPrice } from '../../utils/formatPrice';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }) {
-  const { removeFromCart, increaseProductQuantity, decreaseProductQuantity } = useShoppingCart();
+export function Product({
+  id,
+  name,
+  imageURL,
+  quantity,
+  price,
+  maxQuantity,
+  handleDecreaseQuantity,
+  handleIncreaseQuantity,
+  handleRemoveFromOrder
+}) {
   const [showQuantityError, setShowQuantityError] = useState(false);
 
   useEffect(() => {
@@ -35,9 +41,10 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
 
   return (
     <Box
+      component={Card}
       position="relative"
       display={'flex'}
-      flexDirection={{ xs:'column',sm: 'column', md: 'row' }}
+      flexDirection={{ xs: 'column', sm: 'column', md: 'row' }}
       justifyContent={'space-between'}
       alignItems={'center'}
       padding={2}>
@@ -78,7 +85,7 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
             startAdornment: (
               <IconButton
                 sx={{ pointerEvents: 'all' }}
-                onClick={() => decreaseProductQuantity(id)}
+                onClick={() => handleDecreaseQuantity(id)}
                 size="small">
                 <MinusIcon fontSize="0.6em"></MinusIcon>
               </IconButton>
@@ -86,7 +93,7 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
             endAdornment: (
               <IconButton
                 sx={{ pointerEvents: 'all' }}
-                onClick={() => increaseProductQuantity(id)}
+                onClick={() => handleIncreaseQuantity(id)}
                 size="small">
                 <PlusIcon fontSize="0.6em"></PlusIcon>
               </IconButton>
@@ -104,8 +111,8 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
           {formatPrice(price)}
         </Typography>
       </Box>
-      <Box sx={{ position: { xs:'absolute',sm: 'absolute', md: 'static' }, top: 0, right: 0 }}>
-        <IconButton onClick={() => removeFromCart(id)} color="error">
+      <Box sx={{ position: { xs: 'absolute', sm: 'absolute', md: 'static' }, top: 0, right: 0 }}>
+        <IconButton onClick={() => handleRemoveFromOrder(id)} color="error">
           <ClearIcon></ClearIcon>
         </IconButton>
       </Box>

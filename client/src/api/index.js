@@ -22,6 +22,9 @@ const REST_API = {
     getUserData: 'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=',
     uploadPhoto: 'http://localhost:2308/User/Photo'
   },
+  order: {
+    create: 'http://localhost:2308/Order'
+  },
   product: {
     get: 'http://localhost:2308/Product/id',
     getGroupByCategories: 'http://localhost:2308/Product/Group/Category'
@@ -101,6 +104,13 @@ const backendAPI = {
           'Content-Type': 'multipart/form-data'
         }
       });
+    }
+  },
+
+  /** Order API */
+  order: {
+    async create(order) {
+      return await axios.post(REST_API.order.create, order);
     }
   },
 

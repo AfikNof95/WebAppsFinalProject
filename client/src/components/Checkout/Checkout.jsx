@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import { CssBaseline, Container, Paper, Stepper } from '@mui/material'
 import { StepLabel, Typography, Step } from '@mui/material'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import AddressForm from './AddressForm'
 import PaymentForm from './PaymentForm'
 import Review from './Review'
 
 const steps = ['Shipping address', 'Payment details', 'Review your order']
-const theme = createTheme()
 
 export default function NewCheckout() {
     const [activeStep, setActiveStep] = useState(0)
@@ -48,9 +46,7 @@ export default function NewCheckout() {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Container component="main" maxWidth="sm" sx={{ mb: 4, mt: 12 }}>
+            <Container component="main" maxWidth="md" sx={{ mb: 4, mt: 12 }}>
                 <Paper
                     variant="outlined"
                     sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
@@ -87,6 +83,5 @@ export default function NewCheckout() {
                     )}
                 </Paper>
             </Container>
-        </ThemeProvider>
     )
 }
