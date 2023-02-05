@@ -25,6 +25,7 @@ import {
 import Close from '@mui/icons-material/Close';
 import { useRef, useState } from 'react';
 import Add from '@mui/icons-material/Add';
+import { CancelOutlined, SaveOutlined } from '@mui/icons-material';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -236,12 +237,12 @@ const DashboardUserEditDialog = ({ user, open, handleDialogClose, handleDialogSa
       <DialogActions>
         <Grid container spacing={1} direction={'row'} width={'100%'}>
           <Grid item xs={6}>
-            <Button fullWidth onClick={handleDialogClose} color="info" variant="contained">
+            <Button fullWidth onClick={handleDialogClose} color="secondaryButton.light" startIcon={<CancelOutlined></CancelOutlined>} variant="outlined">
               Cancel
             </Button>
           </Grid>
           <Grid item xs={6}>
-            <Button onClick={handleSubmit} color="mainButton" variant="contained" fullWidth>
+            <Button onClick={handleSubmit} color="mainButton" variant="contained" fullWidth startIcon={<SaveOutlined></SaveOutlined>}>
               Save
             </Button>
           </Grid>

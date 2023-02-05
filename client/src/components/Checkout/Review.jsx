@@ -37,7 +37,8 @@ export default function Review(props) {
             // send put or post to server.
             const order ={
                 products:getCartProducts(),
-                user:currentUser.localId
+                user:currentUser.localId,
+                address:addressId
             }
             const resposne = await backendAPI.order.create(order)
             deleteCart()

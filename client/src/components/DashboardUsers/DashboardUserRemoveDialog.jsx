@@ -59,7 +59,7 @@ const DashboardUserRemoveDialog = ({
         <Button
           onClick={handleDialogClose}
           variant="outlined"
-          color="warning"
+          color="secondaryButton.light"
           sx={{ marginRight: 5, width: 150 }}
         >
           Cancel
