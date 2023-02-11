@@ -67,32 +67,30 @@ export function AddressCard(props) {
     }
   };
 
-    const onRemove = async () => {
-        try {
-            const response = await axios.delete(
-                `http://localhost:2308/Address/id/${addressId}`
-            )
-        } catch (err) {
-            console.log('Error! Could not delete the address')
-            console.log(err)
-        }
+  const onRemove = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:2308/Address/id/${addressId}`);
+    } catch (err) {
+      console.log('Error! Could not delete the address');
+      console.log(err);
     }
+  };
 
-    const onChoose = () => {
-        try {
-            setChosenAddress({
-                street,
-                houseNumber,
-                city,
-                zipCode,
-                country,
-            })
-            setAddressId(addressId)
-            setIsNextAvailable(true)
-        } catch (err) {
-            console.log('Error! Could not set the ChosenAddress state')
-        } 
+  const onChoose = () => {
+    try {
+      setChosenAddress({
+        street,
+        houseNumber,
+        city,
+        zipCode,
+        country
+      });
+      setAddressId(addressId);
+      setIsNextAvailable(true);
+    } catch (err) {
+      console.log('Error! Could not set the ChosenAddress state');
     }
+  };
 
   const handleChange = async (event) => {
     setUpdatedAddress({
@@ -183,10 +181,10 @@ export function AddressCard(props) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondaryButton.light">
+          <Button onClick={handleClose} color="secondaryButton" variant="contained">
             Cancel
           </Button>
-          <Button onClick={handleSave} color="mainButton">
+          <Button onClick={handleSave} color="mainButton" variant="contained">
             Save
           </Button>
         </DialogActions>
@@ -223,4 +221,3 @@ export function AddressCard(props) {
     </>
   );
 }
-

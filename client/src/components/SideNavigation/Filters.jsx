@@ -233,6 +233,7 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
             </ListItem>
             <ListItem>
               <Slider
+              color='secondaryButton'
                 getAriaLabel={() => 'Price range'}
                 min={priceRange[0]}
                 max={priceRange[1]}
@@ -257,7 +258,7 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
           </List>
         </Box>
         <Box display={'flex'} justifyContent={'flex-end'}>
-          <Button endIcon={<FilterAltOff></FilterAltOff>} onClick={clearFilters}>
+          <Button endIcon={<FilterAltOff></FilterAltOff>} onClick={clearFilters} color="secondaryButton">
             Clear
           </Button>
         </Box>

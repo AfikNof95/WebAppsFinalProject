@@ -25,7 +25,6 @@ import Close from '@mui/icons-material/Close';
 import { useState } from 'react';
 import backendAPI from '../../api';
 import ProductList from './ProductList';
-import { Cancel, CancelOutlined, Save, SaveOutlined } from '@mui/icons-material';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -233,7 +232,7 @@ const DashboardOrdersEditDialog = ({ order, open, handleDialogClose, handleDialo
           variant="outlined"
           sx={{ marginRight: 5, maxWidth: 350 }}
           fullWidth
-          startIcon={<CancelOutlined></CancelOutlined>}>
+          >
           Cancel
         </Button>
         <Button
@@ -242,7 +241,7 @@ const DashboardOrdersEditDialog = ({ order, open, handleDialogClose, handleDialo
           variant="contained"
           sx={{ maxWidth: 350 }}
           fullWidth
-          startIcon={<SaveOutlined />}>
+          >
           Save
         </Button>
       </DialogActions>

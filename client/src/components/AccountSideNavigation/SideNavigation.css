@@ -1,0 +1,18 @@
+.side-nav-list-item.Mui-selected {
+  background-color: unset !important;
+}
+
+.side-nav-list-item-mobile.Mui-selected {
+  background-color: var(--main-app-blue) !important;
+  color: 'white';
+}
+
+.side-nav-list-item.Mui-selected .MuiListItemText-primary {
+  font-weight: bold;
+  color: #1976d2;
+}
+
+.side-nav-list-item.Mui-selected .MuiListItemIcon-primary {
+  color: #1976d2;
+  fill: #1976d2;
+}

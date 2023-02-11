@@ -28,10 +28,11 @@ const OrderService = {
   },
 
   async updateOrder(orderId, order) {
-    const updatedOrder = await OrderModel.findOneAndUpdate(
-      { _id: new ObjectId(orderId) },
-      order
-    );
+    const originalOrder = await OrderModel.findById(orderId);
+    if (originalOrder.status !== 'Created') {
+      throw new Error('Order already shipped!');
+    }
+    const updatedOrder = await OrderModel.findOneAndUpdate({ _id: new ObjectId(orderId) }, order);
     if (!updatedOrder) {
       throw new Error('Order not found!');
     }

@@ -28,7 +28,6 @@ import {
 import Close from '@mui/icons-material/Close';
 import { useRef, useState } from 'react';
 import Add from '@mui/icons-material/Add';
-import { CancelOutlined, SaveOutlined } from '@mui/icons-material';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -343,7 +342,7 @@ const DashboardProductsDialog = ({
         <Box display="flex" justifyContent={'flex-end'} width="100%">
           <Button
             onClick={handleDialogClose}
-            startIcon={<CancelOutlined></CancelOutlined>}
+            
             color={'secondaryButton.light'}
             variant="outlined"
             fullWidth
@@ -353,7 +352,7 @@ const DashboardProductsDialog = ({
           <Button
             onClick={handleSubmit}
             color="mainButton"
-            startIcon={<SaveOutlined></SaveOutlined>}
+          
             variant="contained"
             fullWidth
             sx={{ maxWidth: 350 }}>

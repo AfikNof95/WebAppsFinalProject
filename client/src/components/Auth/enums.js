@@ -4,6 +4,7 @@ export const ERROR_MESSAGES = {
   INVALID_PASSWORD: 'Email or password are incorrect!',
   WEAK_PASSWORD: 'Your password should have at least 6 characters',
   USER_NOT_FOUND: "We couldn't find your email address!",
+  CREDENTIAL_TOO_OLD_LOGIN_AGAIN:"Action could not be performed, please sign in again.",
   TOO_MANY_ATTEMPTS:
     'Access to this account has been temporarily disabled due to many failed login attempts.',
   TOO_MANY_ATTEMPTS_TRY_LATER:

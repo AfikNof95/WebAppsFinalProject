@@ -15,15 +15,21 @@ const REST_API = {
     signInWithEmailAndPassword:
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=',
     signUpWithEmailAndPassword: 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=',
-    refreshToken: 'https://identitytoolkit.googleapis.com/v1/token?key='
+    refreshToken: 'https://identitytoolkit.googleapis.com/v1/token?key=',
+    updatePassword: 'https://identitytoolkit.googleapis.com/v1/accounts:update?key='
   },
   user: {
     updateUser: 'https://identitytoolkit.googleapis.com/v1/accounts:update?key=',
     getUserData: 'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=',
-    uploadPhoto: 'http://localhost:2308/User/Photo'
+    uploadPhoto: 'http://localhost:2308/User/Photo',
+    getAddresses: 'http://localhost:2308/Address/User',
+    updateAddress: 'http://localhost:2308/Address/id',
+    addAddress: 'http://localhost:2308/Address',
+    getOrders: 'http://localhost:2308/Order/User'
   },
   order: {
-    create: 'http://localhost:2308/Order'
+    create: 'http://localhost:2308/Order',
+    update: 'http://localhost:2308/Order/id'
   },
   product: {
     get: 'http://localhost:2308/Product/id',
@@ -85,6 +91,13 @@ const backendAPI = {
         grant_type: 'refresh_token',
         refresh_token: refreshToken
       });
+    },
+    async updatePassword(idToken, newPassword) {
+      return await axios.post(getAPIURL(REST_API.auth.updatePassword), {
+        idToken,
+        password: newPassword,
+        returnSecureToken: true
+      });
     }
   },
 
@@ -104,6 +117,18 @@ const backendAPI = {
           'Content-Type': 'multipart/form-data'
         }
       });
+    },
+    async getAddresses(userId) {
+      return await axios.get(REST_API.user.getAddresses + `/${userId}`);
+    },
+    async updateAddress(address) {
+      return await axios.put(REST_API.user.updateAddress + `/${address._id}`, address);
+    },
+    async addAddress(address) {
+      return await axios.post(REST_API.user.addAddress, address);
+    },
+    async getOrders(userId) {
+      return await axios.get(REST_API.user.getOrders + `/${userId}`);
     }
   },
 
@@ -111,6 +136,9 @@ const backendAPI = {
   order: {
     async create(order) {
       return await axios.post(REST_API.order.create, order);
+    },
+    async update(order) {
+      return await axios.put(REST_API.order.update + `/${order._id}`, order);
     }
   },
 

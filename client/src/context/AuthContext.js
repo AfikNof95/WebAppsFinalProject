@@ -9,6 +9,7 @@ const AuthContext = createContext({
   signIn: async ({ email, password }) => {},
   signOut: async () => {},
   updateUser: async (newUserDetails) => {},
+  updatePassword: async (newPassword) => {},
   isUserSignedIn: () => {},
   getUser: () => {},
   refreshToken: async () => {},
@@ -113,6 +114,12 @@ export const AuthContextProvider = ({ children }) => {
         ...newUserDetails
       };
       const updateResponse = await backendAPI.user.update(updateRequestData);
+
+      if (newUserDetails.email && currentUser.email !== newUserDetails.email) {
+        signOut();
+        return;
+      }
+
       const userDataResponse = await backendAPI.user.getUserData(currentUser.idToken);
       const { users } = userDataResponse.data;
 
@@ -143,6 +150,26 @@ export const AuthContextProvider = ({ children }) => {
       };
     });
     return { idToken };
+  }
+
+  async function updatePassword(newPassword) {
+    try {
+      const updatePasswordResponse = await backendAPI.auth.updatePassword(
+        currentUser.idToken,
+        newPassword
+      );
+      setCurrentUser((currentUserState) => {
+        return {
+          ...currentUserState,
+          ...updatePasswordResponse.data,
+          ...{ expireDate: getTokenExpireDate(updatePasswordResponse.data.expiresIn) }
+        };
+      });
+      return true;
+    } catch (ex) {
+      console.error(ex);
+      throw ex;
+    }
   }
 
   useEffect(() => {
@@ -199,6 +226,7 @@ export const AuthContextProvider = ({ children }) => {
     signIn,
     signOut,
     updateUser,
+    updatePassword,
     getUserToken,
     getUser,
     refreshToken,
