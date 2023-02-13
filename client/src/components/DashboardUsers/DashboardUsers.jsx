@@ -135,7 +135,7 @@ const DashboardUsers = ({ token, usersArray, updateUserAnalytics }) => {
               color="inherit"
             />
           );
-          return [deleteAction, editAction];
+          return [editAction,deleteAction];
         }
       }
     ],

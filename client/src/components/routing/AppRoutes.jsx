@@ -11,6 +11,7 @@ import DashboardPage from '../../pages/Dashboard/Dashboard';
 import UnauthorizedPage from '../../pages/401/401';
 import NotFoundPage from '../../pages/404/404';
 import ProtectedRoute from './ProtectedRoute.js';
+import CategoriesPage from '../../pages/Categories/Categories';
 
 const appRoutes = [
   { path: '/', element: <Homepage />, exact: true },
@@ -48,7 +49,7 @@ const appRoutes = [
   },
   {
     path: '/categories',
-    element: <div></div> // Will be
+    element: <CategoriesPage></CategoriesPage> // Will be
   },
   {
     path: '/about',
