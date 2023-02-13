@@ -1,0 +1,7 @@
+.stepper .MuiStepLabel-iconContainer.Mui-active .MuiSvgIcon-root{
+    color:var(--main-app-blue)
+}
+
+.stepper .MuiStepLabel-iconContainer.Mui-completed .MuiSvgIcon-root{
+    color:var(--main-app-blue)
+}

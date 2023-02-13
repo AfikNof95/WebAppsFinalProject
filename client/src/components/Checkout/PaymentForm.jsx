@@ -16,10 +16,12 @@ export default function PaymentForm(props) {
             if (paymentInfo[payInfo] == null) {
                 setIsNextAvailable(false)
                 return
-            } else if (
-                paymentInfo[payInfo].trim() === '' &&
-                !(payInfo == 'expDate')
+            } else if (typeof paymentInfo[payInfo] === "string" && 
+                paymentInfo[payInfo].trim() === ''
             ) {
+                setIsNextAvailable(false)
+                return
+            }else if(payInfo === "expDate" && paymentInfo[payInfo].toDate() < new Date()){
                 setIsNextAvailable(false)
                 return
             }
@@ -88,10 +90,10 @@ export default function PaymentForm(props) {
                             id="expDate"
                             name="expDate"
                             label="Expiration Date Option"
-                            value={expDate ? expDate : 'MM / YYYY'}
+                            value={paymentInfo?.expDate ? paymentInfo.expDate : 'MM / YYYY'}
                             format="MM/YYYY"
                             onChange={(newexpDate) => {
-                                setExpDate(newexpDate)
+                                handlePaymentChange({target:{name:"expDate",value:newexpDate}})
                             }}
                             renderInput={(params) => <TextField {...params} />}
                         />
@@ -118,6 +120,7 @@ export default function PaymentForm(props) {
                     Back
                 </Button>
                 <Button
+                color="mainButton"
                     variant="contained"
                     onClick={handleNext}
                     sx={{ mt: 3, ml: 1 }}

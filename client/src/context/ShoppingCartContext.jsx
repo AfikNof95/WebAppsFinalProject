@@ -42,12 +42,10 @@ export function ShoppingCartProvider({ children }) {
   const [isShoppingCartLoading, setIsShoppingCartLoading] = useState(true);
   const [localCart, setLocalCart, clearLocalCart] = useLocalStorage('user-local-cart', []);
   const [userInfo, setUserInfo] = useState({
-    fName: '',
-    lName: '',
+    country: '',
+    city: '',
     street:'',
     houseNumber:'',
-    city: '',
-    country: '',
     zipCode:''
   });
   const [paymentInfo, setPaymentInfo] = useState({

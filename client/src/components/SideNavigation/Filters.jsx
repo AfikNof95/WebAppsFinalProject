@@ -68,7 +68,11 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
       return;
     }
     if (selectedCategoryId !== searchParams.get('categoryId')) {
-      navigate({ search: `categoryId=${selectedCategoryId}` });
+      if (selectedCategoryId) {
+        navigate({ search: `categoryId=${selectedCategoryId}` });
+      } else {
+        navigate('/');
+      }
     }
   }, [selectedCategoryId]);
 

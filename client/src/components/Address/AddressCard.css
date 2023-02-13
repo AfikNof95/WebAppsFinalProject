@@ -1,0 +1,8 @@
+.selected-address{
+    color: white !important;
+    background-color:var(--main-app-blue) !important;
+}
+
+.selected-address .MuiButtonBase-root {
+    color: white !important;
+}

@@ -1,3 +1,4 @@
+import "./Checkout.css"
 import React, { useState } from 'react'
 import { CssBaseline, Container, Paper, Stepper } from '@mui/material'
 import { StepLabel, Typography, Step } from '@mui/material'
@@ -16,11 +17,11 @@ export default function NewCheckout() {
     const [addressId, setAddressId] = useState('')
     const [boxShadowColor, setBoxShadowColor] = useState('')
     const { currentUser } = useAuth()
-    const {getCartQuantity} = useShoppingCart();
+    const {getCartQuantity,isShoppingCartLoading} = useShoppingCart();
     const navigate = useNavigate();
 
-    if(getCartQuantity() <=0){
-        navigate(-1);
+    if(!isShoppingCartLoading && getCartQuantity() <=0){
+        navigate('/');
     }
 
     function getStepContent(step) {
@@ -75,7 +76,7 @@ export default function NewCheckout() {
                     <Typography component="h1" variant="h4" align="center">
                         Checkout
                     </Typography>
-                    <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+                    <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }} className={"stepper"}>
                         {steps.map((label) => (
                             <Step key={label}>
                                 <StepLabel>{label}</StepLabel>

@@ -52,7 +52,7 @@ export const useAxiosIntercept = () => {
             navigate({ pathname: '/401' });
           }
         } else if (error.response.status === 403) {
-          debugger;
+        
           if (error.response.data === 'USER_DISABLED') {
             signOut();
             navigate('/login');

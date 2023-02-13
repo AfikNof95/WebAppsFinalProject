@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useShoppingCart } from '../../context/ShoppingCartContext'
-import { Typography, Box, Button, Container } from '@mui/material'
-import { Link as RouterLink } from 'react-router-dom'
+import { Typography, Box, Button, Container, IconButton } from '@mui/material'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { AddressCardList } from '../Address/AddressCardList'
 import AddIcon from '@mui/icons-material/Add'
 import NewAddressForm from './NewAddressForm'
@@ -19,22 +19,33 @@ export default function AddressForm(props) {
     const [isNextAvailable, setIsNextAvailable] = useState(false)
     const [chosenAddress, setChosenAddress] = useState({
         street: '',
-        houseNumber: null,
+        houseNumber: "",
         city: '',
-        zipCode: null,
+        zipCode: "",
         country: '',
     })
     const [newAddressToSave, setNewAddressToSave] = useState({
         street: '',
-        houseNumber: null,
+        houseNumber: "",
         city: '',
-        zipCode: null,
+        zipCode: "",
         country: '',
         isActive: true,
         user: currentUser.localId,
     })
-
+    const navigate = useNavigate();
     const toggleChoose = () => {
+        handleChosenAddress({   street: '',
+        houseNumber: "",
+        city: '',
+        zipCode: "",
+        country: '',});
+        setAddressId("");
+        setChosenAddress({   street: '',
+        houseNumber: "",
+        city: '',
+        zipCode: "",
+        country: '',})
         setIsNewAddress((prevIsNewAddress) => !prevIsNewAddress)
     }
 
@@ -73,16 +84,6 @@ export default function AddressForm(props) {
             </Typography>
             {isNewAddress ? (
                 <>
-                    <div>
-                        <hr />
-                        Add your new address, OR{' '}
-                        <Button variant="outlined" onClick={toggleChoose}>
-                            Use Known Address
-                        </Button>
-                        <div></div>
-                        <hr />
-                        <div></div>
-                    </div>
                     <NewAddressForm
                         setIsNextAvailable={setIsNextAvailable}
                         currentUser={currentUser}
@@ -92,18 +93,21 @@ export default function AddressForm(props) {
                 </>
             ) : (
                 <>
-                    <Container maxWidth="sm">
-                        <Box>
-                            <div>
-                                Choose one of your addresses, OR{' '}
-                                <Button
-                                    variant="outlined"
+                      <Box padding={3}>
+                            <Box display={"flex"} justifyContent={"space-between"} width={"100%"}>
+                                <Typography variant='body1' fontWeight={"bold"} >
+                                Choose one of your addresses, or add a new one
+                                </Typography>
+                                <IconButton
+                                    sx={{backgroundColor:theme=>theme.palette.secondaryButton.main,color:"white", "&:hover":{
+                                        backgroundColor:theme=>theme.palette.mainButton.main
+                                    }}}
+                                    color ="mainButton"
                                     onClick={toggleChoose}
                                 >
                                     <AddIcon />
-                                    Add new one
-                                </Button>
-                            </div>
+                                </IconButton>
+                            </Box>
                             <AddressCardList
                                 setIsNextAvailable={setIsNextAvailable}
                                 setChosenAddress={setChosenAddress}
@@ -112,15 +116,18 @@ export default function AddressForm(props) {
                                 setAddressId={setAddressId}
                             />
                         </Box>
-                    </Container>
                 </>
             )}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button to="/" sx={{ mt: 3, ml: 1 }} component={RouterLink}>
-                    Back home
-                </Button>
+                {isNewAddress ? <Button key={"cancelNewAddress"} onClick={toggleChoose} sx={{ mt: 3, ml: 1 }} >
+                    Cancel
+                </Button>: <Button onClick={()=>navigate(-1)} sx={{ mt: 3, ml: 1 }} >
+                    Go Back
+                </Button>}
+                
                 <Button
                     variant="contained"
+                    color="mainButton"
                     onClick={isNewAddress ? handleNew : handleNext}
                     sx={{ mt: 3, ml: 1 }}
                     disabled={!isNextAvailable}

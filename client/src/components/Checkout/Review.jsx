@@ -60,18 +60,7 @@ export default function Review(props) {
         { name: 'Card holder', detail: paymentInfo.cardName },
         { name: 'Card number', detail: `xxxx-xxxx-xxxx-${last4digits}` },
     ]
-    const shippingUser =
-        Object.values(
-            omit(userInfo, [
-                'street',
-                'houseNumber',
-                'city',
-                'zipCode',
-                'country',
-            ])
-        )
-            .filter(Boolean)
-            .join(' ') || currentUser.displayName
+    const shippingUser =currentUser.displayName
 
     return (
         <React.Fragment>
@@ -103,10 +92,10 @@ export default function Review(props) {
                         Shipping
                     </Typography>
                     <Typography align="center" gutterBottom>
-                        {shippingUser}
+                        Name: {shippingUser}
                     </Typography>
                     <Typography align="center" gutterBottom>
-                        {Object.values(omit(userInfo, ['fName', 'lName']))
+                        Address: {Object.values(omit(userInfo, ['fName', 'lName',"addressId"]))
                             .filter(Boolean)
                             .join(', ')}
                     </Typography>
@@ -143,6 +132,7 @@ export default function Review(props) {
                     Back
                 </Button>
                 <Button
+                color="mainButton"
                     variant="contained"
                     onClick={handleFinish}
                     sx={{ mt: 3, ml: 1 }}

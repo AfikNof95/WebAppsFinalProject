@@ -17,6 +17,7 @@ import { useShoppingCart } from '../../context/ShoppingCartContext';
 import { formatPrice } from '../../utils/formatPrice';
 import ShoppingBag from '@mui/icons-material/ShoppingBagOutlined';
 import { Container } from '@mui/system';
+import { ShoppingBagOutlined } from '@mui/icons-material';
 
 const CartPage = () => {
   const { getCartTotalPrice, getCartQuantity, getCartProducts, isShoppingCartLoading } =
@@ -53,8 +54,9 @@ const CartPage = () => {
                 padding={2}
                 sx={{ backgroundColor: (theme) => theme.palette.mainButton.main }}
                 justifyContent={'center'}>
+                <ShoppingBag fontSize="large" sx={{ color: 'white' }}></ShoppingBag>
                 <Typography variant="h4" fontWeight={'bold'} color={'white'} textAlign={'center'}>
-                  Order summary
+                  My Cart
                 </Typography>
               </Box>
               <Box padding={2} maxHeight={'80%'} overflow={'auto'} position={'relative'}>
@@ -67,7 +69,7 @@ const CartPage = () => {
                     sx={{
                       width: '100%',
                       height: '100%',
-                      minHeight:600,
+                      minHeight: 600,
                       backgroundColor: '#cecece52',
                       zIndex: 9999
                     }}>

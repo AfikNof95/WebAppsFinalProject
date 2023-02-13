@@ -1,3 +1,4 @@
+import './AddressCard.css';
 import React, { useState } from 'react';
 import axios from 'axios';
 import {
@@ -18,7 +19,7 @@ import {
   Toolbar,
   IconButton
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, Edit } from '@mui/icons-material';
 
 export function AddressCard(props) {
   const {
@@ -46,7 +47,8 @@ export function AddressCard(props) {
     country
   });
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (event) => {
+    event.stopPropagation();
     setOpen(true);
   };
 
@@ -83,7 +85,8 @@ export function AddressCard(props) {
         houseNumber,
         city,
         zipCode,
-        country
+        country,
+        addressId
       });
       setAddressId(addressId);
       setIsNextAvailable(true);
@@ -189,34 +192,32 @@ export function AddressCard(props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <Card sx={{ display: 'flex', padding: 2, marginTop: 2 }} elevation={1}>
-        <CardContent>
-          <Typography variant="body2" gutterBottom>
-            {street} {houseNumber}, {city}
-          </Typography>
-          <Typography variant="body2">
-            {zipCode}, {country}
-          </Typography>
-        </CardContent>
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-end',
-            width: '60%'
-          }}>
-          <CardActions>
-            <Button size="small" onClick={onChoose}>
-              Choose
-            </Button>
-            <Button size="small" onClick={handleClickOpen}>
-              Edit
-            </Button>
-            <Button size="small" onClick={onRemove}>
-              Remove
-            </Button>
-          </CardActions>
-        </Box>
+      <Card
+        className={addressId === chosenAddress.addressId ? 'selected-address' : ''}
+        sx={{
+          display: 'flex',
+          padding: 2,
+          marginTop: 2,
+          cursor: 'pointer',
+          transition: '0.3s ease all'
+        }}
+        elevation={1}
+        onClick={onChoose}>
+        <Grid container spacing={3}>
+          <Grid item xs={10}>
+            <Typography variant="body2" gutterBottom>
+              {street} {houseNumber}, {city}
+            </Typography>
+            <Typography variant="body2">
+              {zipCode}, {country}
+            </Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <IconButton size="small" onClick={handleClickOpen}>
+              <Edit></Edit>
+            </IconButton>
+          </Grid>
+        </Grid>
       </Card>
     </>
   );

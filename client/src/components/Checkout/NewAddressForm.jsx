@@ -8,23 +8,11 @@ export default function NewAddressForm(props) {
 
     const checkFormValidation = () => {
         for (let contactInfoField of Object.keys(userInfo)) {
-            if (
-                !(contactInfoField == 'houseNumber') &&
-                !(contactInfoField == 'zipCode') &&
-                userInfo[contactInfoField].trim() === ''
-            ) {
+            if(!userInfo[contactInfoField]){
                 setIsNextAvailable(false)
                 return
-            } else if (
-                contactInfoField == 'houseNumber' &&
-                userInfo[contactInfoField] === ''
-            ) {
-                setIsNextAvailable(false)
-                return
-            } else if (
-                contactInfoField == 'zipCode' &&
-                userInfo[contactInfoField] === ''
-            ) {
+            }
+            if(typeof userInfo[contactInfoField] === "string" && userInfo[contactInfoField].trim() === ""){
                 setIsNextAvailable(false)
                 return
             }
@@ -35,15 +23,12 @@ export default function NewAddressForm(props) {
 
     const handleNewAddressChange = (event) => {
         handleFormChange(event)
-        if (
-            !(event.target.name == 'fName') &&
-            !(event.target.name == 'lName')
-        ) {
+      
             setNewAddressToSave({
                 ...newAddressToSave,
                 [event.target.name]: event.target.value,
             })
-        }
+        
     }
 
     useEffect(() => {
@@ -57,31 +42,31 @@ export default function NewAddressForm(props) {
     return (
         <React.Fragment>
             <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>
                     <TextField
                         required
-                        id="firstName"
-                        name="fName"
-                        label="First name"
-                        value={userInfo?.fName && userInfo.fName}
+                        id="country"
+                        name="country"
+                        label="Country"
+                        value={userInfo?.country && userInfo?.country}
                         fullWidth
-                        autoComplete="given-name"
+                        autoComplete="shipping country"
                         variant="standard"
-                        inputProps={{ maxLength: 14, minLength: 2 }}
+                        inputProps={{ maxLength: 22, minLength: 2 }}
                         onChange={handleNewAddressChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
                         required
-                        id="lastName"
-                        name="lName"
-                        label="Last name"
-                        value={userInfo?.lName && userInfo.lName}
+                        id="city"
+                        name="city"
+                        label="City"
+                        value={userInfo.city && userInfo.city}
                         fullWidth
-                        autoComplete="family-name"
+                        autoComplete="shipping address-level2"
                         variant="standard"
-                        inputProps={{ maxLength: 14, minLength: 2 }}
+                        inputProps={{ maxLength: 24, minLength: 2 }}
                         onChange={handleNewAddressChange}
                     />
                 </Grid>
@@ -112,34 +97,8 @@ export default function NewAddressForm(props) {
                         onChange={handleNewAddressChange}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="city"
-                        name="city"
-                        label="City"
-                        value={userInfo.city && userInfo.city}
-                        fullWidth
-                        autoComplete="shipping address-level2"
-                        variant="standard"
-                        inputProps={{ maxLength: 24, minLength: 2 }}
-                        onChange={handleNewAddressChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="country"
-                        name="country"
-                        label="Country"
-                        value={userInfo?.country && userInfo?.country}
-                        fullWidth
-                        autoComplete="shipping country"
-                        variant="standard"
-                        inputProps={{ maxLength: 22, minLength: 2 }}
-                        onChange={handleNewAddressChange}
-                    />
-                </Grid>
+       
+             
                 <Grid item xs={12} sm={6}>
                     <TextField
                         required
