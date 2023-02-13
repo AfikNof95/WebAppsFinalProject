@@ -1,10 +1,6 @@
 import './CartProduct.css';
 import './CartProduct.css';
-import {
-  IconButton,
-  TextField,
-  Typography
-} from '@mui/material';
+import { IconButton, TextField, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import PlusIcon from '@mui/icons-material/Add';
 import MinusIcon from '@mui/icons-material/Remove';
@@ -29,11 +25,11 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
     <Box
       position="relative"
       display={'flex'}
-      flexDirection={{ xs:'column',sm: 'column', md: 'row' }}
+      flexDirection={{ xs: 'column', sm: 'column', md: 'column', lg: 'row', xl: 'row' }}
       justifyContent={'space-between'}
       alignItems={'center'}
       padding={2}>
-      <Box width={150} height={150}>
+      <Box width={100} height={100}>
         <img
           height={'100%'}
           width={'100%'}
@@ -58,6 +54,11 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
             {name}
           </Link>
         </Typography>
+        <Box>
+          <Typography variant="body1" textAlign={'start'}>
+            {formatPrice(price)}
+          </Typography>
+        </Box>
       </Box>
       <Box>
         <TextField
@@ -91,12 +92,13 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
           error={showQuantityError}
           helperText={showQuantityError ? "You've added the entire stock!" : ''}></TextField>
       </Box>
-      <Box>
-        <Typography variant="body1" textAlign={'center'}>
-          {formatPrice(price)}
-        </Typography>
-      </Box>
-      <Box sx={{ position: { xs:'absolute',sm: 'absolute', md: 'static' }, top: 0, right: 0 }}>
+
+      <Box
+        sx={{
+          position: { xs: 'absolute', sm: 'absolute', md: 'absolute', lg: 'static', xl: 'static' },
+          top: 0,
+          right: 0
+        }}>
         <IconButton onClick={() => removeFromCart(id)} color="error">
           <ClearIcon></ClearIcon>
         </IconButton>

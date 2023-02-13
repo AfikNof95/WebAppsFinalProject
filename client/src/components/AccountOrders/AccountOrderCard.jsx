@@ -15,38 +15,43 @@ const AccountOrderCard = ({ order, handleOrderCancel }) => {
   }, [order]);
 
   return (
-    <Paper sx={{ padding: 3 }}>
-      <Grid container>
-        <Grid item xs={12}>
-          <Box
-            position="relative"
-            display={'flex'}
-            flexDirection={{ xs: 'column', sm: 'column', md: 'row' }}
-            justifyContent={'space-between'}>
-            <div>
-              <Typography variant="body1" fontWeight={'bold'} sx={{ wordBreak: 'break-all' }}>
-                Order #{orderObject._id}
-              </Typography>
-              <Typography
-                variant="subtitle1"
-                fontWeight={'bold'}
-                color="GrayText"
-                fontSize={'0.8em'}>
-                Date: {orderDate}
-              </Typography>
-            </div>
-            <Typography variant="body1" fontWeight={'bold'}>
-              Status: {order.isActive ? order.status : 'Canceled'}
-            </Typography>
-          </Box>
-        </Grid>
+    <Paper>
+      <Box
+        position="relative"
+        display={'flex'}
+        flexDirection={{ xs: 'column', sm: 'column', md: 'row' }}
+        justifyContent={'space-between'}
+        sx={{ backgroundColor: (theme) => theme.palette.mainButton.main }}
+        padding={2}>
+        <div>
+          <Typography
+            variant="body1"
+            fontWeight={'bold'}
+            sx={{ wordBreak: 'break-all' }}
+            color="white">
+            Order #{orderObject._id}
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            fontWeight={'bold'}
+            fontSize={'0.8em'}
+            color="white">
+            Date: {orderDate}
+          </Typography>
+        </div>
+        <Typography variant="body1" fontWeight={'bold'} color="white">
+          Status: {order.isActive ? order.status : 'Canceled'}
+        </Typography>
+      </Box>
+
+      <Grid container padding={3}>
         <Grid item xs={12}>
           <Grid container>
             {orderObject.products.map((product) => {
               return (
                 <Grid item xs={12} key={product.product._id}>
                   <Grid container spacing={1} marginBottom={1} marginTop={1}>
-                    <Grid item xs={4} lg={2}>
+                    <Grid item xs={1} sm={1} md={1} lg={1} xl={1}>
                       <Box display="flex" width={'100%'} height={'100%'} marginBottom={1}>
                         <img
                           width={'100%'}
@@ -61,12 +66,12 @@ const AccountOrderCard = ({ order, handleOrderCancel }) => {
                           }}></img>
                       </Box>
                     </Grid>
-                    <Grid item xs={8} lg={10}>
+                    <Grid item xs={11} lg={11}>
                       <Box display={'flex'} alignItems={'center'} height={'100%'}>
                         <Typography
                           variant="body1"
                           fontWeight={600}
-                          fontSize={'0.8em'}
+                          fontSize={'1em'}
                           // overflow={'hidden'}
                           textOverflow={'ellipsis'}
                           whiteSpace={'break-spaces'}>

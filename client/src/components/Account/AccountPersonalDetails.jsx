@@ -62,6 +62,13 @@ const AccountPersonalDetails = () => {
   };
 
   const handleCancelEditDetails = () => {
+    setEmail(currentUser.email);
+    setDisplayName(currentUser.displayName);
+    if (profilePictureInput.current.files[0]) {
+      delete profilePictureInput.current.files[0];
+    }
+
+    profilePictureInput.current.value = '';
     setIsEditMode(false);
   };
 
@@ -102,6 +109,8 @@ const AccountPersonalDetails = () => {
         await updatePassword(newPassword);
         showSuccessSnackBar('Password updated successfully!');
         setIsEditSecurity(false);
+        setNewPassword('');
+        setConfirmNewPassword('');
       }
     } catch (ex) {
       showErrorSnackbar(ex);
@@ -137,6 +146,8 @@ const AccountPersonalDetails = () => {
   };
 
   const handleCancelEditSecurity = () => {
+    setNewPassword('');
+    setConfirmNewPassword('');
     setIsEditSecurity(false);
   };
 

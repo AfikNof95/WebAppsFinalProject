@@ -71,7 +71,7 @@ const ProductPage = (props) => {
       } else {
         setCurrent(current + 1);
       }
-    }, 5000);
+    }, 3000);
     return () => {
       clearInterval(interval);
     };
