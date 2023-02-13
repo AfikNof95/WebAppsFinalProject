@@ -1,16 +1,15 @@
-import Checkout from '../Checkout/Checkout';
-import CartPage from '../../pages/Cart/Cart';
-import Homepage from '../Homepage/Homepage';
-import NotFound from '../NotFound/NotFound';
-
-import AuthForm from '../Auth/Login';
-import ProductPage from '../ProductPage/ProductPage';
+import About from '../About/About';
 import AccountPage from '../Account/Account';
-import ProfilePage from '../Profile/Profile';
+import AuthForm from '../Auth/Login';
+import CartPage from '../../pages/Cart/Cart';
+import Checkout from '../Checkout/Checkout';
 import DashboardPage from '../../pages/Dashboard/Dashboard';
-import UnauthorizedPage from '../../pages/401/401';
+import Homepage from '../Homepage/Homepage';
 import NotFoundPage from '../../pages/404/404';
+import ProductPage from '../ProductPage/ProductPage';
+import ProfilePage from '../Profile/Profile';
 import ProtectedRoute from './ProtectedRoute.js';
+import UnauthorizedPage from '../../pages/401/401';
 import CategoriesPage from '../../pages/Categories/Categories';
 
 const appRoutes = [
@@ -53,25 +52,25 @@ const appRoutes = [
   },
   {
     path: '/about',
-    element: '' // Will be
+    element: <About />
   },
   {
     path: '/dashboard',
-    element: <DashboardPage></DashboardPage>
+    element: <DashboardPage />
   },
   {
     path: '/401',
-    element: <UnauthorizedPage></UnauthorizedPage>
+    element: <UnauthorizedPage />
   },
   {
     path: '/product/:productId',
-    element: <ProductPage></ProductPage>
+    element: <ProductPage />
   },
   {
     path: '*',
     element: (
       <>
-        <NotFoundPage></NotFoundPage>
+        <NotFoundPage />
       </>
     )
   }

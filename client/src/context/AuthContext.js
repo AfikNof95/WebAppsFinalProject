@@ -135,21 +135,30 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   async function refreshToken() {
-    const response = await backendAPI.auth.refreshToken(currentUser.refreshToken);
-    const { id_token: idToken, refresh_token: refreshToken, expires_in: expiresIn } = response.data;
+    try {
+      const response = await backendAPI.auth.refreshToken(currentUser.refreshToken);
+      const {
+        id_token: idToken,
+        refresh_token: refreshToken,
+        expires_in: expiresIn
+      } = response.data;
 
-    setCurrentUser((currentUserState) => {
-      return {
-        ...currentUserState,
-        ...{
-          idToken,
-          refreshToken,
-          expiresIn,
-          expireDate: getTokenExpireDate(expiresIn)
-        }
-      };
-    });
-    return { idToken };
+      setCurrentUser((currentUserState) => {
+        return {
+          ...currentUserState,
+          ...{
+            idToken,
+            refreshToken,
+            expiresIn,
+            expireDate: getTokenExpireDate(expiresIn)
+          }
+        };
+      });
+      return { idToken: idToken };
+    } catch (ex) {
+      console.error(ex);
+      throw ex;
+    }
   }
 
   async function updatePassword(newPassword) {

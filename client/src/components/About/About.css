@@ -1,0 +1,10 @@
+#about-wrapper {
+  height: 100vh;
+  padding-top: 92px;
+  padding-bottom: 50px;
+}
+
+#photo-name-title-wrapper {
+  display: flex;
+  flex-direction: row;
+}
