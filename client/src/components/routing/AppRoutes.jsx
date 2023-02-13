@@ -6,7 +6,7 @@ import Checkout from '../Checkout/Checkout';
 import DashboardPage from '../../pages/Dashboard/Dashboard';
 import Homepage from '../Homepage/Homepage';
 import NotFoundPage from '../../pages/404/404';
-import ProductPage from '../Productpage/ProductPage';
+import ProductPage from '../ProductPage/ProductPage';
 import ProfilePage from '../Profile/Profile';
 import ProtectedRoute from './ProtectedRoute.js';
 import UnauthorizedPage from '../../pages/401/401';

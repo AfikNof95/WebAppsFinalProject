@@ -92,6 +92,11 @@ function Navbar() {
     handleMobileMenuClose();
   };
 
+  const handleSignInClick = () => {
+    setAnchorEl(null);
+    navigate('/login');
+  };
+
   const handleSignOutClick = () => {
     setAnchorEl(null);
     signOut();
@@ -209,8 +214,10 @@ function Navbar() {
         </MenuItem>
       )}
 
-      <MenuItem key="SignOutMobile">
-        <IconButton size="large" color="inherit" onClick={handleSignOutClick}>
+      <MenuItem
+        key="SignOutMobile"
+        onClick={isUserSignedIn() ? handleSignOutClick : handleSignInClick}>
+        <IconButton size="large" color="inherit">
           {isUserSignedIn() ? <LogoutIcon></LogoutIcon> : <LoginIcon />}
         </IconButton>
         <p>{isUserSignedIn() ? 'Sign Out' : 'Sign In'}</p>

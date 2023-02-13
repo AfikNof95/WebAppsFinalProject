@@ -87,88 +87,94 @@ const ProductPage = (props) => {
         <Toolbar></Toolbar>
         <Grid container height={'calc(100vh - 64px)'}>
           <Grid item xs={12} sx={{ backgroundColor: 'white', padding: 2 }}>
-            <Container>
-              <Grid container>
-                <Grid item xs={12} lg={6}>
-                  <Grid container>
-                    <Grid item xs={2} maxHeight={600} overflow={'clip'}>
-                      <Stack gap={2}>
-                        {product.images.map((item, index) => (
-                          <img
-                            key={item}
-                            width={80}
-                            height={70}
-                            src={item}
-                            alt=""
-                            style={{ objectFit: 'contain' }}
-                            loading="lazy"
-                            onClick={() => switchIndex(index)}
-                          />
-                        ))}
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={10}>
-                      <img
-                        width={'100%'}
-                        height={'100%'}
-                        style={{ objectFit: 'contain', maxHeight: '500px', maxWidth: '500px' }}
-                        component="img"
-                        src={product.images[index]}
-                        alt=""
-                      />
+            <Container maxWidth="xl" sx={{ height: '100%' }}>
+              <Box display="flex" alignItems={'center'} height={'100%'}>
+                <Grid container>
+                  <Grid item xs={12} lg={6}>
+                    <Grid container>
+                      <Grid item xs={2} maxHeight={600} overflow={'clip'}>
+                        <Stack gap={2}>
+                          {product.images.map((item, index) => (
+                            <img
+                              key={item}
+                              width={80}
+                              height={70}
+                              src={item}
+                              alt=""
+                              style={{ objectFit: 'contain',cursor:"pointer" }}
+                              loading="lazy"
+                              onClick={() => switchIndex(index)}
+                            />
+                          ))}
+                        </Stack>
+                      </Grid>
+                      <Grid item xs={10}>
+                        <img
+                          width={'100%'}
+                          height={'100%'}
+                          style={{ objectFit: 'contain', maxHeight: '500px', maxWidth: '500px' }}
+                          component="img"
+                          src={product.images[index]}
+                          alt=""
+                        />
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid item xs={12} lg={6} padding={1}>
-                  <Box>
-                    <Typography variant="body1" fontWeight={'bold'} flexBasis={'100%'}>
-                      {product.name}
-                    </Typography>
-                    <Typography variant="h6" sx={{ color: '#1976d2' }}>
-                      {formatPrice(product.price)}
-                    </Typography>
-                    <Box textAlign={'center'} flexBasis={'100%'}>
-                      <Box
-                        display="flex"
-                        width={'100%'}
-                        alignItems={'center'}
-                        justifyContent={'center'}>
-                        <Button
-                          variant="contained"
-                          startIcon={<ShoppingBagOutlined></ShoppingBagOutlined>}
-                          color="secondaryButton.light"
-                          fullWidth
-                          onClick={() => {
-                            addToCart(product);
-                            openCart();
-                          }}>
-                          Add to cart
-                        </Button>
-                        <Button
-                          variant="contained"
-                          startIcon={<AttachMoneyOutlined></AttachMoneyOutlined>}
-                          color="mainButton"
-                          fullWidth
-                          sx={{ marginLeft: 3 }}
-                          onClick={handleBuyNowClick}>
-                          Buy Now
-                        </Button>
+                  <Grid item xs={12} lg={6} padding={1}>
+                    <Box>
+                      <Typography variant="body1" fontWeight={'bold'} flexBasis={'100%'}>
+                        {product.name}
+                      </Typography>
+                      <Typography variant="h6" sx={{ color: '#1976d2' }}>
+                        {formatPrice(product.price)}
+                      </Typography>
+                      <Box textAlign={'center'} flexBasis={'100%'}>
+                      
+                        <AnimateOnChange
+                          className={'quantity-alert'}
+                          animationOut="bounceOut"
+                          animationIn="bounceIn"
+                          durationOut="1000"
+                          durationIn="1000">
+                          <h4>
+                            {' '}
+                            {massageType[current]} {stockCount} Left in stock{' '}
+                          </h4>
+                        </AnimateOnChange>
+
+                        <Box
+                          display="flex"
+                          width={'100%'}
+                          alignItems={'center'}
+                          justifyContent={'center'}>
+                          <Button
+                            variant="contained"
+                            startIcon={<ShoppingBagOutlined></ShoppingBagOutlined>}
+                            color="secondaryButton.light"
+                            fullWidth
+                            onClick={() => {
+                              addToCart(product);
+                              openCart();
+                            }}>
+                            Add to cart
+                          </Button>
+                          <Button
+                            variant="contained"
+                            startIcon={<AttachMoneyOutlined></AttachMoneyOutlined>}
+                            color="mainButton"
+                            fullWidth
+                            sx={{ marginLeft: 3 }}
+                            onClick={handleBuyNowClick}>
+                            Buy Now
+                          </Button>
+                        </Box>
+
+                        
                       </Box>
-                      <AnimateOnChange
-                        className={'quantity-alert'}
-                        animationOut="bounceOut"
-                        animationIn="bounceIn"
-                        durationOut="1000"
-                        durationIn="1000">
-                        <h4>
-                          {' '}
-                          {massageType[current]} {stockCount} Left in stock{' '}
-                        </h4>
-                      </AnimateOnChange>
                     </Box>
-                  </Box>
+                  </Grid>
                 </Grid>
-              </Grid>
+              </Box>
             </Container>
           </Grid>
 

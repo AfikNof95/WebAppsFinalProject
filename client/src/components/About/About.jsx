@@ -1,9 +1,11 @@
 import React from 'react';
 import './About.css';
 import { makeStyles } from '@mui/styles';
-import { Card, CardMedia, CardContent, Typography } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Toolbar, Stack, Avatar } from '@mui/material';
 import { Grid, Link } from '@mui/material';
 import { AiFillLinkedin } from 'react-icons/ai';
+import { Box, Container } from '@mui/system';
+import { ShoppingCart } from '@mui/icons-material';
 
 const useStyles = makeStyles({
   root: {
@@ -56,11 +58,11 @@ const data = [
   },
   {
     name: 'Maya Bezalel',
-    image: 'http://localhost:3000/client/src/images/maya.jpeg', // 'WebAppsFinalProject/client/src/images/maya.jpeg'
-    title: 'Software development of satellite r&d center',
-    linkedin: 'https://www.linkedin.com/in/omer-kaplan-3809841b6/',
+    image: 'http://localhost:2308/images/maya.jpeg',
+    title: 'Software development of satellite R&D center',
+    linkedin: null,
     description:
-      'Full stack developer. Experience with nodeJS, mongoDB and coffeescript, for the satellite r&d center in the IDF.'
+      'Full stack developer. Experience with nodeJS, mongoDB and coffeescript, for the satellite R&D center in the IDF.'
   }
 ];
 
@@ -68,32 +70,75 @@ export default function ProgrammerCards() {
   const classes = useStyles();
 
   return (
-    <div id="about-wrapper">
-      {data.map((item) => (
-        <Card className={classes.root} key={item.name} elevation={1}>
-          <Grid container alignItems="center">
-            <div id="photo-name-title-wrapper">
-              <CardMedia
-                component="img"
-                className={classes.media}
-                image={item.name == 'Maya Bezalel' ? require('../../images/maya.jpeg') : item.image}
-              />
-              <CardContent className={classes.content}>
-                <Typography variant="h5" fontWeight="bold">
-                  {item.name},
-                  <Typography variant="subtitle2" style={{ display: 'inline', marginLeft: '10px' }}>
-                    {item.title}
-                  </Typography>
-                </Typography>
-                <Typography variant="body2">{item.description}</Typography>
-                <Link href={item.linkedin} className={classes.iconWrapper}>
-                  <AiFillLinkedin className={classes.icon} />
-                </Link>
-              </CardContent>
-            </div>
+    <Container maxWidth={'xl'} sx={{ height: '100%', padding: 5 }}>
+      <Toolbar sx={{ width: '100%' }}></Toolbar>
+
+      <Grid container height={'80%'} sx={{ backgroundColor: 'white' }} boxShadow={2}>
+        <Grid item xs={12}>
+          <Box padding={2} color={'white'} bgcolor={'var(--main-app-blue)'}>
+            <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
+              <Avatar
+                sx={{
+                  width: 40,
+                  height: 40,
+                  bgcolor: '#385074'
+                }}>
+                <ShoppingCart fontSize="medium"></ShoppingCart>
+              </Avatar>
+              <Typography variant="h4" fontWeight={'bold'} marginLeft={2}>
+                Store.io
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
+        <Grid item xs={12} padding={1}>
+          <Typography variant="h2" fontFamily={'cursive'} fontWeight={'bold'} textAlign={'center'}>
+            Meet Our Team
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            {data.map((item) => (
+              <Grid item xs={12} md={12} lg={12} xl={4} key={item.name}>
+                <Grid container padding={3}>
+                  <Grid item xs={2} sm={2} md={2} lg={2} xl={12}>
+                    <img
+                      src={item.image}
+                      alt=""
+                      width={'100%'}
+                      height={'100%'}
+                      style={{ maxHeight: 450, objectFit: 'contain' }}
+                    />
+                  </Grid>
+                  <Grid item xs={8} sm={8} md={8} lg={6} xl={12}>
+                    <Box padding={1}>
+                      <Box display="flex" justifyContent={'space-between'}>
+                        <Typography variant="body1" fontWeight={'bold'}>
+                          {item.name}
+                        </Typography>
+                        {item.linkedin && (
+                          <Link href={item.linkedin} className={classes.iconWrapper}>
+                            <AiFillLinkedin className={classes.icon} />
+                          </Link>
+                        )}
+                      </Box>
+                      <Typography variant="caption" fontWeight={'bold'}>
+                        {item.title}
+                      </Typography>
+                    </Box>
+                    <Box padding={1}>
+                      <Typography variant="body2" color={'GrayText'} fontWeight={'bold'}>
+                        {item.description}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Grid>
+            ))}
           </Grid>
-        </Card>
-      ))}
-    </div>
+        </Grid>
+      </Grid>
+    </Container>
+
   );
 }

@@ -1,15 +1,20 @@
 const { getAuth } = require('firebase-admin/auth');
 
-const isAuthorized = async (res, req, next) => {
+const isAuthorized = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (authHeader) {
     try {
       const token = authHeader.split(' ')[1];
-      await getAuth().verifyIdToken(token);
+      const response = await getAuth().verifyIdToken(token);
+      const user = await getAuth().getUser(response.uid);
+      if (user.disabled) {
+        return res.status(403).send('USER_DISABLED');
+      }
       return next();
     } catch (ex) {
       console.error(ex.message);
+      console.error(ex);
       return res.status(403).send('Unauthorized');
     }
   } else {
