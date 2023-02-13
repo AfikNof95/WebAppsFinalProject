@@ -3,7 +3,9 @@ import { Box, Container } from '@mui/system';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import UsersIcon from '@mui/icons-material/Group';
 import ProfitIcon from '@mui/icons-material/AttachMoney';
-import OrdersIcon from '@mui/icons-material/LocalShipping';
+import OrdersIcon from '@mui/icons-material/ReceiptLong';
+import ShippedIcon from '@mui/icons-material/LocalShipping';
+import PackedIcon from "@mui/icons-material/Inventory"
 
 import { formatPrice } from '../../utils/formatPrice';
 import { useEffect, useState } from 'react';
@@ -99,7 +101,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                         sx={{
                           width: 70,
                           height: 70,
-                          backgroundColor: '#9c27b0'
+                          backgroundColor: theme=>theme.palette.secondaryButton.light.main
                         }}>
                         <UsersIcon fontSize={'large'}></UsersIcon>
                       </Avatar>
@@ -135,7 +137,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                         sx={{
                           width: 70,
                           height: 70,
-                          backgroundColor: '#9c27b0'
+                          backgroundColor: theme=>theme.palette.secondaryButton.main
                         }}>
                         <GroupAdd fontSize={'large'}></GroupAdd>
                       </Avatar>
@@ -207,9 +209,79 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                         sx={{
                           width: 70,
                           height: 70,
-                          backgroundColor: '#1976d2'
+                          backgroundColor: theme=>theme.palette.mainButton.main
                         }}>
                         <OrdersIcon fontSize={'large'}></OrdersIcon>
+                      </Avatar>
+                    </>
+                  )}
+                </Box>
+              </CardContent>
+            </Grid>
+            <Grid component={Card} item sm={12} md={5} lg={4} xl={3}>
+              <CardContent>
+                <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
+                  {isOrdersAnalyticsLoading ? (
+                    <>
+                      <div style={{ width: '100%' }}>
+                        <Skeleton width={'50%'}></Skeleton>
+                        <Skeleton width={'25%'}></Skeleton>
+                      </div>
+                      <Skeleton variant="circular" width={100} height={70}></Skeleton>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <Typography variant="body1" fontWeight={'bold'} color={'GrayText'}>
+                          Packed Orders
+                        </Typography>
+                        <Typography variant="h6" fontWeight={'bold'}>
+                          {orders?.byStatus.filter(status=>status._id === "Packed")[0] ? orders?.byStatus.filter(status=>status._id === "Packed")[0].count : 0}
+                        </Typography>
+                      </div>
+
+                      <Avatar
+                        sx={{
+                          width: 70,
+                          height: 70,
+                          backgroundColor: theme=>theme.palette.warning.light
+                        }}>
+                        <PackedIcon fontSize={'large'}></PackedIcon>
+                      </Avatar>
+                    </>
+                  )}
+                </Box>
+              </CardContent>
+            </Grid>
+            <Grid component={Card} item sm={12} md={5} lg={4} xl={3}>
+              <CardContent>
+                <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
+                  {isOrdersAnalyticsLoading ? (
+                    <>
+                      <div style={{ width: '100%' }}>
+                        <Skeleton width={'50%'}></Skeleton>
+                        <Skeleton width={'25%'}></Skeleton>
+                      </div>
+                      <Skeleton variant="circular" width={100} height={70}></Skeleton>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <Typography variant="body1" fontWeight={'bold'} color={'GrayText'}>
+                          Delivered Orders
+                        </Typography>
+                        <Typography variant="h6" fontWeight={'bold'}>
+                        {orders?.byStatus.filter(status=>status._id === "Delivered")[0] ? orders?.byStatus.filter(status=>status._id === "Delivered")[0].count : 0}
+                        </Typography>
+                      </div>
+
+                      <Avatar
+                        sx={{
+                          width: 70,
+                          height: 70,
+                          backgroundColor: theme=>theme.palette.success.main
+                        }}>
+                        <ShippedIcon fontSize={'large'}></ShippedIcon>
                       </Avatar>
                     </>
                   )}

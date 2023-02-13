@@ -14,6 +14,7 @@ import { Grid, List, ListItem, Tooltip } from '@mui/material';
 import { useShoppingCart } from '../../context/ShoppingCartContext';
 import { formatPrice } from '../../utils/formatPrice';
 import { useNavigate } from 'react-router-dom';
+import { Box } from '@mui/system';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -80,12 +81,19 @@ const ProductCard = ({ product }) => {
             <IconButton
               aria-label="add to cart"
               onClick={() => {
-                addToCart(product);
-                openCart();
+                const response = addToCart(product);
+                response && openCart();
               }}>
               <AddIcon />
             </IconButton>
           </Tooltip>
+          {product.quantity <= 0 && (
+            <Box display={'flex'} justifyContent="center" width="100%">
+              <Typography color={'error'} variant="body1" fontWeight={'bold'}>
+                Out Of Stock!
+              </Typography>
+            </Box>
+          )}
           <ExpandMore
             expand={expanded}
             onClick={handleExpandClick}

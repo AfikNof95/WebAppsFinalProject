@@ -111,6 +111,12 @@ const DashboardPage = (props) => {
     }, 1000);
   };
 
+  const handleOrdersUpdate = async ()=>{
+    const responseOrders = await backendAPI.admin.order.getAll()
+    const { orders } = responseOrders.data;
+    setOrders([...orders]);
+  }
+
   return (
     !isLoading && (
       <Box display={'flex'} flexDirection={'row'} justifyContent={'flex-start'}>
@@ -147,6 +153,7 @@ const DashboardPage = (props) => {
                 <DashboardOrders
                   token={currentUser.idToken}
                   ordersArray={orders}
+                  handleOrdersUpdate={handleOrdersUpdate}
                   users={users}></DashboardOrders>
               );
             default:

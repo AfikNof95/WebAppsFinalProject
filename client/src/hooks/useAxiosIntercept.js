@@ -12,7 +12,7 @@ export const useAxiosIntercept = () => {
       async (config) => {
         if (config.url.indexOf('identitytoolkit') === -1 && currentUser) {
           config.headers['Authorization'] = 'Bearer ' + currentUser.idToken;
-          if (config.data) {
+          if (config.data && typeof config.data === "string") {
             config.data.token = currentUser.idToken;
           }
         }

@@ -39,8 +39,7 @@ const ProductPage = (props) => {
   const [stockCount, setStockCount] = useState(0);
   const [current, setCurrent] = useState(0);
   const { addToCart, openCart } = useShoppingCart();
-  const firstMassage = ['Available in stock '];
-  const [massageType, setMassageType] = useState(firstMassage);
+  const [massageType, setMassageType] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -137,7 +136,6 @@ const ProductPage = (props) => {
                           durationOut="1000"
                           durationIn="1000">
                           <h4>
-                            {' '}
                             {massageType[current]} {stockCount} Left in stock{' '}
                           </h4>
                         </AnimateOnChange>
@@ -148,17 +146,19 @@ const ProductPage = (props) => {
                           alignItems={'center'}
                           justifyContent={'center'}>
                           <Button
+                          disabled={stockCount === 0}
                             variant="contained"
                             startIcon={<ShoppingBagOutlined></ShoppingBagOutlined>}
                             color="secondaryButton.light"
                             fullWidth
                             onClick={() => {
-                              addToCart(product);
-                              openCart();
+                              const response = addToCart(product);
+                              response && openCart();
                             }}>
                             Add to cart
                           </Button>
                           <Button
+                          disabled={stockCount === 0}
                             variant="contained"
                             startIcon={<AttachMoneyOutlined></AttachMoneyOutlined>}
                             color="mainButton"

@@ -33,7 +33,6 @@ const ProfilePage = () => {
     updateUserAdress.current = async () => {
       const response = await axios.get(`http://localhost:2308/Address/user/${user.localId}`);
       const newAddress = response.data[response.data.length - 1]
-      console.log(newAddress)
       updateAddres(`${newAddress.street} ${newAddress.houseNumber},
       ${newAddress.city}, ${newAddress.zipCodeCode},
       ${newAddress.country}.`)

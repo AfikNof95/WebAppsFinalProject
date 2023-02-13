@@ -10,7 +10,7 @@ import DashboardOrdersEditDialog from './DashboardOrdersEditDialog';
 import DashboardOrdersRemoveDialog from './DashboardOrdersRemoveDialog';
 import DashboardOrdersRestoreDialog from './DashboardOrdersRestoreDialog';
 
-const DashboardOrders = ({ token, ordersArray, users }) => {
+const DashboardOrders = ({ token, ordersArray, users,handleOrdersUpdate }) => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -24,6 +24,7 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
   });
 
   useEffect(() => {
+    setIsLoading(true);
     setOrders(ordersArray);
     setIsLoading(false);
   }, [ordersArray]);
@@ -245,14 +246,15 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
     try {
       await backendAPI.admin.order.update(updatedOrder);
 
-      setOrders((currentOrdersState) => {
-        return currentOrdersState.map((order) => {
-          if (order._id === updatedOrder._id) {
-            return { ...order, ...updatedOrder };
-          }
-          return order;
-        });
-      });
+      // setOrders((currentOrdersState) => {
+      //   return currentOrdersState.map((order) => {
+      //     if (order._id === updatedOrder._id) {
+      //       return { ...order, ...updatedOrder };
+      //     }
+      //     return order;
+      //   });
+      // });
+      handleOrdersUpdate()
       setIsEditDialogOpen(false);
       showSuccessSnackbar();
     } catch (ex) {

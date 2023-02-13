@@ -28,7 +28,10 @@ const isAdmin = async (req, res, next) => {
     try {
       const token = authHeader.split(' ')[1];
       const claims = await getAuth().verifyIdToken(token);
-      if (claims.isAdmin) return next();
+      if (claims.isAdmin){
+        res.isAdmin = true;
+        return next();
+      } 
       return res.status(401).send('Unauthorized');
     } catch (ex) {
       console.error(ex.message);

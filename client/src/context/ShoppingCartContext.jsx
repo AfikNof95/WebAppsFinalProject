@@ -159,8 +159,13 @@ export function ShoppingCartProvider({ children }) {
   }
 
   function addToCart(productObject) {
+    let success = true;
     setCartProducts((currentProducts) => {
       if (!currentProducts.find((cartProduct) => cartProduct.product._id === productObject._id)) {
+        if(productObject.quantity === 0 ){
+          success=false;
+          return currentProducts;
+        }
         return [...currentProducts, { product: productObject, quantity: 1 }];
       }
 
@@ -177,6 +182,8 @@ export function ShoppingCartProvider({ children }) {
         return cartProduct;
       });
     });
+
+    return success;
   }
 
   function increaseProductQuantity(productId, count = 1) {

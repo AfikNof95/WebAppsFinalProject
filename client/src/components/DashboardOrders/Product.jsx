@@ -24,6 +24,7 @@ export function Product({
   name,
   imageURL,
   quantity,
+  originalQuantity,
   price,
   maxQuantity,
   handleDecreaseQuantity,
@@ -33,7 +34,7 @@ export function Product({
   const [showQuantityError, setShowQuantityError] = useState(false);
 
   useEffect(() => {
-    if (quantity >= maxQuantity) {
+    if (quantity >= maxQuantity && quantity >= originalQuantity) {
       return setShowQuantityError(true);
     }
     setShowQuantityError(false);
@@ -99,7 +100,7 @@ export function Product({
               </IconButton>
             )
           }}
-          sx={{ width: '120px', pointerEvents: 'none' }}
+          sx={{ width: '200px', pointerEvents: 'none' }}
           inputProps={{ style: { textAlign: 'center' } }}
           value={quantity}
           size="small"

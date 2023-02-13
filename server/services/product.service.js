@@ -79,6 +79,9 @@ const ProductService = {
           sortBy = JSON.parse(filters.sort);
           break;
         case 'filterOutOfStock':
+          if(filters[filter] === "false"){
+            break
+          }
           if (!queryFilters['$and']) {
             queryFilters['$and'] = [];
           }

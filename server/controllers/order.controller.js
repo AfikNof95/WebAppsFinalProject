@@ -42,7 +42,8 @@ const OrderController = {
   async updateOrder(req, res, next) {
     try {
       const { orderId } = req.params;
-      const response = await OrderService.updateOrder(orderId, req.body);
+      const isAdmin = res.isAdmin;
+      const response = await OrderService.updateOrder(orderId, req.body,isAdmin);
       return res.json({ message: 'Order updated successfully!' });
     } catch (ex) {
       next(ex);
