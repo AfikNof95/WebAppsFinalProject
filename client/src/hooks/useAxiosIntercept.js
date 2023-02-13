@@ -76,10 +76,13 @@ export const useAxiosIntercept = () => {
     );
     setIsInterceptReady(true);
     
+    if(!currentUser){
       return () => {
         axios.interceptors.request.eject(reqIntercept);
         axios.interceptors.response.eject(resIntercept);
       };
+    }
+      
   }, [currentUser]);
 
   return [isInterceptReady];
