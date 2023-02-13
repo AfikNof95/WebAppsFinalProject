@@ -12,7 +12,7 @@ export const useAxiosIntercept = () => {
       async (config) => {
         if (config.url.indexOf('identitytoolkit') === -1 && currentUser) {
           config.headers['Authorization'] = 'Bearer ' + currentUser.idToken;
-          if (config.data && typeof config.data === "string") {
+          if (config.data && typeof config.data !== "string") {
             config.data.token = currentUser.idToken;
           }
         }
@@ -76,12 +76,10 @@ export const useAxiosIntercept = () => {
     );
     setIsInterceptReady(true);
     
-    if (!currentUser) {
       return () => {
         axios.interceptors.request.eject(reqIntercept);
         axios.interceptors.response.eject(resIntercept);
       };
-    }
   }, [currentUser]);
 
   return [isInterceptReady];
