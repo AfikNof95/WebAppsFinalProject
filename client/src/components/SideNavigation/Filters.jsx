@@ -21,7 +21,7 @@ import FilterIcon from '@mui/icons-material/Tune';
 import PriceIcon from '@mui/icons-material/AttachMoney';
 import { formatPrice } from '../../utils/formatPrice';
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import FilterAltOff from '@mui/icons-material/FilterAltOff';
 const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
   const SORT_BY_ENUM = {
@@ -37,7 +37,7 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
   const [sortBy, setSortBy] = useState(SORT_BY_ENUM.NAME_ASCENDING);
   const [filterOutOfStock, setFilterOutOfStock] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
-
+  const navigate = useNavigate();
   const [currentPriceRange, setCurrentPriceRange] = useState(priceRange);
 
   useEffect(() => {
@@ -64,15 +64,12 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
   }, [searchParams]);
 
   useEffect(() => {
-    setSearchParams((currentState) => {
-      return selectedCategoryId !== currentState.get('categoryId')
-        ? {
-            ...(selectedCategoryId && {
-              categoryId: selectedCategoryId
-            })
-          }
-        : currentState;
-    });
+    if (selectedCategoryId === undefined) {
+      return;
+    }
+    if (selectedCategoryId !== searchParams.get('categoryId')) {
+      navigate({ search: `categoryId=${selectedCategoryId}` });
+    }
   }, [selectedCategoryId]);
 
   const toggleOpenFilters = (event) => {
@@ -233,7 +230,7 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
             </ListItem>
             <ListItem>
               <Slider
-              color='secondaryButton'
+                color="secondaryButton"
                 getAriaLabel={() => 'Price range'}
                 min={priceRange[0]}
                 max={priceRange[1]}
@@ -258,7 +255,10 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
           </List>
         </Box>
         <Box display={'flex'} justifyContent={'flex-end'}>
-          <Button endIcon={<FilterAltOff></FilterAltOff>} onClick={clearFilters} color="secondaryButton">
+          <Button
+            endIcon={<FilterAltOff></FilterAltOff>}
+            onClick={clearFilters}
+            color="secondaryButton">
             Clear
           </Button>
         </Box>

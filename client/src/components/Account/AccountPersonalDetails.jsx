@@ -11,7 +11,8 @@ import {
   InputAdornment,
   IconButton,
   TextField,
-  Tooltip
+  Tooltip,
+  CircularProgress
 } from '@mui/material';
 import { ERROR_MESSAGES } from '../Auth/enums';
 import { useLocation } from 'react-router-dom';
@@ -44,6 +45,7 @@ const AccountPersonalDetails = () => {
     message: '',
     severity: 'error'
   });
+  const [isLoading, setIsLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isEditSecurity, setIsEditSecurity] = useState(false);
   const [passwordErrors, setPasswordErrors] = useState({
@@ -69,11 +71,16 @@ const AccountPersonalDetails = () => {
 
   const handleSaveDetails = async () => {
     try {
+      setIsLoading(true);
       if (displayName.trim() !== '' && email.trim() !== '') {
-        const photoResponse = await backendAPI.user.uploadPhoto(
-          profilePictureInput.current.files[0]
-        );
-        const photoUrl = photoResponse.data.photoUrl;
+        let photoUrl = null;
+        if (profilePictureInput.current.files[0]) {
+          const photoResponse = await backendAPI.user.uploadPhoto(
+            profilePictureInput.current.files[0]
+          );
+          photoUrl = photoResponse.data.photoUrl;
+        }
+
         await updateUser({
           idToken: currentUser.idToken,
           displayName,
@@ -86,9 +93,11 @@ const AccountPersonalDetails = () => {
     } catch (ex) {
       showErrorSnackbar(ex);
     }
+    setIsLoading(false);
   };
   const handleSaveSecurity = async () => {
     try {
+      setIsLoading(true);
       if (newPassword === confirmNewPassword && newPassword.trim().length >= 6) {
         await updatePassword(newPassword);
         showSuccessSnackBar('Password updated successfully!');
@@ -97,6 +106,7 @@ const AccountPersonalDetails = () => {
     } catch (ex) {
       showErrorSnackbar(ex);
     }
+    setIsLoading(false);
   };
 
   const showSuccessSnackBar = (message) => {
@@ -203,7 +213,15 @@ const AccountPersonalDetails = () => {
     }
   }, [displayName, email]);
 
-  return (
+  return isLoading ? (
+    <Box
+      display={'flex'}
+      justifyContent={'center'}
+      alignItems={'center'}
+      sx={{ width: '100%', height: '100vh' }}>
+      <CircularProgress style={{ width: '50vh', height: '50vh' }} />
+    </Box>
+  ) : (
     <Grid container direction={'row'} height={'100%'} padding={5} spacing={2} overflow={'auto'}>
       <Grid item xs={12}>
         <Grid container spacing={2}>

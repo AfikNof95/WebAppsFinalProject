@@ -4,6 +4,7 @@
 
 .side-nav-list-item-mobile.Mui-selected {
   background-color: var(--main-app-blue) !important;
+  border-left: 2px solid white;
 }
 
 .side-nav-list-item-mobile.Mui-selected .MuiListItemIcon-root {

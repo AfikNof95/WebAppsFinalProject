@@ -55,22 +55,29 @@ const AccountOrderCard = ({ order, handleOrderCancel }) => {
                           src={product.product.images[0]}
                           alt=""
                           style={{
-                            objectFit: 'contain'
+                            objectFit: 'contain',
+                            maxWidth: 200,
+                            maxHeight: 200
                           }}></img>
                       </Box>
                     </Grid>
-                    <Grid item xs={8} lg={10} overflow={'hidden'}>
-                      <Typography
-                        variant="body1"
-                        fontWeight={600}
-                        fontSize={'0.6em'}
-                        overflow={'hidden'}
-                        textOverflow={'ellipsis'}
-                        whiteSpace={'nowrap'}>
-                        {product.product.name}
-                      </Typography>
+                    <Grid item xs={8} lg={10}>
+                      <Box display={'flex'} alignItems={'center'} height={'100%'}>
+                        <Typography
+                          variant="body1"
+                          fontWeight={600}
+                          fontSize={'0.8em'}
+                          // overflow={'hidden'}
+                          textOverflow={'ellipsis'}
+                          whiteSpace={'break-spaces'}>
+                          {product.product.name}
+                        </Typography>
+                      </Box>
                     </Grid>
                     <Grid item xs={12}>
+                      <Typography textAlign={'end'}>
+                        Price: {formatPrice(product.product.price)}
+                      </Typography>
                       <Typography textAlign={'end'}>Qty: {product.quantity}</Typography>
                     </Grid>
                   </Grid>
@@ -99,7 +106,7 @@ const AccountOrderCard = ({ order, handleOrderCancel }) => {
                   </Typography>
                 </div>
 
-                {order.status === 'Created' && (
+                {order.status === 'Created' && order.isActive === true && (
                   <Button
                     variant="contained"
                     color="error"

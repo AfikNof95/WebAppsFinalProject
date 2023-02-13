@@ -1,4 +1,4 @@
-import { Alert, Box, Divider, Grid, Snackbar, Typography } from '@mui/material';
+import { Alert, Box, CircularProgress, Divider, Grid, Snackbar, Typography } from '@mui/material';
 import backendAPI from '../../api';
 import { useEffect, useState } from 'react';
 import AccountOrders from '../AccountOrders/AccountOrders';
@@ -7,6 +7,7 @@ import AccountCancelOrderDialog from '../AccountOrders/AccountCancelOrderDialog'
 
 const AccountOrdersHistory = ({ userId }) => {
   const [ordersList, setOrdersList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [snackBarState, setSnackBarState] = useState({
     show: false,
     message: '',
@@ -20,6 +21,7 @@ const AccountOrdersHistory = ({ userId }) => {
       try {
         const response = await backendAPI.user.getOrders(userId);
         setOrdersList(response.data);
+        setIsLoading(false);
       } catch (ex) {
         console.error(ex);
       }
@@ -87,36 +89,47 @@ const AccountOrdersHistory = ({ userId }) => {
 
   return (
     <>
-      <Grid container direction={'row'} height={'100%'} padding={5} spacing={2} overflow={'auto'}>
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Box display="flex" justifyContent={'space-between'}>
-                <div>
-                  <Typography
-                    variant="overline"
-                    fontWeight={'bold'}
-                    fontSize={'1.2em'}
-                    color={'Highlight'}
-                    display={'block'}
-                    lineHeight={'1'}>
-                    Orders History
-                  </Typography>
-                  <Typography variant="caption" fontSize={'0.7em'} color={'GrayText'}>
-                    Track your orders, cancel orders if available.
-                  </Typography>
-                </div>
-              </Box>
-              <Divider></Divider>
-            </Grid>
-            <Grid item xs={12}>
-              <AccountOrders
-                ordersList={ordersList}
-                handleOrderCancel={handleOrderCancel}></AccountOrders>
+      {isLoading ? (
+        <Box
+          display={'flex'}
+          justifyContent={'center'}
+          alignItems={'center'}
+          sx={{ width: '100%', height: '100vh' }}>
+          <CircularProgress style={{ width: '50vh', height: '50vh' }} />
+        </Box>
+      ) : (
+        <Grid container direction={'row'} height={'100%'} padding={5} spacing={2} overflow={'auto'}>
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Box display="flex" justifyContent={'space-between'}>
+                  <div>
+                    <Typography
+                      variant="overline"
+                      fontWeight={'bold'}
+                      fontSize={'1.2em'}
+                      color={'Highlight'}
+                      display={'block'}
+                      lineHeight={'1'}>
+                      Orders History
+                    </Typography>
+                    <Typography variant="caption" fontSize={'0.7em'} color={'GrayText'}>
+                      Track your orders, cancel orders if available.
+                    </Typography>
+                  </div>
+                </Box>
+                <Divider></Divider>
+              </Grid>
+              <Grid item xs={12}>
+                <AccountOrders
+                  ordersList={ordersList}
+                  handleOrderCancel={handleOrderCancel}></AccountOrders>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      )}
+
       <Snackbar
         open={snackBarState.show}
         onClose={() => setSnackBarState({ ...snackBarState, ...{ show: false } })}

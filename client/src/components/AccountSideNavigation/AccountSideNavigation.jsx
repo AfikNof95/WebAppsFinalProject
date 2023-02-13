@@ -56,6 +56,7 @@ const AccountSideNavigation = ({ drawerWidth }) => {
     <>
       {deviceType === 'mobile' ? (
         <MobileSideNavigation
+          pages={pages}
           pageName={selectedPage}
           drawerWidth={drawerWidth}
           deviceType={deviceType}

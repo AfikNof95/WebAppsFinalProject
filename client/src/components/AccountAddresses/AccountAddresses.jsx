@@ -4,12 +4,14 @@ import AccountAddressCard from './AccountAddressCard';
 import backendAPI from '../../api';
 import { Alert, Grid, Paper, Skeleton, Snackbar } from '@mui/material';
 import EditAddressDialog from '../EditAddressDialog/EditAddressDialog';
+import DeleteAddressDialog from '../DeleteAddressDialog/DeleteAddressDialog';
 
 const AccountAddresses = forwardRef(({ userId, openNewAddressDialog = false }, ref) => {
   const [addressList, setAddressList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState({});
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [showSnackBar, setShowSnackBar] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState({
     severity: 'error',
@@ -29,6 +31,38 @@ const AccountAddresses = forwardRef(({ userId, openNewAddressDialog = false }, r
   const handleEditAddressClose = () => {
     setSelectedAddress({});
     setIsEditDialogOpen(false);
+  };
+  const handleDeleteAddressClose = () => {
+    setSelectedAddress({});
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleDeleteAddressConfirm = async (address) => {
+    try {
+      setIsLoading(true);
+      await backendAPI.user.updateAddress(address);
+      setIsDeleteDialogOpen(false);
+      setSelectedAddress({});
+      setAddressList((currentState) => {
+        return currentState.filter(
+          (currentAddressState) => currentAddressState._id !== address._id
+        );
+      });
+      setSnackBarMessage({
+        severity: 'success',
+        message: 'Address deleted successfully!'
+      });
+    } catch (ex) {
+      setSnackBarMessage({
+        severity: 'error',
+        message: "Couldn't delete address, please try again later!"
+      });
+    }
+    setIsLoading(false);
+  };
+  const handleDeleteAddressClick = (address) => {
+    setSelectedAddress(address);
+    setIsDeleteDialogOpen(true);
   };
 
   const handleEditAddressSave = async (address) => {
@@ -89,6 +123,13 @@ const AccountAddresses = forwardRef(({ userId, openNewAddressDialog = false }, r
           handleClose={handleEditAddressClose}
           handleSave={handleEditAddressSave}></EditAddressDialog>
       )}
+      {isDeleteDialogOpen && (
+        <DeleteAddressDialog
+          open={isDeleteDialogOpen}
+          address={selectedAddress}
+          handleDeleteAddressClose={handleDeleteAddressClose}
+          handleDeleteAddress={handleDeleteAddressConfirm}></DeleteAddressDialog>
+      )}
 
       <Grid container spacing={2}>
         {isLoading && (
@@ -127,7 +168,8 @@ const AccountAddresses = forwardRef(({ userId, openNewAddressDialog = false }, r
           <Grid item xs={12} sm={6} lg={4} key={address._id}>
             <AccountAddressCard
               address={address}
-              handleEditAddressClick={handleEditAddressClick}></AccountAddressCard>
+              handleEditAddressClick={handleEditAddressClick}
+              handleDeleteAddressClick={handleDeleteAddressClick}></AccountAddressCard>
           </Grid>
         ))}
       </Grid>

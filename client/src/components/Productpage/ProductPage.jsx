@@ -1,7 +1,7 @@
 import './Productpage.css';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useShoppingCart } from '../../context/ShoppingCartContext';
 import {
   Box,
@@ -22,7 +22,7 @@ import { AnimateOnChange } from 'react-animation';
 import backendAPI from '../../api';
 import { Container, Stack } from '@mui/system';
 import { formatPrice } from '../../utils/formatPrice';
-import { ShoppingBagOutlined } from '@mui/icons-material';
+import { AttachMoneyOutlined, ShoppingBagOutlined } from '@mui/icons-material';
 
 const ProductPage = (props) => {
   const shortStock = ['Low On Stock!   Only ', 'About to run out!   Only '];
@@ -31,6 +31,7 @@ const ProductPage = (props) => {
 
   const largeStock = ['Take you time  ', 'You are lucky! :)  ', 'High Availability  '];
 
+  const navigate = useNavigate();
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,48 +76,56 @@ const ProductPage = (props) => {
       clearInterval(interval);
     };
   });
+
+  const handleBuyNowClick = () => {
+    addToCart(product);
+    navigate('/checkout');
+  };
   return (
     !isLoading && (
-      <Box height="100vh">
+      <Box>
         <Toolbar></Toolbar>
-        <Box
-        height={"calc(100vh - 64px)"}
-          // component={Paper}
-          sx={{ backgroundColor: 'white' }}>
-          <Grid container gap={3} padding={5}>
-            <Grid item xs={12} sm={12} md={12}>
+        <Grid container height={'calc(100vh - 64px)'}>
+          <Grid item xs={12} sx={{ backgroundColor: 'white', padding: 2 }}>
+            <Container>
               <Grid container>
-                <Grid item xs={2}>
-                  <Stack gap={2}>
-                    {product.images.map((item, index) => (
+                <Grid item xs={12} lg={6}>
+                  <Grid container>
+                    <Grid item xs={2} maxHeight={600} overflow={'clip'}>
+                      <Stack gap={2}>
+                        {product.images.map((item, index) => (
+                          <img
+                            key={item}
+                            width={80}
+                            height={70}
+                            src={item}
+                            alt=""
+                            style={{ objectFit: 'contain' }}
+                            loading="lazy"
+                            onClick={() => switchIndex(index)}
+                          />
+                        ))}
+                      </Stack>
+                    </Grid>
+                    <Grid item xs={10}>
                       <img
-                        key={item}
-                        width={80}
-                        height={70}
-                        src={item}
+                        width={'100%'}
+                        height={'100%'}
+                        style={{ objectFit: 'contain', maxHeight: '500px', maxWidth: '500px' }}
+                        component="img"
+                        src={product.images[index]}
                         alt=""
-                        style={{ objectFit: 'contain' }}
-                        loading="lazy"
-                        onClick={() => switchIndex(index)}
                       />
-                    ))}
-                  </Stack>
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item xs={9} sm={10} md={5} xl={3}>
-                  <img
-                    width={'100%'}
-                    height={'100%'}
-                    style={{ objectFit: 'contain',maxHeight:"500px",maxWidth:"500px" }}
-                    component="img"
-                    src={product.images[index]}
-                    alt=""
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={12} md={5} display={'flex'} alignItems={'center'}>
+                <Grid item xs={12} lg={6} padding={1}>
                   <Box>
-                    <Typography variant="body1" fontWeight={'bold'} padding={2} flexBasis={'100%'}>
+                    <Typography variant="body1" fontWeight={'bold'} flexBasis={'100%'}>
                       {product.name}
+                    </Typography>
+                    <Typography variant="h6" sx={{ color: '#1976d2' }}>
+                      {formatPrice(product.price)}
                     </Typography>
                     <Box textAlign={'center'} flexBasis={'100%'}>
                       <Box
@@ -128,15 +137,22 @@ const ProductPage = (props) => {
                           variant="contained"
                           startIcon={<ShoppingBagOutlined></ShoppingBagOutlined>}
                           color="secondaryButton.light"
+                          fullWidth
                           onClick={() => {
                             addToCart(product);
                             openCart();
                           }}>
                           Add to cart
                         </Button>
-                        <Typography variant="h6" padding={2}>
-                          {formatPrice(product.price)}
-                        </Typography>
+                        <Button
+                          variant="contained"
+                          startIcon={<AttachMoneyOutlined></AttachMoneyOutlined>}
+                          color="mainButton"
+                          fullWidth
+                          sx={{ marginLeft: 3 }}
+                          onClick={handleBuyNowClick}>
+                          Buy Now
+                        </Button>
                       </Box>
                       <AnimateOnChange
                         className={'quantity-alert'}
@@ -153,23 +169,34 @@ const ProductPage = (props) => {
                   </Box>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={12}>
-            <List sx={{ listStyleType: 'disc', padding: 2 }}>
-            {product.description.split('\n').map((desc) => (
-              <ListItem key={desc} disablePadding sx={{ display: 'list-item' }}>
-                <ListItemText
-                  primaryTypographyProps={{
-                    variant:"body1",
-                    fontSize: '1em'
-                  }}
-                  primary={desc}></ListItemText>
-              </ListItem>
-            ))}
-          </List>
-            </Grid>
+            </Container>
           </Grid>
-        </Box>
+
+          <Grid item xs={12} sx={{ backgroundColor: '#efefef', padding: 2 }}>
+            <Divider>
+              <Typography fontWeight={'bold'} fontSize={'1.2em'}>
+                About this product
+              </Typography>
+            </Divider>
+            <Container>
+              <Box>
+                <List sx={{ listStyleType: 'disc', padding: 2 }}>
+                  {product.description.split('\n').map((desc) => (
+                    <ListItem key={desc} disablePadding sx={{ display: 'list-item' }}>
+                      <ListItemText
+                        primaryTypographyProps={{
+                          variant: 'body1',
+                          fontSize: '1em',
+                          fontWeight: 600
+                        }}
+                        primary={desc}></ListItemText>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Container>
+          </Grid>
+        </Grid>
       </Box>
     )
   );

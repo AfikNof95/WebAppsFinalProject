@@ -1,9 +1,10 @@
 import { Edit, EditOutlined } from '@mui/icons-material';
-import { Grid, IconButton, Paper, Typography } from '@mui/material';
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
+import { Grid, IconButton, Paper, Tooltip, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
 
-const AccountAddressCard = ({ address, handleEditAddressClick }) => {
+const AccountAddressCard = ({ address, handleEditAddressClick, handleDeleteAddressClick }) => {
   const [addressObject, setAddressObject] = useState(address);
 
   useEffect(() => {
@@ -17,12 +18,24 @@ const AccountAddressCard = ({ address, handleEditAddressClick }) => {
             <Typography variant="body1" fontWeight={'bold'} fontSize={'1em'}>
               Address Info
             </Typography>
-            <IconButton
-              color="mainButton"
-              sx={{ padding: 0 }}
-              onClick={() => handleEditAddressClick(addressObject)}>
-              <EditOutlined></EditOutlined>
-            </IconButton>
+            <div>
+              <Tooltip title="Edit" placement="top">
+                <IconButton
+                  color="mainButton"
+                  sx={{ padding: 0, marginRight: 1 }}
+                  onClick={() => handleEditAddressClick(addressObject)}>
+                  <EditOutlined></EditOutlined>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete" placement="top">
+                <IconButton
+                  color="error"
+                  sx={{ padding: 0 }}
+                  onClick={() => handleDeleteAddressClick(addressObject)}>
+                  <DeleteOutlined></DeleteOutlined>
+                </IconButton>
+              </Tooltip>
+            </div>
           </Box>
         </Grid>
         <Grid item xs={12} md={6}>

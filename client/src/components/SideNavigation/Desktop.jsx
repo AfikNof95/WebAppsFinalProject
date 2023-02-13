@@ -38,7 +38,6 @@ const DesktopSideNavigation = ({
     setIsCategoriesOpen(!isCategoriesOpen);
   };
   const { currentUser, getUserProfilePicture } = useAuth();
-
   return (
     <Drawer
       variant="permanent"
@@ -64,7 +63,7 @@ const DesktopSideNavigation = ({
                 src={getUserProfilePicture()}
                 sx={{ width: 70, height: 70 }}
                 component={Link}
-                to="/profile"></Avatar>
+                to="/account"></Avatar>
               <Typography variant="body1" fontWeight={'bold'}>
                 {currentUser.displayName}
               </Typography>

@@ -47,7 +47,7 @@ const EditAddressDialog = ({ address, open, handleClose, handleSave }) => {
     const newErrors = { ...errors };
 
     for (let [key, value] of Object.entries(addressState)) {
-      if (key === 'id') {
+      if (errors[key] === undefined) {
         continue;
       }
       if (!value || (value.trim && value.trim() === '')) {
@@ -132,7 +132,7 @@ const EditAddressDialog = ({ address, open, handleClose, handleSave }) => {
               inputProps={{ maxLength: 22, minLength: 2 }}
               onChange={handleChange}
               error={errors.houseNumber}
-              helperText={errors.country ? 'Please enter a valid house number' : ''}
+              helperText={errors.houseNumber ? 'Please enter a valid house number' : ''}
             />
           </Grid>
 

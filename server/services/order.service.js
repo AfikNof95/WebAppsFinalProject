@@ -11,7 +11,7 @@ const OrderService = {
   },
 
   async getOrderByUserId(userId) {
-    return await OrderModel.find({ user: userId }).populate('products.product');
+    return await OrderModel.find({ user: userId }).sort({createdAt:-1}).populate('products.product');
   },
 
   async createOrder(order) {

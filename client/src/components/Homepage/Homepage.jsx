@@ -20,7 +20,6 @@ const Homepage = () => {
   const [productCategories, setProductCategories] = useState(null);
   const [productsGroupByCategories, setProductsGroupByCategories] = useState(null);
   const [priceRange, setPriceRange] = useState([1, 1000]);
-  const { getToken } = useAuth();
   const [screenSize] = useScreenSize();
   const [drawerWidth, setDrawerWidth] = useState(() => {
     return screenSize === 'sm' || screenSize === 'xs' ? 80 : 300;
@@ -35,7 +34,7 @@ const Homepage = () => {
   const handlePageChange = async (event, page) => {
     setCurrentPage(page);
     searchParams.set('pageNumber', page);
-    setSearchParams(searchParams);
+    setSearchParams(searchParams, { replace: false });
   };
 
   useEffect(() => {

@@ -5,6 +5,8 @@ import AddressForm from './AddressForm'
 import PaymentForm from './PaymentForm'
 import Review from './Review'
 import { useAuth } from '../../context/AuthContext'
+import { useShoppingCart } from '../../context/ShoppingCartContext'
+import { useNavigate } from 'react-router-dom'
 
 const steps = ['Shipping address', 'Payment details', 'Review your order']
 
@@ -14,6 +16,12 @@ export default function NewCheckout() {
     const [addressId, setAddressId] = useState('')
     const [boxShadowColor, setBoxShadowColor] = useState('')
     const { currentUser } = useAuth()
+    const {getCartQuantity} = useShoppingCart();
+    const navigate = useNavigate();
+
+    if(getCartQuantity() <=0){
+        navigate(-1);
+    }
 
     function getStepContent(step) {
         switch (step) {
