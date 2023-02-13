@@ -1,17 +1,27 @@
 import React, { useState } from 'react'
 import { CssBaseline, Container, Paper, Stepper } from '@mui/material'
 import { StepLabel, Typography, Step } from '@mui/material'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import AddressForm from './AddressForm'
 import PaymentForm from './PaymentForm'
 import Review from './Review'
+import { useAuth } from '../../context/AuthContext'
+import { useShoppingCart } from '../../context/ShoppingCartContext'
+import { useNavigate } from 'react-router-dom'
 
 const steps = ['Shipping address', 'Payment details', 'Review your order']
-const theme = createTheme()
 
 export default function NewCheckout() {
     const [activeStep, setActiveStep] = useState(0)
     const [isNewAddress, setIsNewAddress] = useState(false)
+    const [addressId, setAddressId] = useState('')
+    const [boxShadowColor, setBoxShadowColor] = useState('')
+    const { currentUser } = useAuth()
+    const {getCartQuantity} = useShoppingCart();
+    const navigate = useNavigate();
+
+    if(getCartQuantity() <=0){
+        navigate(-1);
+    }
 
     function getStepContent(step) {
         switch (step) {
@@ -21,6 +31,10 @@ export default function NewCheckout() {
                         handleNext={handleNext}
                         isNewAddress={isNewAddress}
                         setIsNewAddress={setIsNewAddress}
+                        currentUser={currentUser}
+                        setAddressId={setAddressId}
+                        boxShadowColor={boxShadowColor}
+                        setBoxShadowColor={setBoxShadowColor}
                     />
                 )
             case 1:
@@ -32,7 +46,12 @@ export default function NewCheckout() {
                 )
             case 2:
                 return (
-                    <Review handleNext={handleNext} handleBack={handleBack} />
+                    <Review
+                        handleNext={handleNext}
+                        handleBack={handleBack}
+                        currentUser={currentUser}
+                        addressId={addressId}
+                    />
                 )
             default:
                 throw new Error('Unknown step')
@@ -48,9 +67,7 @@ export default function NewCheckout() {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Container component="main" maxWidth="sm" sx={{ mb: 4, mt: 12 }}>
+            <Container component="main" maxWidth="md" sx={{ mb: 4, mt: 12 }}>
                 <Paper
                     variant="outlined"
                     sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
@@ -87,6 +104,5 @@ export default function NewCheckout() {
                     )}
                 </Paper>
             </Container>
-        </ThemeProvider>
     )
 }

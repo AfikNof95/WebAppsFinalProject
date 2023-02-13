@@ -29,7 +29,7 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
     <Box
       position="relative"
       display={'flex'}
-      flexDirection={{ sm: 'column', md: 'row' }}
+      flexDirection={{ xs:'column',sm: 'column', md: 'row' }}
       justifyContent={'space-between'}
       alignItems={'center'}
       padding={2}>
@@ -96,7 +96,7 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
           {formatPrice(price)}
         </Typography>
       </Box>
-      <Box sx={{ position: { sm: 'absolute', md: 'static' }, top: 0, right: 0 }}>
+      <Box sx={{ position: { xs:'absolute',sm: 'absolute', md: 'static' }, top: 0, right: 0 }}>
         <IconButton onClick={() => removeFromCart(id)} color="error">
           <ClearIcon></ClearIcon>
         </IconButton>

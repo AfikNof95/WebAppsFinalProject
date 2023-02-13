@@ -11,22 +11,27 @@ const OrderService = {
   },
 
   async getOrderByUserId(userId) {
-    return await OrderModel.find({ user: userId }).populate('products.product');
+    return await OrderModel.find({ user: userId }).sort({createdAt:-1}).populate('products.product');
   },
 
   async createOrder(order) {
+    let totalPrice = 0;
     order.products = order.products.map((product) => {
+      totalPrice += product.quantity * product.product.price;
       return {
         quantity: product.quantity,
-        product: new ObjectId(product.product)
+        product: new ObjectId(product.product._id)
       };
     });
+    order.totalPrice = totalPrice;
     return (await OrderModel.create(order)).populate('products.product');
   },
 
   async updateOrder(orderId, order) {
-    console.log('orderId: ' + orderId);
-    console.log('order : ' + order);
+    const originalOrder = await OrderModel.findById(orderId);
+    if (originalOrder.status !== 'Created') {
+      throw new Error('Order already shipped!');
+    }
     const updatedOrder = await OrderModel.findOneAndUpdate({ _id: new ObjectId(orderId) }, order);
     if (!updatedOrder) {
       throw new Error('Order not found!');

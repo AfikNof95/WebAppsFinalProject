@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const useScreenSize = () => {
-  const [screenSize, setScreenSize] = useState('xl');
+  const [screenSize, setScreenSize] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {

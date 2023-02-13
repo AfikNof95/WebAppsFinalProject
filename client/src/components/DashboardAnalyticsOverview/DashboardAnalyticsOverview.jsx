@@ -8,6 +8,7 @@ import OrdersIcon from '@mui/icons-material/LocalShipping';
 import { formatPrice } from '../../utils/formatPrice';
 import { useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { GroupAdd, GroupAddOutlined } from '@mui/icons-material';
 
 const DashboardAnalyticsOverview = ({ users, orders, products }) => {
   const [socketUrl, setSocketUrl] = useState('ws://localhost:2309');
@@ -16,6 +17,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
   const [isUserAnalyticsLoading, setIsUserAnalyticsLoading] = useState(true);
   const [isOrdersAnalyticsLoading, setIsOrdersAnalyticsLoading] = useState(true);
   const [isProductsAnalyticsLoading, setIsProductsAnalyticsLoading] = useState(true);
+  const [newUsers, setNewUsers] = useState(0);
 
   const [productsCategoryPieChart, setProductsCategoryPieChart] = useState([]);
   const [monthlyProfit, setMonthlyProfit] = useState(0);
@@ -40,6 +42,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
 
   useEffect(() => {
     if (users) {
+      setNewUsers(users.newUsers);
       setIsUserAnalyticsLoading(false);
     }
     if (orders) {
@@ -67,43 +70,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
       <Grid container paddingTop={3} rowGap={3} columnGap={2}>
         <Grid item xs={12}>
           <Grid container gap={3}>
-            <Grid component={Card} item sm={12} md={3}>
-              <CardContent>
-                <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
-                  {isOrdersAnalyticsLoading ? (
-                    <>
-                      <div style={{ width: '100%' }}>
-                        <Skeleton width={'50%'}></Skeleton>
-                        <Skeleton width={'25%'}></Skeleton>
-                      </div>
-                      <Skeleton variant="circular" width={100} height={70}></Skeleton>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        <Typography variant="body1" fontWeight={'bold'} color={'GrayText'}>
-                          Monthly Profit
-                        </Typography>
-                        <Typography variant="h6" fontWeight={'bold'}>
-                          {formatPrice(monthlyProfit)}
-                        </Typography>
-                      </div>
-
-                      <Avatar
-                        sx={{
-                          width: 70,
-                          height: 70,
-                          backgroundColor: '#2e7d32'
-                        }}>
-                        <ProfitIcon fontSize={'large'}></ProfitIcon>
-                      </Avatar>
-                    </>
-                  )}
-                </Box>
-              </CardContent>
-            </Grid>
-
-            <Grid component={Card} item sm={12} md={3}>
+            <Grid component={Card} item sm={12} md={5} lg={4} xl={3}>
               <CardContent>
                 <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
                   {isUserAnalyticsLoading ? (
@@ -142,7 +109,79 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
               </CardContent>
             </Grid>
 
-            <Grid component={Card} item sm={12} md={3}>
+            <Grid component={Card} item sm={12} md={5} lg={4} xl={3}>
+              <CardContent>
+                <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
+                  {isUserAnalyticsLoading ? (
+                    <>
+                      <div style={{ width: '100%' }}>
+                        <Skeleton width={'50%'}></Skeleton>
+                        <Skeleton width={'25%'}></Skeleton>
+                      </div>
+                      <Skeleton variant="circular" width={100} height={70}></Skeleton>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <Typography variant="body1" fontWeight={'bold'} color={'GrayText'}>
+                          New users this month
+                        </Typography>
+                        <Typography variant="h6" fontWeight={'bold'}>
+                          {newUsers}
+                        </Typography>
+                      </div>
+
+                      <Avatar
+                        sx={{
+                          width: 70,
+                          height: 70,
+                          backgroundColor: '#9c27b0'
+                        }}>
+                        <GroupAdd fontSize={'large'}></GroupAdd>
+                      </Avatar>
+                    </>
+                  )}
+                </Box>
+              </CardContent>
+            </Grid>
+
+            <Grid component={Card} item sm={12} md={5} lg={4} xl={3}>
+              <CardContent>
+                <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
+                  {isOrdersAnalyticsLoading ? (
+                    <>
+                      <div style={{ width: '100%' }}>
+                        <Skeleton width={'50%'}></Skeleton>
+                        <Skeleton width={'25%'}></Skeleton>
+                      </div>
+                      <Skeleton variant="circular" width={100} height={70}></Skeleton>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <Typography variant="body1" fontWeight={'bold'} color={'GrayText'}>
+                          Monthly Profit
+                        </Typography>
+                        <Typography variant="h6" fontWeight={'bold'}>
+                          {formatPrice(monthlyProfit)}
+                        </Typography>
+                      </div>
+
+                      <Avatar
+                        sx={{
+                          width: 70,
+                          height: 70,
+                          backgroundColor: '#2e7d32'
+                        }}>
+                        <ProfitIcon fontSize={'large'}></ProfitIcon>
+                      </Avatar>
+                    </>
+                  )}
+                </Box>
+              </CardContent>
+            </Grid>
+
+            <Grid component={Card} item sm={12} md={5} lg={4} xl={3}>
               <CardContent>
                 <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
                   {isOrdersAnalyticsLoading ? (
@@ -182,7 +221,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
 
         <Grid item xs={12}>
           <Grid container gap={3}>
-            <Grid item component={Card} sm={12} md={3}>
+            <Grid item component={Card} sm={12} md={5} lg={4} xl={3}>
               <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Typography variant="body2" fontWeight={'bold'}>
                   Amount Of Products Per Category
@@ -206,7 +245,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                 </ResponsiveContainer>
               </CardContent>
             </Grid>
-            <Grid item component={Card} sm={12} md={3}>
+            <Grid item component={Card} sm={12} md={5} lg={4} xl={3}>
               <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
                 {isOrdersAnalyticsLoading ? (
                   <>
@@ -242,7 +281,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                 )}
               </CardContent>
             </Grid>
-            <Grid item component={Card} sm={12} md={3}>
+            <Grid item component={Card} sm={12} md={5} lg={4} xl={3}>
               <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>
                 {isUserAnalyticsLoading ? (
                   <></>

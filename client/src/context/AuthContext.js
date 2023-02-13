@@ -9,6 +9,7 @@ const AuthContext = createContext({
   signIn: async ({ email, password }) => {},
   signOut: async () => {},
   updateUser: async (newUserDetails) => {},
+  updatePassword: async (newPassword) => {},
   isUserSignedIn: () => {},
   getUser: () => {},
   refreshToken: async () => {},
@@ -98,19 +99,39 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   async function updateUser(newUserDetails) {
-    if (newUserDetails.photoFile) {
-      const photoUploadResponse = await backendAPI.user.uploadPhoto(newUserDetails.photoFile);
-      newUserDetails.photoUrl = photoUploadResponse.data;
+    try {
+      if (newUserDetails.photoFile) {
+        const photoUploadResponse = await backendAPI.user.uploadPhoto(newUserDetails.photoFile);
+        newUserDetails.photoUrl = photoUploadResponse.data;
+      }
+      const updateRequestData = {
+        ...{
+          idToken: currentUser.idToken,
+          displayName: currentUser.displayName,
+          photoUrl: currentUser.photoUrl,
+          returnSecureToken: true
+        },
+        ...newUserDetails
+      };
+      const updateResponse = await backendAPI.user.update(updateRequestData);
+
+      if (newUserDetails.email && currentUser.email !== newUserDetails.email) {
+        signOut();
+        return;
+      }
+
+      const userDataResponse = await backendAPI.user.getUserData(currentUser.idToken);
+      const { users } = userDataResponse.data;
+
+      const updatedUserDetails = { ...updateResponse.data, ...users[0] };
+
+      setCurrentUser((currentUserState) => {
+        return { ...currentUserState, ...updatedUserDetails };
+      });
+    } catch (ex) {
+      console.error(ex);
+      throw ex;
     }
-    const updateRequestData = { ...currentUser, ...newUserDetails };
-    const updateResponse = await backendAPI.user.update(updateRequestData);
-    const userDataResponse = await backendAPI.user.getUserData(updateResponse.data.idToken);
-
-    const updatedUserDetails = { ...updateResponse.data, ...userDataResponse.data };
-
-    setCurrentUser((currentUserState) => {
-      return { ...currentUserState, ...updatedUserDetails };
-    });
   }
 
   async function refreshToken() {
@@ -129,6 +150,26 @@ export const AuthContextProvider = ({ children }) => {
       };
     });
     return { idToken };
+  }
+
+  async function updatePassword(newPassword) {
+    try {
+      const updatePasswordResponse = await backendAPI.auth.updatePassword(
+        currentUser.idToken,
+        newPassword
+      );
+      setCurrentUser((currentUserState) => {
+        return {
+          ...currentUserState,
+          ...updatePasswordResponse.data,
+          ...{ expireDate: getTokenExpireDate(updatePasswordResponse.data.expiresIn) }
+        };
+      });
+      return true;
+    } catch (ex) {
+      console.error(ex);
+      throw ex;
+    }
   }
 
   useEffect(() => {
@@ -185,6 +226,7 @@ export const AuthContextProvider = ({ children }) => {
     signIn,
     signOut,
     updateUser,
+    updatePassword,
     getUserToken,
     getUser,
     refreshToken,

@@ -40,14 +40,27 @@ const UserController = {
       const response = await listAllUsers();
       const activeUsers = { name: 'Active users', count: 0 };
       const notActiveUsers = { name: 'Disabled users', count: 0 };
+      let newUserCount = 0;
+      const today = new Date();
       response.users.map((user) => {
         if (user.disabled) {
           return notActiveUsers.count++;
+        }
+        if (user.metadata) {
+          const createdDate = new Date(user.metadata.creationTime);
+
+          if (
+            createdDate.getMonth() === today.getMonth() &&
+            createdDate.getFullYear() === today.getFullYear()
+          ) {
+            newUserCount++;
+          }
         }
         activeUsers.count++;
       });
       res.json({
         count: response.users.length,
+        newUsers:newUserCount,
         usersState: [activeUsers, notActiveUsers]
       });
     } catch (ex) {

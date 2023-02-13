@@ -4,28 +4,49 @@ import { Grid, Box, Button, Stack } from '@mui/material'
 import { useShoppingCart } from '../../context/ShoppingCartContext'
 import omit from 'lodash/omit'
 import ReviewProdList from './ReviewProdList'
+import backendAPI from '../../api'
+import { useAuth } from '../../context/AuthContext'
 
 export default function Review(props) {
-    const { handleNext, handleBack } = props
+    const { handleNext, handleBack,addressId } = props
+    const {currentUser} =  useAuth();
     const {
         paymentInfo,
         userInfo,
+        getCartProducts,
         getCartTotalPrice,
+        getCartTotalPriceNumber,
         deleteCart,
         removePaymentInfo,
         removeUserInfo,
     } = useShoppingCart()
-    const sumOrder = getCartTotalPrice()
 
-    const finishReservation = () => {
+    const cartProducts = getCartProducts()
+    const ordersPrice = getCartTotalPrice()
+    const sumOrder = getCartTotalPriceNumber()
+
+    const orderToSend = {
+        user: currentUser.localId,
+        address: addressId,
+        products: cartProducts,
+        totalPrice: sumOrder,
+    }
+
+    const finishReservation = async () => {
         try {
             // send put or post to server.
-        } catch (err) {
-            // clg error
-        } finally {
+            const order ={
+                products:getCartProducts(),
+                user:currentUser.localId,
+                address:addressId
+            }
+            const resposne = await backendAPI.order.create(order)
             deleteCart()
             removePaymentInfo()
             removeUserInfo()
+        } catch (err) {
+            // clg error
+            console.error(err);
         }
     }
 
@@ -39,6 +60,18 @@ export default function Review(props) {
         { name: 'Card holder', detail: paymentInfo.cardName },
         { name: 'Card number', detail: `xxxx-xxxx-xxxx-${last4digits}` },
     ]
+    const shippingUser =
+        Object.values(
+            omit(userInfo, [
+                'street',
+                'houseNumber',
+                'city',
+                'zipCode',
+                'country',
+            ])
+        )
+            .filter(Boolean)
+            .join(' ') || currentUser.displayName
 
     return (
         <React.Fragment>
@@ -47,14 +80,14 @@ export default function Review(props) {
             </Typography>
             <hr />
             <List disablePadding>
-                <Stack direction={'column'} gap={3} minWidth={500}>
+                <Stack direction={'column'} gap={3} >
                     <ReviewProdList />
                 </Stack>
                 <hr />
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="Total" />
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                        {sumOrder}
+                        {ordersPrice}
                     </Typography>
                 </ListItem>
             </List>
@@ -70,17 +103,7 @@ export default function Review(props) {
                         Shipping
                     </Typography>
                     <Typography align="center" gutterBottom>
-                        {Object.values(
-                            omit(userInfo, [
-                                'street',
-                                'houseNumber',
-                                'city',
-                                'zipCode',
-                                'country',
-                            ])
-                        )
-                            .filter(Boolean)
-                            .join(' ')}
+                        {shippingUser}
                     </Typography>
                     <Typography align="center" gutterBottom>
                         {Object.values(omit(userInfo, ['fName', 'lName']))
@@ -130,3 +153,4 @@ export default function Review(props) {
         </React.Fragment>
     )
 }
+

@@ -229,7 +229,7 @@ const DashboardUserEditDialog = ({ user, open, handleDialogClose, handleDialogSa
       <DialogActions>
         <Grid container spacing={1} direction={'row'} width={'100%'}>
           <Grid item xs={6}>
-            <Button fullWidth onClick={handleDialogClose} color="info" variant="contained">
+            <Button fullWidth onClick={handleDialogClose} color="secondaryButton.light" variant="outlined">
               Cancel
             </Button>
           </Grid>

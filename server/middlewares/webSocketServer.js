@@ -67,7 +67,7 @@ const broadcastUserCount = async () => {
     if (client.user) {
       try {
         const user = await getAuth().verifyIdToken(client.user.idToken);
-        if (user.isAdmin && client.connection.readyState === WebSocket.OPEN) {
+        if (user.isAdmin /* && client.connection.readyState === WebSocket.OPEN */) {
           console.log(`Notifying ${user.email} About Current User Count`);
           client.connection.send(
             JSON.stringify({

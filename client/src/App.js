@@ -20,6 +20,21 @@ const App = () => {
         light: 'rgb(79, 92, 111)',
         dark: 'rgb(25, 36, 53)',
         contrastText: '#fff'
+      },
+      secondaryButton: {
+        main: '#3b5071',
+        dark: '#29384F',
+        contrastText: '#fff',
+        light: {
+          main: '#62738D',
+          dark: '#29384F',
+          contrastText: '#fff'
+        }
+      },
+      'secondaryButton.light': {
+        main: '#62738D',
+        dark: '#29384F',
+        contrastText: '#fff'
       }
     }
   });

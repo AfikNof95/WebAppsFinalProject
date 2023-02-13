@@ -1,5 +1,5 @@
+import { DataGrid, GridActionsCellItem} from '@mui/x-data-grid';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import backendAPI from '../../api';
 import { Alert, CircularProgress, Snackbar, Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
@@ -243,11 +243,7 @@ const DashboardOrders = ({ token, ordersArray, users }) => {
 
   const handleDialogSave = async (updatedOrder) => {
     try {
-      if (!updatedOrder._id) {
-        await backendAPI.admin.product.create(updatedOrder);
-      } else {
-        await backendAPI.admin.product.update(updatedOrder);
-      }
+      await backendAPI.admin.order.update(updatedOrder);
 
       setOrders((currentOrdersState) => {
         return currentOrdersState.map((order) => {

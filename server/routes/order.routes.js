@@ -5,7 +5,7 @@ const router = require('express').Router();
 router.get('/', OrderController.getAllOrders);
 router.get('/id/:orderId', OrderController.getOrderById);
 
-router.get('/user/:userId', OrderController.getOrderByUserId);
+router.get('/User/:userId', OrderController.getOrderByUserId);
 
 router.post('/', OrderController.createOrder);
 router.put('/id/:orderId', OrderController.updateOrder);

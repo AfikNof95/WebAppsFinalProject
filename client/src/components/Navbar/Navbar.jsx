@@ -134,12 +134,6 @@ function Navbar() {
             <AccountCircle></AccountCircle>
           </IconButton>
           Account
-        </MenuItem>,
-        <MenuItem key="Profile" onClick={handleMenuClose} component={RouterLink} to={'/profile'}>
-          <IconButton size="large" color="inherit">
-            <AccountCircle></AccountCircle>
-          </IconButton>
-          Profile
         </MenuItem>
       ]}
       {isAdmin() && (
@@ -189,7 +183,7 @@ function Navbar() {
         <p>Cart</p>
       </MenuItem>
       {isUserSignedIn() && (
-        <MenuItem component={RouterLink} to="/profile" key="ProfileMobile">
+        <MenuItem component={RouterLink} to="/account" key="AccountMobile">
           <IconButton
             size="large"
             aria-label="account of current user"
@@ -198,7 +192,20 @@ function Navbar() {
             color="inherit">
             <AccountCircle />
           </IconButton>
-          <p>Profile</p>
+          <p>Account</p>
+        </MenuItem>
+      )}
+      {isAdmin() && (
+        <MenuItem component={RouterLink} to="/dashboard" key="DashboardMobile">
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            color="inherit">
+            <DashboardIcon />
+          </IconButton>
+          <p>Dashboard</p>
         </MenuItem>
       )}
 

@@ -24,7 +24,10 @@ const AddressModel = new Schema(
       type: Number,
       required: [true, 'Zip code field should not be empty!']
     },
-    user: String, //We get it from the firebase UID
+    user: {
+      type: String,
+      required: [true, 'User field should not be empty!']
+    }, //We get it from the firebase UID
     isActive: { type: Boolean, default: true }
   },
   { timestamps: true }

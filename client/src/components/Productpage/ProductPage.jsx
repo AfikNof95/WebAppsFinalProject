@@ -1,13 +1,17 @@
+import './Productpage.css';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useShoppingCart } from '../../context/ShoppingCartContext';
 import {
   Box,
   Button,
+  Card,
   Grid,
   List,
   Typography,
+  ImageList,
+  ImageListItem,
   ListItem,
   ListItemText,
   Toolbar,
@@ -16,8 +20,9 @@ import {
 } from '@mui/material';
 import { AnimateOnChange } from 'react-animation';
 import backendAPI from '../../api';
-import { Stack } from '@mui/system';
+import { Container, Stack } from '@mui/system';
 import { formatPrice } from '../../utils/formatPrice';
+import { AttachMoneyOutlined, ShoppingBagOutlined } from '@mui/icons-material';
 
 const ProductPage = (props) => {
   const shortStock = ['Low On Stock!   Only ', 'About to run out!   Only '];
@@ -26,6 +31,7 @@ const ProductPage = (props) => {
 
   const largeStock = ['Take you time  ', 'You are lucky! :)  ', 'High Availability  '];
 
+  const navigate = useNavigate();
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,91 +76,125 @@ const ProductPage = (props) => {
       clearInterval(interval);
     };
   });
+
+  const handleBuyNowClick = () => {
+    addToCart(product);
+    navigate('/checkout');
+  };
   return (
     !isLoading && (
-      <Box
-        component={Paper}
-        sx={{ backgroundColor: 'white' }}
-        padding={5}
-        height={'100vh'}
-        overflow={'auto'}>
+      <Box>
         <Toolbar></Toolbar>
-        <Grid container gap={3}>
-          <Grid item xs={12} sm={12} md={5}>
-            <Grid container>
-              <Grid item xs={2}>
-                <Stack gap={2}>
-                  {product.images.map((item, index) => (
-                    <img
-                      key={item}
-                      width={80}
-                      height={70}
-                      src={item}
-                      alt=""
-                      style={{ objectFit: 'contain' }}
-                      loading="lazy"
-                      onClick={() => switchIndex(index)}
-                    />
-                  ))}
-                </Stack>
+        <Grid container height={'calc(100vh - 64px)'}>
+          <Grid item xs={12} sx={{ backgroundColor: 'white', padding: 2 }}>
+            <Container>
+              <Grid container>
+                <Grid item xs={12} lg={6}>
+                  <Grid container>
+                    <Grid item xs={2} maxHeight={600} overflow={'clip'}>
+                      <Stack gap={2}>
+                        {product.images.map((item, index) => (
+                          <img
+                            key={item}
+                            width={80}
+                            height={70}
+                            src={item}
+                            alt=""
+                            style={{ objectFit: 'contain' }}
+                            loading="lazy"
+                            onClick={() => switchIndex(index)}
+                          />
+                        ))}
+                      </Stack>
+                    </Grid>
+                    <Grid item xs={10}>
+                      <img
+                        width={'100%'}
+                        height={'100%'}
+                        style={{ objectFit: 'contain', maxHeight: '500px', maxWidth: '500px' }}
+                        component="img"
+                        src={product.images[index]}
+                        alt=""
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} lg={6} padding={1}>
+                  <Box>
+                    <Typography variant="body1" fontWeight={'bold'} flexBasis={'100%'}>
+                      {product.name}
+                    </Typography>
+                    <Typography variant="h6" sx={{ color: '#1976d2' }}>
+                      {formatPrice(product.price)}
+                    </Typography>
+                    <Box textAlign={'center'} flexBasis={'100%'}>
+                      <Box
+                        display="flex"
+                        width={'100%'}
+                        alignItems={'center'}
+                        justifyContent={'center'}>
+                        <Button
+                          variant="contained"
+                          startIcon={<ShoppingBagOutlined></ShoppingBagOutlined>}
+                          color="secondaryButton.light"
+                          fullWidth
+                          onClick={() => {
+                            addToCart(product);
+                            openCart();
+                          }}>
+                          Add to cart
+                        </Button>
+                        <Button
+                          variant="contained"
+                          startIcon={<AttachMoneyOutlined></AttachMoneyOutlined>}
+                          color="mainButton"
+                          fullWidth
+                          sx={{ marginLeft: 3 }}
+                          onClick={handleBuyNowClick}>
+                          Buy Now
+                        </Button>
+                      </Box>
+                      <AnimateOnChange
+                        className={'quantity-alert'}
+                        animationOut="bounceOut"
+                        animationIn="bounceIn"
+                        durationOut="1000"
+                        durationIn="1000">
+                        <h4>
+                          {' '}
+                          {massageType[current]} {stockCount} Left in stock{' '}
+                        </h4>
+                      </AnimateOnChange>
+                    </Box>
+                  </Box>
+                </Grid>
               </Grid>
-              <Grid item xs={9} sm={10}>
-                <img
-                  width={'100%'}
-                  height={'100%'}
-                  style={{ objectFit: 'contain' }}
-                  component="img"
-                  src={product.images[index]}
-                  alt=""
-                />
-              </Grid>
-            </Grid>
+            </Container>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={4}>
-            <Typography variant="body1" fontWeight={'bold'} padding={2}>
-              {product.name}
-            </Typography>
-            <Divider></Divider>
-            <Typography variant="h6" padding={2}>
-              {formatPrice(product.price)}
-            </Typography>
-            <Divider></Divider>
-            <List sx={{ listStyleType: 'disc', padding: 2 }}>
-              {product.description.split('\n').map((desc) => (
-                <ListItem key={desc} disablePadding sx={{ display: 'list-item' }}>
-                  <ListItemText
-                    primaryTypographyProps={{
-                      fontWeight: 'bold',
-                      fontSize: '0.8em'
-                    }}
-                    primary={desc}></ListItemText>
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-          <Grid item xs={12} sm={12} md={2} textAlign={'center'}>
-            <AnimateOnChange
-              className="foo"
-              animationOut="bounceOut"
-              animationIn="bounceIn"
-              durationOut="1000"
-              durationIn="1000">
-              <h4>
-                {' '}
-                {massageType[current]} {stockCount} Left in stock{' '}
-              </h4>
-            </AnimateOnChange>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                addToCart(product);
-                openCart();
-              }}
-              fullWidth>
-              Add to cart
-            </Button>
+          <Grid item xs={12} sx={{ backgroundColor: '#efefef', padding: 2 }}>
+            <Divider>
+              <Typography fontWeight={'bold'} fontSize={'1.2em'}>
+                About this product
+              </Typography>
+            </Divider>
+            <Container>
+              <Box>
+                <List sx={{ listStyleType: 'disc', padding: 2 }}>
+                  {product.description.split('\n').map((desc) => (
+                    <ListItem key={desc} disablePadding sx={{ display: 'list-item' }}>
+                      <ListItemText
+                        primaryTypographyProps={{
+                          variant: 'body1',
+                          fontSize: '1em',
+                          fontWeight: 600
+                        }}
+                        primary={desc}></ListItemText>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Container>
           </Grid>
         </Grid>
       </Box>

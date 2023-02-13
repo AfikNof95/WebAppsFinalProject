@@ -13,7 +13,13 @@ export default function PaymentForm(props) {
 
     const checkFormValidation = () => {
         for (let payInfo of Object.keys(paymentInfo)) {
-            if (paymentInfo[payInfo].trim() === '' && !(payInfo == 'expDate')) {
+            if (paymentInfo[payInfo] == null) {
+                setIsNextAvailable(false)
+                return
+            } else if (
+                paymentInfo[payInfo].trim() === '' &&
+                !(payInfo == 'expDate')
+            ) {
                 setIsNextAvailable(false)
                 return
             }
@@ -55,7 +61,6 @@ export default function PaymentForm(props) {
                         autoComplete="cc-name"
                         variant="standard"
                         value={paymentInfo?.cardName && paymentInfo.cardName}
-                        placeholder={!paymentInfo?.cardName && 'Card holder...'}
                         inputProps={{ maxLength: 25, minLength: 2 }}
                         onChange={handlePaymentChange}
                     />
@@ -71,9 +76,6 @@ export default function PaymentForm(props) {
                         variant="standard"
                         value={
                             paymentInfo?.cardNumber && paymentInfo.cardNumber
-                        }
-                        placeholder={
-                            !paymentInfo?.cardNumber && 'Card number...'
                         }
                         inputProps={{ maxLength: 19, minLength: 10 }}
                         onChange={handlePaymentChange}
@@ -106,7 +108,6 @@ export default function PaymentForm(props) {
                         autoComplete="cc-csc"
                         variant="standard"
                         value={paymentInfo?.cvv && paymentInfo.cvv}
-                        placeholder={!paymentInfo?.cvv && 'CVV...'}
                         inputProps={{ maxLength: 3, minLength: 3 }}
                         onChange={handlePaymentChange}
                     />
