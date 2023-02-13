@@ -44,8 +44,8 @@ const CartPage = () => {
               display={'flex'}
               flexDirection="column"
               component={Paper}
-              minHeight={600}
-              maxHeight={'100%'}
+              minHeight={"80%"}
+              maxHeight={'95%'}
               width={'50%'}
               margin={'auto'}>
               <Box
