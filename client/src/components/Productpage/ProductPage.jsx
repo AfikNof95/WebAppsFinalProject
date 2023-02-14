@@ -187,8 +187,8 @@ const ProductPage = (props) => {
             <Container>
               <Box>
                 <List sx={{ listStyleType: 'disc', padding: 2 }}>
-                  {product.description.split('\n').map((desc) => (
-                    <ListItem key={desc} disablePadding sx={{ display: 'list-item' }}>
+                  {product.description.split('\n').map((desc,index) => (
+                    <ListItem key={desc + index} disablePadding sx={{ display: 'list-item' }}>
                       <ListItemText
                         primaryTypographyProps={{
                           variant: 'body1',

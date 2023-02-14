@@ -12,7 +12,7 @@ export const useAxiosIntercept = () => {
       async (config) => {
         if (config.url.indexOf('identitytoolkit') === -1 && currentUser) {
           config.headers['Authorization'] = 'Bearer ' + currentUser.idToken;
-          if (config.data && typeof config.data !== "string") {
+          if (config.data && typeof config.data !== 'string') {
             config.data.token = currentUser.idToken;
           }
         }
@@ -34,12 +34,14 @@ export const useAxiosIntercept = () => {
           if (new Date(currentUser.expireDate) < new Date()) {
             try {
               const user = await refreshToken();
-              error.config.headers.Authorization = 'Bearer ' + user.idToken;
+              if (error.config.url.indexOf('identitytoolkit') === -1 && currentUser) {
+                error.config.headers.Authorization = 'Bearer ' + user.idToken;
 
-              if (error.config.data && error.config.url.indexOf('identitytoolkit') === -1) {
-                const data = JSON.parse(error.config.data);
-                data.token = user.idToken;
-                error.config.data = JSON.stringify(data);
+                if (error.config.data && error.config.url.indexOf('identitytoolkit') === -1) {
+                  const data = JSON.parse(error.config.data);
+                  data.token = user.idToken;
+                  error.config.data = JSON.stringify(data);
+                }
               }
 
               return axios(error.config);
@@ -52,7 +54,6 @@ export const useAxiosIntercept = () => {
             navigate({ pathname: '/401' });
           }
         } else if (error.response.status === 403) {
-        
           if (error.response.data === 'USER_DISABLED') {
             signOut();
             navigate('/login');
@@ -60,10 +61,15 @@ export const useAxiosIntercept = () => {
           }
           try {
             const user = await refreshToken();
-            error.config.data = JSON.stringify({
-              token: user.idToken
-            });
-            error.config.headers.Authorization = 'Bearer ' + user.idToken;
+            if (error.config.url.indexOf('identitytoolkit') === -1 && currentUser) {
+              error.config.headers.Authorization = 'Bearer ' + user.idToken;
+              if (error.config.data) {
+                error.config.data = JSON.stringify({
+                  token: user.idToken
+                });
+              }
+            }
+
             return axios(error.config);
           } catch (ex) {
             console.error(ex);
@@ -75,14 +81,13 @@ export const useAxiosIntercept = () => {
       }
     );
     setIsInterceptReady(true);
-    
-    if(!currentUser){
+
+    if (!currentUser) {
       return () => {
         axios.interceptors.request.eject(reqIntercept);
         axios.interceptors.response.eject(resIntercept);
       };
     }
-      
   }, [currentUser]);
 
   return [isInterceptReady];

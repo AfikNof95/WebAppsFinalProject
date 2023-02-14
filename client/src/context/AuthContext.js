@@ -182,9 +182,12 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    const refresh = async ()=>{
+      await refreshToken();
+    }
     if (lastJsonMessage !== null) {
       if (lastJsonMessage.type === 'REFRESH_TOKEN') {
-        refreshToken();
+        refresh();
         sendJsonMessage({ type: 'SIGN_IN', user: currentUser });
       }
     }

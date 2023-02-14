@@ -297,6 +297,10 @@ export function ShoppingCartProvider({ children }) {
         })
     }
 
+    function applyDiscount(discountCode){
+      
+    }
+
     return (
         <ShoppingCartContext.Provider
             value={{

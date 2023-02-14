@@ -17,11 +17,16 @@ import { useShoppingCart } from '../../context/ShoppingCartContext';
 import { formatPrice } from '../../utils/formatPrice';
 import ShoppingBag from '@mui/icons-material/ShoppingBagOutlined';
 import { Container } from '@mui/system';
-import { ShoppingBagOutlined } from '@mui/icons-material';
+import { ReceiptLong, ShoppingBagOutlined } from '@mui/icons-material';
 
 const CartPage = () => {
-  const { getCartTotalPrice, getCartQuantity, getCartProducts, isShoppingCartLoading } =
-    useShoppingCart();
+  const {
+    getCartTotalPrice,
+    getCartQuantity,
+    getCartTotalPriceNumber,
+    getCartProducts,
+    isShoppingCartLoading
+  } = useShoppingCart();
 
   const getCartTitle = () => {
     const title = getCartQuantity() > 0 ? 'My Cart' : 'Your Cart Is Empty!';
@@ -39,15 +44,8 @@ const CartPage = () => {
       <Toolbar></Toolbar>
       <Container maxWidth="xl">
         <Grid container height={'calc(100vh - 64px)'}>
-          <Grid item xs={12} sm={12} md={12} lg={12} padding={1} height={'100%'}>
-            <Box
-              display={'flex'}
-              flexDirection="column"
-              component={Paper}
-              minHeight={"80%"}
-              maxHeight={'95%'}
-              width={'50%'}
-              margin={'auto'}>
+          <Grid item xs={12} sm={12} md={12} lg={6} padding={1} height={'100%'}>
+            <Box display={'flex'} flexDirection="column" component={Paper} height={'100%'}>
               <Box
                 display={'flex'}
                 width="100%"
@@ -59,7 +57,7 @@ const CartPage = () => {
                   My Cart
                 </Typography>
               </Box>
-              <Box padding={2} maxHeight={'80%'} overflow={'auto'} position={'relative'}>
+              <Box padding={2} maxHeight={'100%'} overflow={'auto'} position={'relative'}>
                 {isShoppingCartLoading && (
                   <Box
                     display={'flex'}
@@ -95,30 +93,129 @@ const CartPage = () => {
                   )
                 )}
               </Box>
-              <Box padding={2} marginTop="auto">
-                <Box>
-                  <Box display={'flex'} justifyContent="space-between" marginTop={1}>
-                    <Typography variant="body1" textAlign={'start'}>
-                      Total Price:
-                    </Typography>
-                    <Typography variant="body1" fontWeight={'bold'} textAlign={'end'}>
-                      {getCartTotalPrice()}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box display={'flex'} justifyContent="center">
-                  <Button
-                    fullWidth
-                    disabled={getCartQuantity() === 0}
-                    variant="contained"
-                    color="secondaryButton"
-                    size="large"
-                    LinkComponent={ReactLink}
-                    to="/checkout">
-                    Checkout now
-                  </Button>
-                </Box>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} sm={12} md={12} lg={6} padding={1}>
+            <Box display={'flex'} flexDirection="column" component={Paper} height={'100%'}>
+              <Box
+                display={'flex'}
+                width="100%"
+                padding={2}
+                sx={{ backgroundColor: (theme) => theme.palette.mainButton.main }}
+                justifyContent={'center'}>
+                <ReceiptLong fontSize="large" sx={{ color: 'white' }}></ReceiptLong>
+                <Typography variant="h4" fontWeight={'bold'} color={'white'} textAlign={'center'}>
+                  Order Summary
+                </Typography>
               </Box>
+
+              <Grid item xs={12} padding={2}>
+                <Stack direction={'column'} marginBottom={2} marginTop={2} gap={2}>
+                  {getCartProducts().map((cartProduct) => (
+                    <Box
+                      key={cartProduct.product._id}
+                      display={'flex'}
+                      flexDirection={'row'}
+                      justifyContent={'space-between'}>
+                      <Box display={'flex'} width={'50%'}>
+                        <Typography
+                          fontWeight={'bold'}
+                          fontSize={'1em'}
+                          noWrap
+                          overflow={'hidden'}
+                          textOverflow={'ellipsis'}>
+                          {cartProduct.product.name}
+                        </Typography>
+                        <FormLabel
+                          color="secondary"
+                          sx={{
+                            fontWeight: 'bold',
+                            fontSize: '0.7em',
+                            alignSelf: 'self-end'
+                          }}>
+                          x{cartProduct.quantity}
+                        </FormLabel>
+                      </Box>
+                      <Typography fontWeight={'bold'}>
+                        {formatPrice(cartProduct.quantity * cartProduct.product.price)}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Stack>
+              </Grid>
+              <Grid container marginTop="auto"  padding={2}>
+                <Grid item xs={12}>
+                  <Box>
+                    <Box display={'flex'} justifyContent="space-between">
+                      <Typography variant="body1" textAlign={'start'} fontSize={'1.3em'}>
+                        Price Before Taxes:
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        fontWeight={'bold'}
+                        textAlign={'end'}
+                        fontSize={'1.3em'}>
+                        {formatPrice(
+                          getCartTotalPriceNumber() -
+                            (getCartTotalPriceNumber() - (getCartTotalPriceNumber() / 0.18) * 0.17)
+                        )}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box>
+                    <Box display={'flex'} justifyContent="space-between">
+                      <Typography variant="body1" textAlign={'start'} fontSize={'1.3em'}>
+                        VAT:
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        fontWeight={'bold'}
+                        textAlign={'end'}
+                        fontSize={'1.3em'}>
+                        17%
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box>
+                    <Box display={'flex'} justifyContent="space-between">
+                      <Typography
+                        variant="body1"
+                        textAlign={'start'}
+                        fontWeight={'bold'}
+                        fontSize={'1.3em'}>
+                        Total Price:
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        fontWeight={'bold'}
+                        textAlign={'end'}
+                        fontSize={'1.3em'}>
+                        {getCartTotalPrice()}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} marginTop={3}>
+                  <Box width="100%">
+                    <Button
+                      fullWidth
+                      disabled={getCartQuantity() === 0}
+                      variant="contained"
+                      color="secondaryButton"
+                      size="large"
+                      sx={{height:"70px"}}
+                      LinkComponent={ReactLink}
+                      to="/checkout">
+                      Checkout now
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
             </Box>
           </Grid>
         </Grid>

@@ -77,7 +77,7 @@ const ProductCard = ({ product }) => {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <Tooltip title="Add to cart">
+          {product.quantity > 0 && <Tooltip title="Add to cart">
             <IconButton
               aria-label="add to cart"
               onClick={() => {
@@ -87,8 +87,9 @@ const ProductCard = ({ product }) => {
               <AddIcon />
             </IconButton>
           </Tooltip>
+}
           {product.quantity <= 0 && (
-            <Box display={'flex'} justifyContent="center" width="100%">
+            <Box display={'flex'} justifyContent="center" width="100%" marginLeft={5}>
               <Typography color={'error'} variant="body1" fontWeight={'bold'}>
                 Out Of Stock!
               </Typography>
