@@ -110,7 +110,7 @@ export default function ProgrammerCards() {
                       style={{ maxHeight: 450, objectFit: 'contain' }}
                     />
                   </Grid>
-                  <Grid item xs={8} sm={8} md={8} lg={6} xl={12}>
+                  <Grid item xs={10} sm={10} md={10} lg={10} xl={12}>
                     <Box padding={1}>
                       <Box display="flex" justifyContent={'space-between'}>
                         <Typography variant="body1" fontWeight={'bold'}>
