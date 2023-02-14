@@ -50,7 +50,13 @@ const OrderService = {
         const originalOrderProduct = originalOrder.products.find(
           (prod) => prod.product._id.toString() === product.product._id
         );
-        if (originalOrderProduct && originalOrderProduct.quantity !== product.quantity) {
+        if(order.isActive === false){
+          const prod = await productModel.findOneAndUpdate(
+            { _id: originalOrderProduct.product._id },
+            { quantity: originalOrderProduct.product.quantity + product.quantity }
+          );
+        }
+        else if (originalOrderProduct && originalOrderProduct.quantity !== product.quantity) {
           if (originalOrderProduct.quantity > product.quantity) {
             const count = originalOrderProduct.quantity - product.quantity;
             const prod = await productModel.findOneAndUpdate(
