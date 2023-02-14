@@ -118,7 +118,7 @@ const CartPage = () => {
                       display={'flex'}
                       flexDirection={'row'}
                       justifyContent={'space-between'}>
-                      <Box display={'flex'} width={'50%'}>
+                      <Box display={'flex'} width={'80%'}>
                         <Typography
                           fontWeight={'bold'}
                           fontSize={'1em'}
