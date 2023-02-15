@@ -1,27 +1,48 @@
-import { ArrowBackIos } from '@mui/icons-material';
+import { ArrowBackIos, BroadcastOnPersonal, CellTower, Send } from '@mui/icons-material';
 import {
   Avatar,
   Box,
   Divider,
   Drawer,
+  FormControl,
+  Grid,
   IconButton,
+  InputLabel,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
+  Select,
+  TextField,
+  Tooltip,
   Typography
 } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
+import { useState } from 'react';
+import BroadCast from './BroadCast';
 
 const DashboardDesktopNavigation = ({
   drawerWidth,
   pages,
   handlePageClick,
   navigateToHomepage,
-  pageName
+  pageName,
+  sendBroadCast
 }) => {
   const { currentUser, getUserProfilePicture } = useAuth();
+
+  const [isBroadCastOpen, setIsBroadCastOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const toggleOpenBroadCast = (event) => {
+    setIsBroadCastOpen((currentState) => {
+      return !currentState;
+    });
+    setAnchorEl(event.currentTarget);
+  };
 
   return (
     <Drawer
@@ -86,6 +107,23 @@ const DashboardDesktopNavigation = ({
               </ListItem>
             );
           })}
+          <ListItem key="AdminCommands">
+            <ListItemText>Admin Commands</ListItemText>
+          </ListItem>
+          <ListItem key="BroadCast">
+            <ListItemButton sx={{ borderRadius: '30px' }} onClick={toggleOpenBroadCast}>
+              <ListItemIcon color="info">
+                <CellTower></CellTower>
+              </ListItemIcon>
+              <ListItemText primary="Broadcast"></ListItemText>
+            </ListItemButton>
+            <BroadCast
+              isMobile={false}
+              anchorEl={anchorEl}
+              isBroadCastOpen={isBroadCastOpen}
+              sendBroadCast={sendBroadCast}
+              toggleOpenBroadCast={toggleOpenBroadCast}></BroadCast>
+          </ListItem>
         </List>
       </Box>
     </Drawer>

@@ -25,7 +25,7 @@ import {
 import GoogleIcon from '@mui/icons-material/Google';
 import SendIcon from '@mui/icons-material/Send';
 import { auth, provider } from './firebaseConfig';
-import { signInWithPopup, sendPasswordResetEmail } from 'firebase/auth';
+import { signInWithPopup, signU,sendPasswordResetEmail } from 'firebase/auth';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 
@@ -37,7 +37,7 @@ const AuthForm = () => {
   const displayNameInputRef = useRef();
   const photoUrlInput = useRef();
   const navigate = useNavigate();
-  const { signIn, signUp, isUserSignedIn } = useAuth();
+  const { signIn,signInWithGoogleAuth, signUp, isUserSignedIn } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isShownModal, setIsShownModal] = useState(false);
@@ -114,11 +114,24 @@ const AuthForm = () => {
     setIsLoading(true);
     try {
       const data = await signInWithPopup(auth, provider);
-      signIn(data.user.uid);
+      await signInWithGoogleAuth(data._tokenResponse);
       navigate('/');
       setIsLoading(false);
     } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        let errorMessage;
+        Object.keys(ERROR_MESSAGES).forEach((message) => {
+          if (ex.response.data.error.message.indexOf(message) !== -1) {
+            errorMessage = message;
+            return;
+          }
+        });
+
+        errorMessage = errorMessage ? ERROR_MESSAGES[errorMessage] : ERROR_MESSAGES.GENERIC;
+        setErrorMessage(errorMessage);
+      }
       setIsLoading(false);
+      setShowError(true);
     }
   };
 

@@ -183,7 +183,7 @@ const DashboardOrders = ({ token, ordersArray, users,handleOrdersUpdate }) => {
   const toggleOrderIsActive = async (order, callback) => {
     try {
       order.isActive = !order.isActive;
-      await backendAPI.admin.product.update(order);
+      await backendAPI.admin.order.update(order);
       setOrders((currentOrdersState) => {
         return currentOrdersState.map((ord) => {
           if (ord._id === order._id) {
@@ -214,8 +214,8 @@ const DashboardOrders = ({ token, ordersArray, users,handleOrdersUpdate }) => {
     setIsRestoreDialogOpen(false);
   };
 
-  const handleRestoreDialogConfirm = (product) => {
-    toggleOrderIsActive(product, () => {
+  const handleRestoreDialogConfirm = (order) => {
+    toggleOrderIsActive(order, () => {
       setIsRestoreDialogOpen(false);
     });
   };
@@ -318,14 +318,14 @@ const DashboardOrders = ({ token, ordersArray, users,handleOrdersUpdate }) => {
               handleDialogClose={handleRemoveDialogClose}
               handleDialogConfirm={handleRemoveDialogConfirm}
               open={isRemoveDialogOpen}
-              product={currentOrder}></DashboardOrdersRemoveDialog>
+              order={currentOrder}></DashboardOrdersRemoveDialog>
           )}
           {isRestoreDialogOpen && (
             <DashboardOrdersRestoreDialog
               handleDialogClose={handleRestoreDialogClose}
               handleDialogConfirm={handleRestoreDialogConfirm}
               open={isRestoreDialogOpen}
-              product={currentOrder}></DashboardOrdersRestoreDialog>
+              order={currentOrder}></DashboardOrdersRestoreDialog>
           )}
           <Snackbar
             open={snackBarState.show}

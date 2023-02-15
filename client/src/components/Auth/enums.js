@@ -10,6 +10,7 @@ export const ERROR_MESSAGES = {
   TOO_MANY_ATTEMPTS_TRY_LATER:
     'We have blocked all requests from this device due to unusual activity. Try again later.',
   INVALID_EMAIL: 'Please provide a valid email address!',
+  MISSING_EMAIL:"This user is not registered, please sign up first!",
   EMAIL_EXISTS: 'Email already in use!',
   DISPLAY_NAME_EMPTY: 'Display name cannot be empty!',
   EMAIL_EMPTY: 'Email cannot be empty!',

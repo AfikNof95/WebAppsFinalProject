@@ -1,7 +1,7 @@
 const categoryModel = require('../models/category.model');
 const ProductModel = require('../models/product.model');
 const ObjectId = require('mongoose').Types.ObjectId;
-
+const { broadCastAllUsers } = require('../middlewares/webSocketServer');
 const ProductService = {
   // async getAllProducts(page) {
   //   const pages = Math.ceil((await ProductModel.count()) / 24);
@@ -20,7 +20,14 @@ const ProductService = {
     return await ProductModel.findOne({ _id: new ObjectId(productId) });
   },
   async createProduct(product) {
-    return await ProductModel.create(product);
+    const newProduct = await ProductModel.create(product);
+
+    broadCastAllUsers({
+      type:"BROADCAST_ALL",
+      message: "We've added " + product.name,
+      severity: 'info'
+    });
+    return newProduct;
   },
   async updateProduct(productId, product) {
     const updatedProduct = await ProductModel.findOneAndUpdate(
@@ -79,8 +86,8 @@ const ProductService = {
           sortBy = JSON.parse(filters.sort);
           break;
         case 'filterOutOfStock':
-          if(filters[filter] === "false"){
-            break
+          if (filters[filter] === 'false') {
+            break;
           }
           if (!queryFilters['$and']) {
             queryFilters['$and'] = [];

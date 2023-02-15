@@ -131,7 +131,18 @@ const DashboardOrdersEditDialog = ({ order, open, handleDialogClose, handleDialo
         <Grid container>
           <Grid item xs={12}>
             <Grid container spacing={1}>
-              <Grid item xs={4}>
+            <Grid item xs={2}>
+                <FormControlLabel
+                  label="Is active?"
+                  labelPlacement="bottom"
+                  control={
+                    <Checkbox
+                      id="isActive"
+                      checked={orderDetails.isActive}
+                      onChange={handleFormChange}></Checkbox>
+                  }></FormControlLabel>
+              </Grid>
+              <Grid item xs={2}>
                 <TextField
                   margin="dense"
                   fullWidth

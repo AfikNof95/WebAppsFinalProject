@@ -44,7 +44,7 @@ const CartPage = () => {
       <Toolbar></Toolbar>
       <Container maxWidth="xl">
         <Grid container height={'calc(100vh - 64px)'}>
-          <Grid item xs={12} sm={12} md={12} lg={6} padding={1} height={'100%'}>
+          <Grid item xs={12} sm={12} md={12} lg={6} padding={1} height={{sm:"auto",md:"'100%'"}}>
             <Box display={'flex'} flexDirection="column" component={Paper} height={'100%'}>
               <Box
                 display={'flex'}
@@ -57,7 +57,7 @@ const CartPage = () => {
                   My Cart
                 </Typography>
               </Box>
-              <Box padding={2} maxHeight={'100%'} overflow={'auto'} position={'relative'}>
+              <Box  height={'100%'} overflow={'auto'} position={'relative'}>
                 {isShoppingCartLoading && (
                   <Box
                     display={'flex'}
@@ -67,15 +67,14 @@ const CartPage = () => {
                     sx={{
                       width: '100%',
                       height: '100%',
-                      minHeight: 600,
                       backgroundColor: '#cecece52',
                       zIndex: 9999
                     }}>
-                    <CircularProgress style={{ width: '30vh', height: '30vh' }} />
+                    <CircularProgress style={{ width: '20vh', height: '20vh' }} />
                   </Box>
                 )}
                 {getCartQuantity() > 0 ? (
-                  <Stack direction={'column'} gap={3}>
+                  <Stack direction={'column'} gap={3} padding={2}>
                     <CartProductList></CartProductList>
                   </Stack>
                 ) : (

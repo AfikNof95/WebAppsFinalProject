@@ -90,7 +90,7 @@ export function CartProduct({ id, name, imageURL, quantity, price, maxQuantity }
           value={quantity}
           size="small"
           error={showQuantityError}
-          helperText={showQuantityError ? "You've added the entire stock!" : ''}></TextField>
+          helperText={showQuantityError ? "Max Stock!" : ''}></TextField>
       </Box>
 
       <Box

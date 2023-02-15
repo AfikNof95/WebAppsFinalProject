@@ -23,7 +23,7 @@ const CartController = {
     try {
       const { userId } = req.params;
       const response = await CartService.updateCart(userId, req.body);
-      return res.json({ message: 'Cart updated successfully!' });
+      return res.json(response);
     } catch (ex) {
       next(ex);
     }

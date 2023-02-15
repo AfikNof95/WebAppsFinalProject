@@ -1,15 +1,28 @@
 import './SideNavigation.css';
 
-import { ArrowBackIos } from '@mui/icons-material';
+import { ArrowBackIos, CellTower } from '@mui/icons-material';
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, Tooltip } from '@mui/material';
+import BroadCast from './BroadCast';
+import { useState } from 'react';
 
 const DashboardMobileNavigation = ({
   drawerWidth,
   pages,
   handlePageClick,
   navigateToHomepage,
-  pageName
+  pageName,
+  sendBroadCast
 }) => {
+  const [isBroadCastOpen, setIsBroadCastOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const toggleOpenBroadCast = (event) => {
+    setIsBroadCastOpen((currentState) => {
+      return !currentState;
+    });
+    setAnchorEl(event.currentTarget);
+  };
+
   return (
     <Drawer
       variant="permanent"
@@ -78,6 +91,34 @@ const DashboardMobileNavigation = ({
                 </Tooltip>
               )
           )}
+          <ListItem disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              className={'side-nav-list-item-mobile'}
+              sx={{
+                minHeight: 48,
+                justifyContent: 'center',
+                px: 2.5
+              }}
+              selected={'Broadcast' === pageName}
+              onClick={toggleOpenBroadCast}>
+              <ListItemIcon
+                sx={{
+                  color: 'black',
+                  mr: 'auto',
+                  minWidth: 0,
+                  justifyContent: 'center'
+                }}>
+                <CellTower></CellTower>
+              </ListItemIcon>
+            </ListItemButton>
+
+            <BroadCast
+              isMobile={true}
+              anchorEl={anchorEl}
+              isBroadCastOpen={isBroadCastOpen}
+              sendBroadCast={sendBroadCast}
+              toggleOpenBroadCast={toggleOpenBroadCast}></BroadCast>
+          </ListItem>
         </List>
       </Box>
     </Drawer>

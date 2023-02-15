@@ -24,7 +24,7 @@ const DashboardUserRestoreDialog = ({
       TransitionComponent={Transition}
       maxWidth={"md"}
     >
-      <AppBar sx={{ position: "relative" }} color="success">
+      <AppBar sx={{ position: "relative" }} color="secondaryButton">
         <Toolbar>
           <Typography variant="body1" paddingRight={5}>
             Restore Product
@@ -58,7 +58,7 @@ const DashboardUserRestoreDialog = ({
         <Button
           onClick={handleDialogClose}
           variant="outlined"
-          color="warning"
+          color="secondaryButton.light"
           sx={{ marginRight: 5, width: 150 }}
         >
           Cancel
@@ -66,7 +66,7 @@ const DashboardUserRestoreDialog = ({
         <Button
           onClick={() => handleDialogConfirm(user)}
           variant="contained"
-          color="success"
+          color="secondaryButton"
           sx={{ width: 150 }}
         >
           Restore

@@ -13,7 +13,7 @@ const getIsAdmin = async (userToken) => {
 };
 const setUserAdmin = async (user) => {
   const claims = await getAuth(app).setCustomUserClaims(user.uid, {
-    isAdmin: true
+    isAdmin: user.customClaims.isAdmin
   });
   return claims;
 };
@@ -24,7 +24,7 @@ const listAllUsers = async () => {
 };
 
 const updateUser = (user) => {
-  if (user.customClaims && user.customClaims.isAdmin) {
+  if (user.customClaims) {
     setUserAdmin(user);
   }
 

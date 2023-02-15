@@ -20,7 +20,7 @@ export default function NewCheckout() {
     const {getCartQuantity,isShoppingCartLoading} = useShoppingCart();
     const navigate = useNavigate();
 
-    if(!isShoppingCartLoading && getCartQuantity() <=0){
+    if(!isShoppingCartLoading && getCartQuantity() <=0 && activeStep < 2){
         navigate('/');
     }
 

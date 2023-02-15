@@ -15,7 +15,7 @@ const REST_API = {
     signInWithEmailAndPassword:
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=',
     signUpWithEmailAndPassword: 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=',
-    refreshToken: 'https://identitytoolkit.googleapis.com/v1/token?key=',
+    refreshToken: 'https://securetoken.googleapis.com/v1/token?key=',
     updatePassword: 'https://identitytoolkit.googleapis.com/v1/accounts:update?key='
   },
   user: {

@@ -7,27 +7,27 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import useScreenSize from '../hooks/useScreenSize';
 
 const ShoppingCartContext = createContext({
-    openCart() {},
-    closeCart() {},
-    getCartQuantity() {},
-    getCartProducts() {},
-    getCartTotalPrice() {},
-    getCartTotalPriceNumber() {},
-    getProductQuantity(productId) {},
-    addToCart(productObject) {},
-    increaseProductQuantity(productId, count) {},
-    decreaseProductQuantity(productId, count) {},
-    updateProductQuantity(productId, count) {},
-    removeFromCart(productId) {},
-    userInfo: [],
-    paymentInfo: [],
-    handleFormChange: () => {},
-    handlePaymentChange: () => {},
-    deleteCart: () => {},
-    removePaymentInfo: () => {},
-    removeUserInfo: () => {},
-    handleChosenAddress: () => {},
-})
+  openCart() {},
+  closeCart() {},
+  getCartQuantity() {},
+  getCartProducts() {},
+  getCartTotalPrice() {},
+  getCartTotalPriceNumber() {},
+  getProductQuantity(productId) {},
+  addToCart(productObject) {},
+  increaseProductQuantity(productId, count) {},
+  decreaseProductQuantity(productId, count) {},
+  updateProductQuantity(productId, count) {},
+  removeFromCart(productId) {},
+  userInfo: [],
+  paymentInfo: [],
+  handleFormChange: () => {},
+  handlePaymentChange: () => {},
+  deleteCart: () => {},
+  removePaymentInfo: () => {},
+  removeUserInfo: () => {},
+  handleChosenAddress: () => {}
+});
 
 export function useShoppingCart() {
   return useContext(ShoppingCartContext);
@@ -44,9 +44,9 @@ export function ShoppingCartProvider({ children }) {
   const [userInfo, setUserInfo] = useState({
     country: '',
     city: '',
-    street:'',
-    houseNumber:'',
-    zipCode:''
+    street: '',
+    houseNumber: '',
+    zipCode: ''
   });
   const [paymentInfo, setPaymentInfo] = useState({
     cardName: '',
@@ -94,13 +94,16 @@ export function ShoppingCartProvider({ children }) {
       }
     };
 
-    if (currentUser) {
-      fetchUserCart();
-      clearLocalCart();
-    } else {
-      setIsInitialLoad(true);
-      setCartProducts(localCart);
-    }
+    
+      if (currentUser) {
+        fetchUserCart();
+        clearLocalCart();
+      } else {
+        setIsInitialLoad(true);
+        setCartProducts(localCart);
+      }
+    
+    
   }, [currentUser]);
 
   useEffect(() => {
@@ -110,7 +113,10 @@ export function ShoppingCartProvider({ children }) {
   useEffect(() => {
     const updateUserCart = async () => {
       setIsShoppingCartLoading(true);
-      await backendAPI.cart.update(currentUser.localId, cartProducts);
+      const response = await backendAPI.cart.update(currentUser.localId, cartProducts);
+      // setIsInitialLoad(true);
+      // setCartProducts([...response.data.products]);
+      
     };
 
     if (!isInitialLoad) {
@@ -133,26 +139,26 @@ export function ShoppingCartProvider({ children }) {
     setCartProducts([]);
   }
 
-    function removePaymentInfo() {
-        setPaymentInfo({
-            cardName: '',
-            cardNumber: null,
-            expDate: '',
-            cvv: null,
-        })
-    }
+  function removePaymentInfo() {
+    setPaymentInfo({
+      cardName: '',
+      cardNumber: null,
+      expDate: '',
+      cvv: null
+    });
+  }
 
-    function removeUserInfo() {
-        setUserInfo({
-            fName: '',
-            lName: '',
-            street: '',
-            houseNumber: null,
-            city: '',
-            zipCode: null,
-            country: '',
-        })
-    }
+  function removeUserInfo() {
+    setUserInfo({
+      fName: '',
+      lName: '',
+      street: '',
+      houseNumber: null,
+      city: '',
+      zipCode: null,
+      country: ''
+    });
+  }
 
   function getProductQuantity(productId) {
     return cartProducts.find((product) => (product._id === productId ? product.quantity : 0));
@@ -162,8 +168,8 @@ export function ShoppingCartProvider({ children }) {
     let success = true;
     setCartProducts((currentProducts) => {
       if (!currentProducts.find((cartProduct) => cartProduct.product._id === productObject._id)) {
-        if(productObject.quantity === 0 ){
-          success=false;
+        if (productObject.quantity === 0) {
+          success = false;
           return currentProducts;
         }
         return [...currentProducts, { product: productObject, quantity: 1 }];
@@ -259,21 +265,20 @@ export function ShoppingCartProvider({ children }) {
     return cartQuantity;
   }
 
-    function getCartTotalPrice() {
-        let sum = 0
-        for (let product of cartProducts) {
-            sum += product.quantity * product.product.price
-        }
-        return formatPrice(sum)
+  function getCartTotalPrice() {
+    let sum = 0;
+    for (let product of cartProducts) {
+      sum += product.quantity * product.product.price;
     }
+    return formatPrice(sum);
+  }
 
-    function getCartTotalPriceNumber() {
-        return cartProducts.reduce(
-            (all, current) =>
-                all + (current.quantity || 0) * (current.product.price || 0),
-            0
-        )
-    }
+  function getCartTotalPriceNumber() {
+    return cartProducts.reduce(
+      (all, current) => all + (current.quantity || 0) * (current.product.price || 0),
+      0
+    );
+  }
 
   const handleFormChange = async (event) => {
     setUserInfo({
@@ -282,53 +287,49 @@ export function ShoppingCartProvider({ children }) {
     });
   };
 
+  const handlePaymentChange = async (event) => {
+    setPaymentInfo({
+      ...paymentInfo,
+      [event.target.name]: event.target.value
+    });
+  };
 
-    const handlePaymentChange = async (event) => {
-        setPaymentInfo({
-            ...paymentInfo,
-            [event.target.name]: event.target.value,
-        })
-    }
+  const handleChosenAddress = (address) => {
+    setUserInfo({
+      ...userInfo,
+      ...address
+    });
+  };
 
-    const handleChosenAddress = (address) => {
-        setUserInfo({
-            ...userInfo,
-            ...address,
-        })
-    }
+  function applyDiscount(discountCode) {}
 
-    function applyDiscount(discountCode){
-      
-    }
-
-    return (
-        <ShoppingCartContext.Provider
-            value={{
-                openCart,
-                closeCart,
-                getCartQuantity,
-                getCartProducts,
-                getProductQuantity,
-                getCartTotalPrice,
-                getCartTotalPriceNumber,
-                addToCart,
-                removeFromCart,
-                deleteCart,
-                increaseProductQuantity,
-                decreaseProductQuantity,
-                updateProductQuantity,
-                userInfo: userInfo,
-                paymentInfo: paymentInfo,
-                handleFormChange: handleFormChange,
-                handlePaymentChange: handlePaymentChange,
-                removePaymentInfo,
-                removeUserInfo,
-                isShoppingCartLoading,
-                handleChosenAddress,
-            }}
-        >
-            {children}
-            <SideCart isCartOpen={isOpen}></SideCart>
-        </ShoppingCartContext.Provider>
-    )
+  return (
+    <ShoppingCartContext.Provider
+      value={{
+        openCart,
+        closeCart,
+        getCartQuantity,
+        getCartProducts,
+        getProductQuantity,
+        getCartTotalPrice,
+        getCartTotalPriceNumber,
+        addToCart,
+        removeFromCart,
+        deleteCart,
+        increaseProductQuantity,
+        decreaseProductQuantity,
+        updateProductQuantity,
+        userInfo: userInfo,
+        paymentInfo: paymentInfo,
+        handleFormChange: handleFormChange,
+        handlePaymentChange: handlePaymentChange,
+        removePaymentInfo,
+        removeUserInfo,
+        isShoppingCartLoading,
+        handleChosenAddress
+      }}>
+      {children}
+      <SideCart isCartOpen={isOpen}></SideCart>
+    </ShoppingCartContext.Provider>
+  );
 }

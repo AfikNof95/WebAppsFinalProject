@@ -9,9 +9,10 @@ export default function PaymentForm(props) {
     const { paymentInfo, handlePaymentChange } = useShoppingCart()
     const { handleNext, handleBack } = props
     const [isNextAvailable, setIsNextAvailable] = useState(false)
-    const [expDate, setExpDate] = useState(null)
+    const [showDateError,setShowDateError] = useState(false);
 
     const checkFormValidation = () => {
+        setShowDateError(false)
         for (let payInfo of Object.keys(paymentInfo)) {
             if (paymentInfo[payInfo] == null) {
                 setIsNextAvailable(false)
@@ -22,6 +23,7 @@ export default function PaymentForm(props) {
                 setIsNextAvailable(false)
                 return
             }else if(payInfo === "expDate" && paymentInfo[payInfo].toDate() < new Date()){
+                setShowDateError(true)
                 setIsNextAvailable(false)
                 return
             }
@@ -98,6 +100,9 @@ export default function PaymentForm(props) {
                             renderInput={(params) => <TextField {...params} />}
                         />
                     </LocalizationProvider>
+                    { showDateError && <Typography variant='body2' color={"error"}>
+                        Please select a valid date!
+                    </Typography>}
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField

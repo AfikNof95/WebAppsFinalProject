@@ -7,7 +7,7 @@ const cors = require('cors');
 const path = require('path');
 const mongoSanitize = require('express-mongo-sanitize');
 const Scraper = require('./scraper/main');
-const wsServer = require('./middlewares/webSocketServer');
+const { webSocketServer: wsServer } = require('./middlewares/webSocketServer');
 require('dotenv').config({ path: path.join(__dirname, './.env') });
 process.env.rootDir = __dirname;
 

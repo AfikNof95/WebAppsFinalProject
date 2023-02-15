@@ -8,8 +8,8 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DashboardOrdersRemoveDialog = ({ product, open, handleDialogClose, handleDialogConfirm }) => {
-  const [productDetails, setProductDetails] = useState(product);
+const DashboardOrdersRemoveDialog = ({ order, open, handleDialogClose, handleDialogConfirm }) => {
+  const [orderDetails, setOrderDetails] = useState(order);
 
   return (
     <Dialog
@@ -20,7 +20,7 @@ const DashboardOrdersRemoveDialog = ({ product, open, handleDialogClose, handleD
       <AppBar sx={{ position: 'relative' }} color="error">
         <Toolbar>
           <Typography variant="body1" paddingRight={5}>
-            Delete Product
+            Delete Order
           </Typography>
           <IconButton
             edge="end"
@@ -32,14 +32,10 @@ const DashboardOrdersRemoveDialog = ({ product, open, handleDialogClose, handleD
       </AppBar>
       <DialogContent>
         <Box display="flex" flexDirection="row" justifyContent={'space-between'}>
-          <Box maxWidth={150} marginRight={5}>
-            <img src={product.images[0]} width="100%" style={{ objectFit: 'contain' }} alt=""></img>
-          </Box>
-
           <Box>
             <Typography variant="body1">Are you sure you want to delete:</Typography>
             <Typography variant="body2" fontWeight={'bold'}>
-              {productDetails.name}
+              {orderDetails._id}
             </Typography>
           </Box>
         </Box>
@@ -48,12 +44,12 @@ const DashboardOrdersRemoveDialog = ({ product, open, handleDialogClose, handleD
         <Button
           onClick={handleDialogClose}
           variant="outlined"
-          color="warning"
+          color="secondaryButton"
           sx={{ marginRight: 5, width: 150 }}>
           Cancel
         </Button>
         <Button
-          onClick={() => handleDialogConfirm(productDetails)}
+          onClick={() => handleDialogConfirm(orderDetails)}
           variant="contained"
           color="error"
           sx={{ width: 150 }}>

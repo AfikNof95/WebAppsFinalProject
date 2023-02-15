@@ -33,7 +33,8 @@ const CartService = {
       product.product = new ObjectId(product.product._id);
     }
 
-    const updatedCart = await CartModel.updateOne({ user: userId }, { products: cart.products });
+    await CartModel.updateOne({ user: userId }, { products: cart.products });
+    const updatedCart = await CartModel.findOne({user:userId}).populate(["products.product"]).exec();
     if (!updatedCart) {
       throw new Error('Cart not found!');
     }

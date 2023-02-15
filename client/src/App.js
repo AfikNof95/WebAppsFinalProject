@@ -1,12 +1,15 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import MainRouter from './components/routing/MainRouter';
 import { useAxiosIntercept } from './hooks/useAxiosIntercept';
-import { ThemeProvider, createTheme } from '@mui/material';
+import { Alert, Snackbar, ThemeProvider, createTheme } from '@mui/material';
+import useSnackBar from './hooks/useSnackBar';
 
 const App = () => {
   const [isInterceptReady] = useAxiosIntercept();
+  const [snackBarState,setSnackBarState] = useSnackBar();
+
 
   const theme = createTheme({
     palette: {
@@ -42,6 +45,21 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">{isInterceptReady && <MainRouter />}</div>
+      <Snackbar
+        open={snackBarState.show}
+        onClose={() => setSnackBarState({ ...snackBarState, ...{ show: false } })}
+        autoHideDuration={3000}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center'
+        }}>
+        <Alert
+          severity={snackBarState.severity}
+          variant="filled"
+          sx={{ width: '100%', marginTop: 3 }}>
+          {snackBarState.message}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 };

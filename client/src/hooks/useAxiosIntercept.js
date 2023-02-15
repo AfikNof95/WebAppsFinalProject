@@ -10,10 +10,15 @@ export const useAxiosIntercept = () => {
   useEffect(() => {
     const reqIntercept = axios.interceptors.request.use(
       async (config) => {
-        if (config.url.indexOf('identitytoolkit') === -1 && currentUser) {
-          config.headers['Authorization'] = 'Bearer ' + currentUser.idToken;
+        if (config.url.indexOf('identitytoolkit') === -1 && config.url.indexOf('securetoken') === -1  && currentUser) {
+          let idToken = currentUser.idToken;
+          if(new Date(currentUser.expireDate) < new Date()){
+            const response = await refreshToken()
+            idToken = response ? response.idToken :  idToken;
+          }
+          config.headers['Authorization'] = 'Bearer ' + idToken;
           if (config.data && typeof config.data !== 'string') {
-            config.data.token = currentUser.idToken;
+            config.data.token = idToken;
           }
         }
 
@@ -30,52 +35,16 @@ export const useAxiosIntercept = () => {
         if (!error.response) {
           return Promise.reject(error);
         }
-        if (error.response.status === 401) {
-          if (new Date(currentUser.expireDate) < new Date()) {
-            try {
-              const user = await refreshToken();
-              if (error.config.url.indexOf('identitytoolkit') === -1 && currentUser) {
-                error.config.headers.Authorization = 'Bearer ' + user.idToken;
 
-                if (error.config.data && error.config.url.indexOf('identitytoolkit') === -1) {
-                  const data = JSON.parse(error.config.data);
-                  data.token = user.idToken;
-                  error.config.data = JSON.stringify(data);
-                }
-              }
-
-              return axios(error.config);
-            } catch (ex) {
-              console.error(ex.message);
-              signOut();
-              navigate({ pathname: '/login' });
-            }
-          } else {
-            navigate({ pathname: '/401' });
+        if(error.response.status === 401 || error.response.status === 403){
+          if(error.config.url.indexOf('identitytoolkit') === -1 && error.config.url.indexOf('securetoken') === -1){
+           return  navigate("/401");
           }
-        } else if (error.response.status === 403) {
-          if (error.response.data === 'USER_DISABLED') {
+          if(error.response.data && error.response.data.error.message === "auth/id-token-expired"){
             signOut();
-            navigate('/login');
-            return;
+            return navigate("/login");
           }
-          try {
-            const user = await refreshToken();
-            if (error.config.url.indexOf('identitytoolkit') === -1 && currentUser) {
-              error.config.headers.Authorization = 'Bearer ' + user.idToken;
-              if (error.config.data) {
-                error.config.data = JSON.stringify({
-                  token: user.idToken
-                });
-              }
-            }
-
-            return axios(error.config);
-          } catch (ex) {
-            console.error(ex);
-            navigate({ pathname: '/401' });
-          }
-        } else {
+        }else{
           return Promise.reject(error);
         }
       }

@@ -12,7 +12,7 @@ import DashboardProductsDialog from './DashboardProductsDialog';
 import DashboardProductsRemoveDialog from './DashboardProductRemoveDialog';
 import DashboardProductRestoreDialog from './DashboardProductRestoreDialog';
 
-const DashboardProducts = ({ token, productsArray, categoriesArray }) => {
+const DashboardProducts = ({ token, productsArray, categoriesArray,handleProductsUpdate }) => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -295,6 +295,7 @@ const DashboardProducts = ({ token, productsArray, categoriesArray }) => {
           return product;
         });
       });
+      handleProductsUpdate();
       setIsEditDialogOpen(false);
       showSuccessSnackbar();
     } catch (ex) {

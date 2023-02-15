@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -69,7 +69,7 @@ const DashboardProductsDialog = ({
     if (productDetails.description.trim() === '') {
       currentErrors.description = true;
     }
-    if (productDetails.price < 0) {
+    if (productDetails.price <= 0) {
       currentErrors.price = true;
     }
     if (productDetails.quantity < 0) {
@@ -148,6 +148,12 @@ const DashboardProductsDialog = ({
       return { ...currentProductDetails };
     });
   };
+
+  useEffect(() => {
+    if (!productDetails.category._id) {
+      handleFormChange({ currentTarget: { id: 'category', value: categories[0]._id } });
+    }
+  }, []);
 
   return (
     <Dialog open={open} onClose={handleDialogClose} fullScreen TransitionComponent={Transition}>
@@ -276,7 +282,7 @@ const DashboardProductsDialog = ({
                   value={productDetails.price}
                   onChange={handleFormChange}
                   error={errors.price}
-                  helperText={errors.price && 'Price must be greater than or equal to 0!'}
+                  helperText={errors.price && 'Price must be greater than 0!'}
                 />
               </Grid>
               <Grid item xs={2}>
@@ -342,7 +348,6 @@ const DashboardProductsDialog = ({
         <Box display="flex" justifyContent={'flex-end'} width="100%">
           <Button
             onClick={handleDialogClose}
-            
             color={'secondaryButton.light'}
             variant="outlined"
             fullWidth
@@ -352,7 +357,6 @@ const DashboardProductsDialog = ({
           <Button
             onClick={handleSubmit}
             color="mainButton"
-          
             variant="contained"
             fullWidth
             sx={{ maxWidth: 350 }}>

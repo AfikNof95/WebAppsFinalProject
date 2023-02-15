@@ -204,7 +204,7 @@ const DashboardUserEditDialog = ({ user, open, handleDialogClose, handleDialogSa
           </Grid>
           <Grid item xs={12}>
             <Box display="flex" justifyContent={'space-between'}>
-              <FormControlLabel
+              {/* <FormControlLabel
                 label="Is active?"
                 labelPlacement="top"
                 control={
@@ -212,7 +212,7 @@ const DashboardUserEditDialog = ({ user, open, handleDialogClose, handleDialogSa
                     id="disabled"
                     checked={!userDetails.disabled}
                     onChange={handleFormChange}></Checkbox>
-                }></FormControlLabel>
+                }></FormControlLabel> */}
               <FormControlLabel
                 label="Is Admin?"
                 labelPlacement="top"

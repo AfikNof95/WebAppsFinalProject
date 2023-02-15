@@ -38,6 +38,9 @@ const webSocketServer = () => {
         if (messageJSON.type === 'ADMIN_READY') {
           connectToAdmin(clientId);
         }
+        if (messageJSON.type === 'BROADCAST_ALL') {
+          broadCastAllUsers(messageJSON);
+        }
       } catch (ex) {
         console.error(ex);
       }
@@ -93,24 +96,51 @@ const notifySignOut = (clientId) => {
 };
 
 const notifySignIn = (clientId, messageJSON) => {
-  clients[clientId] = {
-    ...clients[clientId],
-    ...{ isLoggedIn: true, user: messageJSON.user }
-  };
-  loggedInClients++;
+  if (!clients[clientId.isLoggedIn]) {
+    clients[clientId] = {
+      ...clients[clientId],
+      ...{ isLoggedIn: true, user: messageJSON.user }
+    };
+    loggedInClients++;
+  }
+
   broadcastUserCount();
 };
 
 const connectToAdmin = async (clientId) => {
-  // const user = clients[clientId].user;
-  // if (user) {
-  //   const { isAdmin } = await getAuth().verifyIdToken(user.idToken);
-  //   if (isAdmin) {
-  //     clients[clientId].connection.send(JSON.stringify({ loggedInClients }));
-  //   }
-  // }
-
   broadcastUserCount();
 };
 
-module.exports = webSocketServer;
+const broadCastAllUsers = async (message) => {
+  for (let client of Object.values(clients)) {
+    try {
+      client.connection.send(
+        JSON.stringify({
+          ...message
+        })
+      );
+    } catch (ex) {
+      console.error(ex);
+    }
+  }
+};
+
+const broadCastUser = (userId, message) => {
+  try {
+    for (let client of Object.values(clients)) {
+      if (client.user && client.user.localId === userId) {
+        client.connection.send(
+          JSON.stringify({
+            ...{ type: 'BROADCAST_ALL' },
+            ...message
+          })
+        );
+        return;
+      }
+    }
+  } catch (ex) {
+    console.error(ex);
+  }
+};
+
+module.exports = { webSocketServer, broadCastAllUsers, broadCastUser };

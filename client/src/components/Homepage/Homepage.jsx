@@ -73,7 +73,7 @@ const Homepage = () => {
       display={'flex'}
       flexDirection={'column'}
       sx={{ backgroundColor: 'white' }}
-      height={'calc(100vh - 64px)'}>
+      height={'calc(100vh)'}>
       <Toolbar></Toolbar>
       <Box display={'flex'}>
         <SideNavigation

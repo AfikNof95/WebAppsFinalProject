@@ -2,7 +2,9 @@ import React, { useState, useContext, createContext, useEffect } from 'react';
 import backendAPI from '../api';
 import { useCookies } from 'react-cookie';
 import { getTokenExpireDate } from '../utils/getTokenExpireDate';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
+import { useWebSocketServer } from './WebSocketContext';
+
+let isRefreshingToken = false;
 
 const AuthContext = createContext({
   signUp: async ({ email, password, imageURL, displayName }) => {},
@@ -25,35 +27,19 @@ export function useAuth() {
 export const AuthContextProvider = ({ children }) => {
   const [cookies, setCookie, removeCookie] = useCookies(['user-session']);
   const [currentUser, setCurrentUser] = useState(cookies['user-session']);
-  const [wsURL, setWsURL] = useState(null);
-  const [isSocketOpen, setIsSocketOpen] = useState(false);
   const [userProfilePicture, setUserProfilePicture] = useState(
     'http://localhost:2308/images/defaultAvatar.png'
   );
-  const { lastJsonMessage, sendJsonMessage, readyState } = useWebSocket(wsURL, {
-    share: true,
-    onOpen: () => {
-      console.log('WebSocket opened');
-    }
-  });
-
-  useEffect(() => {
-    if (readyState === ReadyState.OPEN) {
-      setIsSocketOpen(true);
-    }
-    if (readyState === ReadyState.CLOSED) {
-      setIsSocketOpen(false);
-    }
-  }, [readyState]);
+  const { lastJsonMessage, sendJsonMessage, readyState, isSocketOpen, setWsURL } =
+    useWebSocketServer();
 
   useEffect(() => {
     if (!currentUser) {
       return;
     }
+
     if (isSocketOpen) {
       sendJsonMessage({ type: 'SIGN_IN', user: currentUser });
-    } else {
-      setWsURL('ws://localhost:2309');
     }
   }, [currentUser, isSocketOpen]);
 
@@ -82,6 +68,17 @@ export const AuthContextProvider = ({ children }) => {
   async function signIn({ email, password }) {
     const response = await backendAPI.auth.signInWithEmailAndPassword(email, password);
     const { data: authData } = response;
+    const userDataResponse = await backendAPI.user.getUserData(authData.idToken);
+    const { users: userData } = userDataResponse.data;
+    const userSession = { ...authData, ...userData[0] };
+    //Set the expiry date of the token, so we can use the refresh token to revoke our token.
+    userSession.expireDate = getTokenExpireDate(authData.expiresIn);
+    setCurrentUser(userSession);
+    setCookie('user-session', userSession);
+    return userSession;
+  }
+
+  async function signInWithGoogleAuth(authData){
     const userDataResponse = await backendAPI.user.getUserData(authData.idToken);
     const { users: userData } = userDataResponse.data;
     const userSession = { ...authData, ...userData[0] };
@@ -136,6 +133,10 @@ export const AuthContextProvider = ({ children }) => {
 
   async function refreshToken() {
     try {
+      if(isRefreshingToken){
+        return;
+      }
+      isRefreshingToken = true;
       const response = await backendAPI.auth.refreshToken(currentUser.refreshToken);
       const {
         id_token: idToken,
@@ -143,14 +144,17 @@ export const AuthContextProvider = ({ children }) => {
         expires_in: expiresIn
       } = response.data;
 
+      const expireDate = getTokenExpireDate(expiresIn);
+
       setCurrentUser((currentUserState) => {
+        isRefreshingToken = false;
         return {
           ...currentUserState,
           ...{
             idToken,
             refreshToken,
             expiresIn,
-            expireDate: getTokenExpireDate(expiresIn)
+            expireDate
           }
         };
       });
@@ -181,17 +185,17 @@ export const AuthContextProvider = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-    const refresh = async ()=>{
-      await refreshToken();
-    }
-    if (lastJsonMessage !== null) {
-      if (lastJsonMessage.type === 'REFRESH_TOKEN') {
-        refresh();
-        sendJsonMessage({ type: 'SIGN_IN', user: currentUser });
-      }
-    }
-  }, [lastJsonMessage]);
+  // useEffect(() => {
+  //   const refresh = async () => {
+  //     await refreshToken();
+  //   };
+  //   if (lastJsonMessage !== null) {
+  //     if (lastJsonMessage.type === 'REFRESH_TOKEN') {
+  //       refresh();
+  //       sendJsonMessage({ type: 'SIGN_IN', user: currentUser });
+  //     }
+  //   }
+  // }, [lastJsonMessage]);
 
   useEffect(() => {
     if (currentUser) {
@@ -200,12 +204,9 @@ export const AuthContextProvider = ({ children }) => {
         setUserProfilePicture((currentPicture) =>
           currentUser.photoUrl ? currentUser.photoUrl : currentPicture
         );
-        setWsURL('ws://localhost:2309');
       } catch (ex) {
         console.error(ex);
       }
-    } else {
-      setWsURL(null);
     }
   }, [currentUser, setCookie, sendJsonMessage]);
 
@@ -236,6 +237,7 @@ export const AuthContextProvider = ({ children }) => {
     isUserSignedIn,
     signUp,
     signIn,
+    signInWithGoogleAuth,
     signOut,
     updateUser,
     updatePassword,

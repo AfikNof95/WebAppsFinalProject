@@ -3,11 +3,13 @@ import UsersIcon from '@mui/icons-material/Group';
 import OrdersIcon from '@mui/icons-material/LocalShipping';
 import ProductsIcon from '@mui/icons-material/Store';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useScreenSize from '../../hooks/useScreenSize';
-import DashboardDesktopNavigation from './Dashboard';
+import DashboardDesktopNavigation from './Desktop';
 import DashboardMobileNavigation from './Mobile';
+import { useWebSocketServer } from '../../context/WebSocketContext';
 
 const DashboardNavigation = ({ handlePageClick, selectedPage }) => {
   const navigate = useNavigate();
@@ -15,6 +17,12 @@ const DashboardNavigation = ({ handlePageClick, selectedPage }) => {
   const [drawerWidth, setDrawerWidth] = useState(() => {
     return screenSize === 'sm' || screenSize === 'xs' ? 80 : 300;
   });
+
+  const { lastJsonMessage, sendJsonMessage } = useWebSocketServer();
+
+  const sendBroadCast = ({ message, severity }) => {
+    sendJsonMessage({ type: 'BROADCAST_ALL', message, severity });
+  };
 
   const pages = [
     {
@@ -58,22 +66,24 @@ const DashboardNavigation = ({ handlePageClick, selectedPage }) => {
     });
   }, [screenSize]);
 
-  if(screenSize)
-  return screenSize === 'sm' || screenSize === "xs" ? (
-    <DashboardMobileNavigation
-      pageName={selectedPage}
-      handlePageClick={handlePageClick}
-      navigateToHomepage={navigateToHomepage}
-      drawerWidth={drawerWidth}
-      pages={pages}></DashboardMobileNavigation>
-  ) : (
-    <DashboardDesktopNavigation
-      pageName={selectedPage}
-      handlePageClick={handlePageClick}
-      navigateToHomepage={navigateToHomepage}
-      drawerWidth={drawerWidth}
-      pages={pages}></DashboardDesktopNavigation>
-  );
+  if (screenSize)
+    return screenSize === 'sm' || screenSize === 'xs' ? (
+      <DashboardMobileNavigation
+        pageName={selectedPage}
+        handlePageClick={handlePageClick}
+        navigateToHomepage={navigateToHomepage}
+        drawerWidth={drawerWidth}
+        sendBroadCast={sendBroadCast}
+        pages={pages}></DashboardMobileNavigation>
+    ) : (
+      <DashboardDesktopNavigation
+        pageName={selectedPage}
+        handlePageClick={handlePageClick}
+        navigateToHomepage={navigateToHomepage}
+        drawerWidth={drawerWidth}
+        sendBroadCast={sendBroadCast}
+        pages={pages}></DashboardDesktopNavigation>
+    );
 };
 
 export default DashboardNavigation;

@@ -13,9 +13,9 @@ const isAuthorized = async (req, res, next) => {
       }
       return next();
     } catch (ex) {
-      console.error(ex.message);
       console.error(ex);
-      return res.status(403).send('Unauthorized');
+      return next();
+      // return res.status(403).send('Unauthorized');
     }
   } else {
     res.status(401).send('Unauthorized');

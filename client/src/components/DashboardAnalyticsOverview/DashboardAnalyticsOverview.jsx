@@ -5,12 +5,13 @@ import UsersIcon from '@mui/icons-material/Group';
 import ProfitIcon from '@mui/icons-material/AttachMoney';
 import OrdersIcon from '@mui/icons-material/ReceiptLong';
 import ShippedIcon from '@mui/icons-material/LocalShipping';
-import PackedIcon from "@mui/icons-material/Inventory"
+import PackedIcon from '@mui/icons-material/Inventory';
 
 import { formatPrice } from '../../utils/formatPrice';
 import { useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { GroupAdd, GroupAddOutlined } from '@mui/icons-material';
+import { useWebSocketServer } from '../../context/WebSocketContext';
 
 const DashboardAnalyticsOverview = ({ users, orders, products }) => {
   const [socketUrl, setSocketUrl] = useState('ws://localhost:2309');
@@ -23,9 +24,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
 
   const [productsCategoryPieChart, setProductsCategoryPieChart] = useState([]);
   const [monthlyProfit, setMonthlyProfit] = useState(0);
-  const { lastJsonMessage, lastMessage, sendJsonMessage, readyState } = useWebSocket(socketUrl, {
-    share: true
-  });
+  const { lastJsonMessage, lastMessage, sendJsonMessage, readyState } = useWebSocketServer();
 
   useEffect(() => {
     if (readyState === ReadyState.OPEN) {
@@ -101,7 +100,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                         sx={{
                           width: 70,
                           height: 70,
-                          backgroundColor: theme=>theme.palette.secondaryButton.light.main
+                          backgroundColor: (theme) => theme.palette.secondaryButton.light.main
                         }}>
                         <UsersIcon fontSize={'large'}></UsersIcon>
                       </Avatar>
@@ -137,7 +136,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                         sx={{
                           width: 70,
                           height: 70,
-                          backgroundColor: theme=>theme.palette.secondaryButton.main
+                          backgroundColor: (theme) => theme.palette.secondaryButton.main
                         }}>
                         <GroupAdd fontSize={'large'}></GroupAdd>
                       </Avatar>
@@ -209,7 +208,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                         sx={{
                           width: 70,
                           height: 70,
-                          backgroundColor: theme=>theme.palette.mainButton.main
+                          backgroundColor: (theme) => theme.palette.mainButton.main
                         }}>
                         <OrdersIcon fontSize={'large'}></OrdersIcon>
                       </Avatar>
@@ -236,7 +235,9 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                           Packed Orders
                         </Typography>
                         <Typography variant="h6" fontWeight={'bold'}>
-                          {orders?.byStatus.filter(status=>status._id === "Packed")[0] ? orders?.byStatus.filter(status=>status._id === "Packed")[0].count : 0}
+                          {orders?.byStatus.filter((status) => status._id === 'Packed')[0]
+                            ? orders?.byStatus.filter((status) => status._id === 'Packed')[0].count
+                            : 0}
                         </Typography>
                       </div>
 
@@ -244,7 +245,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                         sx={{
                           width: 70,
                           height: 70,
-                          backgroundColor: theme=>theme.palette.warning.light
+                          backgroundColor: (theme) => theme.palette.warning.light
                         }}>
                         <PackedIcon fontSize={'large'}></PackedIcon>
                       </Avatar>
@@ -271,7 +272,10 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                           Delivered Orders
                         </Typography>
                         <Typography variant="h6" fontWeight={'bold'}>
-                        {orders?.byStatus.filter(status=>status._id === "Delivered")[0] ? orders?.byStatus.filter(status=>status._id === "Delivered")[0].count : 0}
+                          {orders?.byStatus.filter((status) => status._id === 'Delivered')[0]
+                            ? orders?.byStatus.filter((status) => status._id === 'Delivered')[0]
+                                .count
+                            : 0}
                         </Typography>
                       </div>
 
@@ -279,7 +283,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                         sx={{
                           width: 70,
                           height: 70,
-                          backgroundColor: theme=>theme.palette.success.main
+                          backgroundColor: (theme) => theme.palette.success.main
                         }}>
                         <ShippedIcon fontSize={'large'}></ShippedIcon>
                       </Avatar>

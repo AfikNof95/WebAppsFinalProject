@@ -1,5 +1,5 @@
-import React from 'react'
-import { Typography, List, ListItem, ListItemText } from '@mui/material'
+import React, { useState } from 'react'
+import { Typography, List, ListItem, ListItemText, Alert } from '@mui/material'
 import { Grid, Box, Button, Stack } from '@mui/material'
 import { useShoppingCart } from '../../context/ShoppingCartContext'
 import omit from 'lodash/omit'
@@ -20,6 +20,7 @@ export default function Review(props) {
         removePaymentInfo,
         removeUserInfo,
     } = useShoppingCart()
+    const [showOutOfStockError,setShowOutOfStockError] = useState(false);
 
     const cartProducts = getCartProducts()
     const ordersPrice = getCartTotalPrice()
@@ -44,15 +45,17 @@ export default function Review(props) {
             deleteCart()
             removePaymentInfo()
             removeUserInfo()
+            handleNext()
         } catch (err) {
-            // clg error
             console.error(err);
+            if(err.response.data.error && err.response.data.error.message === "OUT_OF_STOCK"){
+                setShowOutOfStockError(true);
+            }
         }
     }
 
     const handleFinish = () => {
         finishReservation()
-        handleNext()
     }
 
     const last4digits = paymentInfo?.cardNumber.substr(-4)
@@ -127,6 +130,11 @@ export default function Review(props) {
                     </Grid>
                 </Grid>
             </Grid>
+            {showOutOfStockError && <Box width={"100%"}>
+            <Alert severity="error" variant="filled" sx={{ width: '100%', marginTop: 1 }}>
+                        Some of the products in your cart are out of stock, please remove them before continuing.
+                      </Alert>
+                </Box>}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                     Back

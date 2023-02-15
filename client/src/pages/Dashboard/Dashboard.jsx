@@ -111,11 +111,17 @@ const DashboardPage = (props) => {
     }, 1000);
   };
 
-  const handleOrdersUpdate = async ()=>{
-    const responseOrders = await backendAPI.admin.order.getAll()
+  const handleOrdersUpdate = async () => {
+    const responseOrders = await backendAPI.admin.order.getAll();
     const { orders } = responseOrders.data;
     setOrders([...orders]);
-  }
+  };
+
+  const handleProductsUpdate = async () => {
+    const responseOrders = await backendAPI.admin.product.getAll();
+    const { products } = responseOrders.data;
+    setProducts([...products]);
+  };
 
   return (
     !isLoading && (
@@ -146,7 +152,8 @@ const DashboardPage = (props) => {
                 <DashboardProducts
                   token={currentUser.idToken}
                   productsArray={products}
-                  categoriesArray={categories}></DashboardProducts>
+                  categoriesArray={categories}
+                  handleProductsUpdate={handleProductsUpdate}></DashboardProducts>
               );
             case 'orders':
               return (
