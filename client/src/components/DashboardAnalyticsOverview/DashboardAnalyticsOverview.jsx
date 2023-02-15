@@ -1,3 +1,4 @@
+import "./style.css";
 import { Avatar, Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { Box, Container } from '@mui/system';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
@@ -12,7 +13,7 @@ import { useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { GroupAdd, GroupAddOutlined } from '@mui/icons-material';
 import { useWebSocketServer } from '../../context/WebSocketContext';
-
+let timeout;
 const DashboardAnalyticsOverview = ({ users, orders, products }) => {
   const [socketUrl, setSocketUrl] = useState('ws://localhost:2309');
 
@@ -21,6 +22,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
   const [isOrdersAnalyticsLoading, setIsOrdersAnalyticsLoading] = useState(true);
   const [isProductsAnalyticsLoading, setIsProductsAnalyticsLoading] = useState(true);
   const [newUsers, setNewUsers] = useState(0);
+  const [notifyUserChange,setNotifyUserChange] = useState(false);
 
   const [productsCategoryPieChart, setProductsCategoryPieChart] = useState([]);
   const [monthlyProfit, setMonthlyProfit] = useState(0);
@@ -32,6 +34,17 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
       sendJsonMessage({ type: 'ADMIN_READY' });
     }
   }, [readyState]);
+
+
+useEffect(()=>{
+  if(timeout){
+    clearTimeout(timeout);
+  }
+  setNotifyUserChange(true);
+ timeout = setTimeout(()=>{
+  setNotifyUserChange(false);
+},500)
+},[loggedInUsers])
 
   useEffect(() => {
     if (lastJsonMessage !== null && lastJsonMessage.currentLoggedInUsers) {
@@ -91,7 +104,7 @@ const DashboardAnalyticsOverview = ({ users, orders, products }) => {
                         <Typography variant="h6" fontWeight={'bold'}>
                           {users.count}
                         </Typography>
-                        <Typography variant="subtitle2" fontWeight={'bold'}>
+                        <Typography variant="subtitle2" fontWeight={'bold'} className={notifyUserChange ? 'notify-user-change' : ""} sx={{transition:"0.4s ease all"}}>
                           {loggedInUsers.length} Connected now!
                         </Typography>
                       </div>

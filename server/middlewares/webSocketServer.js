@@ -16,7 +16,7 @@ const webSocketServer = () => {
     clients[clientId] = { connection, clientId };
 
     connection.on('close', () => {
-      if (clients[clientId]) {
+      if (clients[clientId] && clients[clientId].user) {
         loggedInClients--;
         delete clients[clientId];
         console.log('Client Disconnected!');
@@ -96,7 +96,7 @@ const notifySignOut = (clientId) => {
 };
 
 const notifySignIn = (clientId, messageJSON) => {
-  if (!clients[clientId.isLoggedIn]) {
+  if (!clients[clientId].isLoggedIn) {
     clients[clientId] = {
       ...clients[clientId],
       ...{ isLoggedIn: true, user: messageJSON.user }

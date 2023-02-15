@@ -41,6 +41,10 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
   const [currentPriceRange, setCurrentPriceRange] = useState(priceRange);
 
   useEffect(() => {
+    setCurrentPriceRange(priceRange);
+  }, [priceRange]);
+
+  useEffect(() => {
     const priceRangeArray =
       searchParams.get('minPrice') && searchParams.get('maxPrice')
         ? [Number(searchParams.get('minPrice')), Number(searchParams.get('maxPrice'))]
@@ -56,7 +60,7 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
     const freeTextValue = searchParams.get('freeText') || '';
     const searchTerm = searchParams.get('searchTerm') || null;
 
-    setCurrentPriceRange(priceRangeArray);
+    setCurrentPriceRange(() => [...priceRangeArray]);
     setFilterOutOfStock(outOfStockFilter);
     setSortBy(sortByValue);
     setFreeText(freeTextValue);
@@ -101,7 +105,7 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
   };
 
   const handleChangePriceRange = (value) => {
-    setCurrentPriceRange(value);
+    setCurrentPriceRange(() => [...value]);
   };
 
   const handleCommitPriceRange = (value) => {
@@ -125,7 +129,7 @@ const Filters = ({ selectedCategoryId, priceRange, deviceType }) => {
   };
 
   const clearFilters = () => {
-    setCurrentPriceRange(priceRange);
+    setCurrentPriceRange(() => [...priceRange]);
     setFilterOutOfStock(false);
     setSortBy(SORT_BY_ENUM.NAME_ASCENDING);
     setFreeText('');
